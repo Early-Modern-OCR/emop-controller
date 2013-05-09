@@ -21,6 +21,10 @@
             <outputDirectory></outputDirectory>
             <fileMode>0744</fileMode>   
         </file>
+        <file>
+            <source>scripts/emop.pbs</source>
+            <outputDirectory></outputDirectory>
+        </file>
     </files>
     <dependencySets>
         <dependencySet>

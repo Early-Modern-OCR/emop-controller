@@ -3,3 +3,10 @@ eMOP Controller
 ===============================================================================
 
 The Brazos Cluster controller process for the eMOP workflow.
+
+Depends on .my.cnf for MySql connection parameters
+
+Depends on several environment variables as well. They are:
+  EMOP_WALLTIME    - Maximum time the controller will run (sec)
+  JUXTA_HOME       - Root directory for JuxtaXL
+  EMOP_RESULTS_DIR - Root direcroty for writing results

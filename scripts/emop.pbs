@@ -1,0 +1,22 @@
+#PBS -q general
+#PBS -l nodes=1:ppn=8
+#PBS -l walltime=00:30:00
+#PBS -l mem=16GB
+#PBS -N emop_controller
+
+# load required modules
+module load tesseract/3.02.02
+module load java/sun-jre-1.6
+
+# Print out the starting time and host.
+echo "$PBS_JOBID started on $(hostname) at $(date)"
+echo "-=-"
+
+
+# TODO
+
+# Done; print the end time and host.
+echo "-=-"
+echo "$PBS_JOBID ended on $(hostname) at $(date)"
+ 
+exit 0
