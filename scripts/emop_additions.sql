@@ -5,14 +5,13 @@ CREATE TABLE IF NOT EXISTS emop_job_queue (
 	job_status ENUM('NOT_STARTED','PROCESSING','PENDING_POSTPROCESS','DONE', 'FAILED') not null default 'NOT_STARTED',
 	job_type ENUM('OCR_TESSERACT','OCR_GAMERA','OCR_OCROPUS','GT_COMPARE') not null,
 	parameters varchar(255),
-	created DATETIME not null,
-	last_update DATETIME,
+	created TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	last_update TIMESTAMP,
 	results varchar(255),
 	PRIMARY KEY (id),
 	FOREIGN KEY (page_id) REFERENCES pages (pg_page_id) ON DELETE CASCADE,
 	index(page_id),
-	index (batch_id),
-	unique(batch_id)
+	index (batch_id)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS page_ocr_results (
