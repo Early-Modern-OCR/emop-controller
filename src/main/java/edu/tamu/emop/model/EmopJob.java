@@ -3,14 +3,13 @@ package edu.tamu.emop.model;
 import java.util.Date;
 
 public class EmopJob {
-    public enum Status {NOT_STARTED, PROCESSING, PENDING_POSTPROCESS, DONE, FAILED};
-    public enum JobType {OCR_TESSERACT, OCR_GAMERA, OCR_OCROPUS, GT_COMPARE};
+    public enum Status {NOT_STARTED, PROCESSING, PENDING_POSTPROCESS, POSTPROCESSING, DONE, FAILED};
+    public enum JobType {GT_COMPARE, OCR};
     private Long id;
     private Long pageId;
-    private String batchId;
+    private Long batchId;
     private Status status;
     private JobType jobType;
-    private String parameters;
     private String results;
     private Date created;
     private Date updated;
@@ -27,29 +26,25 @@ public class EmopJob {
     public void setPageId(Long pageId) {
         this.pageId = pageId;
     }
-    public String getBatchId() {
+    public Long getBatchId() {
         return batchId;
     }
-    public void setBatchId(String batchId) {
+    public void setBatchId(Long batchId) {
         this.batchId = batchId;
     }
     public Status getStatus() {
         return status;
     }
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatus(Long statusId) {
+        int idx = (int)(statusId-1);
+        this.status = Status.values()[idx];
     }
     public JobType getJobType() {
         return jobType;
     }
-    public void setJobType(JobType jobType) {
-        this.jobType = jobType;
-    }
-    public String getParameters() {
-        return parameters;
-    }
-    public void setParameters(String parameters) {
-        this.parameters = parameters;
+    public void setJobType(Long typeId) {
+        int idx = (int)(typeId-1);
+        this.jobType = JobType.values()[idx];
     }
     public String getResults() {
         return results;
@@ -95,7 +90,7 @@ public class EmopJob {
     @Override
     public String toString() {
         return "EmopJob [id=" + id + ", pageId=" + pageId + ", batchId=" + batchId + ", status=" + status
-            + ", jobType=" + jobType + ", parameters=" + parameters + ", results=" + results + ", created=" + created
+            + ", jobType=" + jobType + ", results=" + results + ", created=" + created
             + ", updated=" + updated + "]";
     }
     

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -13,6 +14,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
+
+import edu.tamu.emop.model.EmopJob;
 
 /**
  * eMOP controller app. Responsible for pulling jobs from the work
@@ -44,6 +47,10 @@ public class EmopController {
             emop.init();
             emop.doWork();
             emop.shutdown();
+        } catch ( SQLException e) {
+            System.err.println("eMOP Controller database error");
+            e.printStackTrace();
+            System.exit(-1);
         } catch ( Exception e) {
             System.err.println("eMOP Controller FAILED");
             e.printStackTrace();
@@ -69,9 +76,10 @@ public class EmopController {
     
     /**
      * Initialize the controller. Get run settings from environment. Init database connection.
+     * @throws SQLException 
      * @throws FileNotFoundException 
      */
-    public void init() throws IOException {
+    public void init() throws IOException, SQLException {
         LOG.info("Initialize eMOP controller");
         
         // pull settings .my.cf
@@ -126,11 +134,16 @@ public class EmopController {
      * Main work look for the controller. As long as time remains, pick off availble jobs.
      * Mark the as in-process and kick off a task to service them. When complete, 
      * record data to configured out location and mark task as pending post-processing.
+     * @throws SQLException 
      */
-    public void doWork() {
+    public void doWork() throws SQLException {
         do {
             long t0 = System.currentTimeMillis();
-            LOG.info("fake job");
+            EmopJob job = this.db.getJob();
+            if ( job == null ) {
+                LOG.info("No jobs to process. Terminating.");
+                break;
+            }
             try {
                 Thread.sleep(1000);
             } catch (Exception e ) {}
