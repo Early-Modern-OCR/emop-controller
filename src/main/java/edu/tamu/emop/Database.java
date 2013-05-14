@@ -108,7 +108,52 @@ public class Database {
     }
     
     /**
-     * Get details about the specified OCR Batch id.s
+     * Get the path to the ground truth file for the specified pageID
+     * @param pageId
+     * @return
+     * @throws SQLException 
+     */
+    public String getPageGroundTruth(Long pageId) throws SQLException {
+        PreparedStatement smt = null;
+        ResultSet rs = null;
+        try {
+            final String sql = "select pg_ground_truth_file from pages where pg_page_id=?";
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, pageId);
+            rs = smt.executeQuery();
+            if (rs.first()) {
+                return rs.getString("pg_ground_truth_file");
+            } else {
+                return "";
+            }
+        } catch (SQLException e ) {
+            throw e;
+        } finally {
+            closeQuietly(rs);
+            closeQuietly(smt);
+        }
+    }
+    
+    /**
+     * Get the path to the OCR'd text for the specied pageID
+     * @param pageId
+     * @return
+     */
+    public String getPageOcrText(Long pageId) {
+        return "";
+    }
+    
+    /**
+     * Get the path to the page image for the specified pageID
+     * @param pageId
+     * @return
+     */
+    public String getPageImage(Long pageId) {
+        return "";
+    }
+    
+    /**
+     * Get details about the specified OCR Batch ids
      * 
      * @param id
      * @return
