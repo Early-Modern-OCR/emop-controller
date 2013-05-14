@@ -16,6 +16,9 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 
 import edu.tamu.emop.model.EmopJob;
+import edu.tamu.emop.model.EmopJob.JobType;
+import edu.tamu.emop.model.EmopJob.Status;
+import edu.tamu.emop.model.OcrBatch;
 
 /**
  * eMOP controller app. Responsible for pulling jobs from the work
@@ -84,7 +87,6 @@ public class EmopController {
         
         // pull settings .my.cf
         Properties mySql = loadMySqlCfg();
-        
         String dbHost = mySql.getProperty("host");
         if ( dbHost == null || dbHost.length() == 0) {
             dbHost = "localhost";
@@ -100,8 +102,9 @@ public class EmopController {
             dbPass = "";
         }
         
+        // Get other runtime config from environment
         String strWorkTimeSec =  System.getenv("EMOP_WALLTIME");
-        this.timeLeftMs = 5*1000;
+        this.timeLeftMs = 4*1000;
         if ( strWorkTimeSec != null && strWorkTimeSec.length() > 0) {
             this.timeLeftMs = Integer.parseInt(strWorkTimeSec);
         }
@@ -116,6 +119,7 @@ public class EmopController {
             throw new RuntimeException("Missing require EMOP_RESULTS_DIR environment variable");
         }
 
+        // connect to database
         this.db = new Database();
         this.db.connect(dbHost, "emop", dbUser, dbPass);
     }
@@ -139,19 +143,61 @@ public class EmopController {
     public void doWork() throws SQLException {
         do {
             long t0 = System.currentTimeMillis();
+            
+            // check for availble jobs; bail if none are available
             EmopJob job = this.db.getJob();
             if ( job == null ) {
                 LOG.info("No jobs to process. Terminating.");
                 break;
             }
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e ) {}
+            
+            // get details about the OCR batch that is to be
+            // used for this jobs
+            LOG.info("Got job ["+job.getId()+"]");
+            OcrBatch batchInfo = this.db.getBatch(job.getBatchId());
+            LOG.info("Job Type: "+job.getJobType()+", OCR engine: " +batchInfo.getOcrEngine()+", Batch: "+batchInfo.version);
+            if ( job.getJobType().equals(JobType.GT_COMPARE)) {
+                doGroundTruthCompare(job, batchInfo);
+            } else {
+                doOCR(job, batchInfo);
+            }
             
             this.timeLeftMs -= ( (System.currentTimeMillis()-t0) );
         } while ( this.timeLeftMs > 0);
     }
     
+    private void doOCR(EmopJob job, OcrBatch batchInfo) {
+        // TODO Auto-generated method stub
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e ) {}
+        
+    }
+
+    private void doGroundTruthCompare(EmopJob job, OcrBatch batchInfo) throws SQLException {
+        
+        try {
+            ProcessBuilder pb = new ProcessBuilder(
+                "java", "-jar", "-server", "-Xmn512M", "-Xms1G", "-Xmx1G", 
+                this.juxtaHome+"/juxta-cl.jar", "-diff",
+                "/Users/loufoster/Desktop/MD_AmerCh1b.xml", 
+                "/Users/loufoster/Desktop/MD_Brit_v1CH1a.xml",
+                "-algorithm", "jaro_winkler");
+            pb.directory( new File(this.juxtaHome) );
+            Process jxProc = pb.start();
+            jxProc.waitFor();
+            String out = IOUtils.toString(jxProc.getInputStream());
+            if (jxProc.exitValue() == 0) {
+                this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+out.trim()+"\"}");
+            } else {
+                this.db.updateJobStatus(job.getId(), Status.FAILED, out);
+            }
+        } catch (Exception e) {
+            LOG.error("GT compare failed", e);
+            this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
+        } 
+    }
+
     /**
      * Shutdown the emop controller and release any allocated resources
      */

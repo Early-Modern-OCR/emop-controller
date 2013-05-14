@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS ocr_engine (
    PRIMARY KEY (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 truncate table ocr_engine;
-insert into ocr_engine (name) values ('Teseract'), ('Gamera'), ('OCROpus');
+insert into ocr_engine (name) values ('Tesseract'), ('Gamera'), ('OCROpus');
 
 --
 -- Lookup table that defines types of jobs available to be run.
