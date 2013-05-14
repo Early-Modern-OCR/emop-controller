@@ -147,9 +147,40 @@ public class Database {
      * Get the path to the page image for the specified pageID
      * @param pageId
      * @return
+     * @throws SQLException 
      */
-    public String getPageImage(Long pageId) {
-        return "";
+    public String getPageImage(Long pageId) throws SQLException {
+        PreparedStatement smt = null;
+        ResultSet rs = null;
+        try {
+            final String sql = 
+                "select wks_eebo_directory,wks_ecco_directory,wks_ecco_number,pg_ref_number from works inner join pages on pg_work_id=wks_work_id where pg_page_id=?";
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, pageId);
+            rs = smt.executeQuery();
+            if (rs.first()) {
+                Object obj = rs.getObject("wks_ecco_directory");
+                if ( obj != null ) {
+                    // ECCO format: ECCO number + 4 digit page + 0.tif
+                    return String.format("%s/images/%s%04d0.TIF", rs.getString("wks_ecco_directory"), rs.getString("wks_ecco_number"), rs.getInt("pg_ref_number") );
+                } else {
+                    obj = rs.getObject("wks_eebo_directory");
+                    if ( obj != null ) {
+                        // EEBO format: 00014.000.001.tif
+                        return String.format("%s/%05d.000.001.tif", rs.getString("wks_eebo_directory"), rs.getInt("pg_ref_number") );
+                    }
+                    return "";
+                }
+            } else {
+                return "";
+            }
+        } catch (SQLException e ) {
+            throw e;
+        } finally {
+            closeQuietly(rs);
+            closeQuietly(smt);
+        }
+        
     }
     
     /**

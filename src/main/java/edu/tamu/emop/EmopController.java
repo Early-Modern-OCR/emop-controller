@@ -143,7 +143,12 @@ public class EmopController {
     public void doWork() throws SQLException {
         do {
             long t0 = System.currentTimeMillis();
-                        
+            
+            String test = this.db.getPageImage(0L);
+            System.out.println(test);
+            test = this.db.getPageImage(2174836L);
+            System.out.println(test);
+            
             // check for availble jobs; bail if none are available
             EmopJob job = this.db.getJob();
             if ( job == null ) {
