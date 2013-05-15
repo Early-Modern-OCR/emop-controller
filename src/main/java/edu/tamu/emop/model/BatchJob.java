@@ -8,13 +8,16 @@ package edu.tamu.emop.model;
  * @author loufoster
  *
  */
-public class OcrBatch {
-    public enum OcrEngine {TESSERACT, GAMERA, OCROPUS};
-    public Long id;
-    public OcrEngine ocrEngine;
-    public String parameters;
-    public String version;
-    public String notes;
+public class BatchJob {
+    public enum OcrEngine {GALE, TESSERACT, GAMERA, OCROPUS};
+    public enum JobType {GT_COMPARE, OCR, OTHER};
+
+    private Long id;
+    private JobType jobType;
+    private OcrEngine ocrEngine;
+    private String parameters;
+    private String name;
+    private String notes;
     
     public Long getId() {
         return id;
@@ -35,12 +38,6 @@ public class OcrBatch {
     public void setParameters(String parameters) {
         this.parameters = parameters;
     }
-    public String getVersion() {
-        return version;
-    }
-    public void setVersion(String version) {
-        this.version = version;
-    }
     public String getNotes() {
         return notes;
     }
@@ -48,6 +45,19 @@ public class OcrBatch {
         this.notes = notes;
     }
     
+    public JobType getJobType() {
+        return jobType;
+    }
+    public void setJobType(Long jobType) {
+        int idx = (int)(jobType-1);
+        this.jobType = JobType.values()[idx];
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -63,7 +73,7 @@ public class OcrBatch {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        OcrBatch other = (OcrBatch) obj;
+        BatchJob other = (BatchJob) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -73,9 +83,8 @@ public class OcrBatch {
     }
     @Override
     public String toString() {
-        return "OcrBatch [id=" + id + ", ocrEngine=" + ocrEngine + ", parameters=" + parameters + ", version="
-            + version + "]";
+        return "BatchJob [id=" + id + ", jobType=" + jobType + ", ocrEngine=" + ocrEngine + ", parameters="
+            + parameters + ", name=" + name + "]";
     }
-    
     
 }

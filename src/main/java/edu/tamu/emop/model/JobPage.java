@@ -2,14 +2,12 @@ package edu.tamu.emop.model;
 
 import java.util.Date;
 
-public class EmopJob {
+public class JobPage {
     public enum Status {NOT_STARTED, PROCESSING, PENDING_POSTPROCESS, POSTPROCESSING, DONE, FAILED};
-    public enum JobType {GT_COMPARE, OCR};
     private Long id;
     private Long pageId;
-    private Long batchId;
+    private BatchJob batch;
     private Status status;
-    private JobType jobType;
     private String results;
     private Date created;
     private Date updated;
@@ -26,11 +24,11 @@ public class EmopJob {
     public void setPageId(Long pageId) {
         this.pageId = pageId;
     }
-    public Long getBatchId() {
-        return batchId;
+    public BatchJob getBatch() {
+        return batch;
     }
-    public void setBatchId(Long batchId) {
-        this.batchId = batchId;
+    public void setBatch(BatchJob batch) {
+        this.batch = batch;
     }
     public Status getStatus() {
         return status;
@@ -38,13 +36,6 @@ public class EmopJob {
     public void setStatus(Long statusId) {
         int idx = (int)(statusId-1);
         this.status = Status.values()[idx];
-    }
-    public JobType getJobType() {
-        return jobType;
-    }
-    public void setJobType(Long typeId) {
-        int idx = (int)(typeId-1);
-        this.jobType = JobType.values()[idx];
     }
     public String getResults() {
         return results;
@@ -79,7 +70,7 @@ public class EmopJob {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        EmopJob other = (EmopJob) obj;
+        JobPage other = (JobPage) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -89,9 +80,8 @@ public class EmopJob {
     }
     @Override
     public String toString() {
-        return "EmopJob [id=" + id + ", pageId=" + pageId + ", batchId=" + batchId + ", status=" + status
-            + ", jobType=" + jobType + ", results=" + results + ", created=" + created
-            + ", updated=" + updated + "]";
+        return "EmopJob [id=" + id + ", pageId=" + pageId + ", batch=" + batch + ", status=" + status
+            + ", results=" + results + ", created=" + created + ", updated=" + updated + "]";
     }
     
     

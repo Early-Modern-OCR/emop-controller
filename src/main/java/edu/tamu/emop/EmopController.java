@@ -15,10 +15,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 
-import edu.tamu.emop.model.EmopJob;
-import edu.tamu.emop.model.EmopJob.JobType;
-import edu.tamu.emop.model.EmopJob.Status;
-import edu.tamu.emop.model.OcrBatch;
+import edu.tamu.emop.model.BatchJob;
+import edu.tamu.emop.model.BatchJob.JobType;
+import edu.tamu.emop.model.JobPage;
+import edu.tamu.emop.model.JobPage.Status;
 
 /**
  * eMOP controller app. Responsible for pulling jobs from the work
@@ -36,10 +36,14 @@ import edu.tamu.emop.model.OcrBatch;
  */
 public class EmopController {
     private Database db;
-    private int timeLeftMs;
+    private long timeLeftMs;
+    private long wallTimeSec;
     private String juxtaHome;
     private String resultsRoot;
+    
     private static Logger LOG = Logger.getLogger(EmopController.class);
+    
+    private static final long JX_TIMEOUT_MS = 1000*60*2;//2 mins
 
     public static void main(String[] args) {
         boolean consoleLog =  ( args.length == 1 && args[0].equals("-console") );
@@ -48,6 +52,7 @@ public class EmopController {
 
             EmopController emop = new EmopController();
             emop.init();
+            emop.killStalledJobs();
             emop.doWork();
             emop.shutdown();
         } catch ( SQLException e) {
@@ -60,7 +65,7 @@ public class EmopController {
             System.exit(-1);
         }
     }
-    
+
     protected static void initLogging( boolean consoleLogger ) throws IOException {
         LogManager.getRootLogger().removeAllAppenders();
         LogManager.getRootLogger().setLevel(Level.DEBUG);
@@ -104,10 +109,11 @@ public class EmopController {
         
         // Get other runtime config from environment
         String strWorkTimeSec =  System.getenv("EMOP_WALLTIME");
-        this.timeLeftMs = 4*1000;
+        this.wallTimeSec = 2;
         if ( strWorkTimeSec != null && strWorkTimeSec.length() > 0) {
-            this.timeLeftMs = Integer.parseInt(strWorkTimeSec);
+            this.wallTimeSec = Integer.parseInt(strWorkTimeSec);
         }
+        this.timeLeftMs = this.wallTimeSec*1000;
         
         this.juxtaHome =  System.getenv("JUXTA_HOME");
         if ( this.juxtaHome == null || this.juxtaHome.length() == 0) {
@@ -133,6 +139,21 @@ public class EmopController {
         IOUtils.closeQuietly(fis);
         return mySqlProp;
     }
+    
+    /**
+     * Scan the job queue for jobs that have stayed in the PROCESSING state for too
+     * long. Mark them as failed with a result of Timed Out.
+     */
+    public void killStalledJobs() {
+        // if something has been in process for longer than the wall time
+        // the controller that started it has been killed and the job will 
+        // not complete. mark it as timed out
+        try {
+            this.db.timeoutStalledJobs( this.wallTimeSec);
+        } catch (SQLException e ) {
+            LOG.error("Unabled to flag long-running jobs as timed out", e);
+        }
+    }
 
     /**
      * Main work look for the controller. As long as time remains, pick off availble jobs.
@@ -144,13 +165,8 @@ public class EmopController {
         do {
             long t0 = System.currentTimeMillis();
             
-            String test = this.db.getPageImage(0L);
-            System.out.println(test);
-            test = this.db.getPageImage(2174836L);
-            System.out.println(test);
-            
             // check for availble jobs; bail if none are available
-            EmopJob job = this.db.getJob();
+            JobPage job = this.db.getJob();
             if ( job == null ) {
                 LOG.info("No jobs to process. Terminating.");
                 break;
@@ -158,20 +174,21 @@ public class EmopController {
             
             // get details about the OCR batch that is to be
             // used for this jobs
-            LOG.info("Got job ["+job.getId()+"]");
-            OcrBatch batchInfo = this.db.getBatch(job.getBatchId());
-            LOG.info("Job Type: "+job.getJobType()+", OCR engine: " +batchInfo.getOcrEngine()+", Batch: "+batchInfo.version);
-            if ( job.getJobType().equals(JobType.GT_COMPARE)) {
-                doGroundTruthCompare(job, batchInfo);
+            BatchJob batch = job.getBatch();
+            LOG.info("Got job ["+job.getId()+"] - Batch: "+batch.getName()+" job Type: "+batch.getJobType()+", OCR engine: " + batch.getOcrEngine());
+            if ( batch.getJobType().equals(JobType.GT_COMPARE)) {
+                doGroundTruthCompare(job);
             } else {
-                doOCR(job, batchInfo);
+                doOCR(job);
             }
             
-            this.timeLeftMs -= ( (System.currentTimeMillis()-t0) );
+            long durationMs = (System.currentTimeMillis()-t0);
+            LOG.info("Job ["+job.getId()+"] COMPLETE. Duration: "+(durationMs/1000f)+" secs");
+            this.timeLeftMs -= durationMs;
         } while ( this.timeLeftMs > 0);
     }
     
-    private void doOCR(EmopJob job, OcrBatch batchInfo) {
+    private void doOCR(JobPage job) {
         // TODO Auto-generated method stub
         try {
             Thread.sleep(1000);
@@ -179,9 +196,9 @@ public class EmopController {
         
     }
 
-    private void doGroundTruthCompare(EmopJob job, OcrBatch batchInfo) throws SQLException {
-        
+    private void doGroundTruthCompare(JobPage job) throws SQLException {  
         try {
+            String out = "";
             ProcessBuilder pb = new ProcessBuilder(
                 "java", "-jar", "-server", "-Xmn512M", "-Xms1G", "-Xmx1G", 
                 this.juxtaHome+"/juxta-cl.jar", "-diff",
@@ -190,17 +207,44 @@ public class EmopController {
                 "-algorithm", "jaro_winkler");
             pb.directory( new File(this.juxtaHome) );
             Process jxProc = pb.start();
-            jxProc.waitFor();
-            String out = IOUtils.toString(jxProc.getInputStream());
+            awaitProcess(jxProc, JX_TIMEOUT_MS);
+            out = IOUtils.toString(jxProc.getInputStream());
+            
             if (jxProc.exitValue() == 0) {
                 this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+out.trim()+"\"}");
             } else {
                 this.db.updateJobStatus(job.getId(), Status.FAILED, out);
             }
-        } catch (Exception e) {
-            LOG.error("GT compare failed", e);
+            
+        } catch (InterruptedException e) {
+            this.db.updateJobStatus(job.getId(), Status.FAILED, "Timed Out");
+        } catch ( Exception e ) {
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
-        } 
+        }
+    }
+    
+    private void awaitProcess(Process p, long timeoutMs) throws InterruptedException {
+        long now = System.currentTimeMillis();
+        long killTimeMs = now + timeoutMs;
+        while (isAlive(p) && (System.currentTimeMillis() < killTimeMs)) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                // no-op
+            }
+        }
+        if (isAlive(p)) {
+            throw new InterruptedException("Process timed out");
+        }
+    }
+    
+    private boolean isAlive(Process p) {
+        try {
+            p.exitValue();
+            return false;
+        } catch (IllegalThreadStateException e) {
+            return true;
+        }
     }
 
     /**

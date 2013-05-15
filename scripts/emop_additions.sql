@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS ocr_engine (
    PRIMARY KEY (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 truncate table ocr_engine;
-insert into ocr_engine (name) values ('Tesseract'), ('Gamera'), ('OCROpus');
+insert into ocr_engine (name) values ('Gale'), ('Tesseract'), ('Gamera'), ('OCROpus'), ('Not Applicable');
 
 --
 -- Lookup table that defines types of jobs available to be run.
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS job_type (
    PRIMARY KEY (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 truncate table job_type;
-insert into job_type (name) values ('Ground Truth Compare'), ('OCR');
+insert into job_type (name) values ('Ground Truth Compare'), ('OCR'), ('Other');
 
 --
 -- Lookup table to define job status
@@ -34,42 +34,43 @@ truncate table job_status;
 insert into job_status (name) values ('Not Started'), ('Processing'), ('Pending Postprocess'), ('Postprocessing'), ('Done'), ('Failed');
 
 --
--- Description of an OCR batch run. Includes version of the engine and
--- and parameters it was launched with
+-- Description of a batch job. Includes type of job, job launch
+-- parameters and notes about the nature of the job
 --
-CREATE TABLE IF NOT EXISTS ocr_batch (
+CREATE TABLE IF NOT EXISTS batch_job (
    id BIGINT NOT NULL AUTO_INCREMENT,
-   engine_id BIGINT not null,
+   job_type BIGINT not null default 1,
+   ocr_engine_id BIGINT not null default 4,
    parameters varchar(255),
-   version varchar(50) not null,
+   name varchar(50) not null,
    notes varchar(255),
-   FOREIGN KEY (engine_id) REFERENCES ocr_engine (id),
+   FOREIGN KEY (ocr_engine_id) REFERENCES ocr_engine (id),
+   FOREIGN KEY (job_type) REFERENCES job_type (id),
    PRIMARY KEY (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Job queue
 --
-CREATE TABLE IF NOT EXISTS emop_job_queue (
+CREATE TABLE IF NOT EXISTS job_queue (
    id BIGINT NOT NULL AUTO_INCREMENT,
-   page_id int(11) NOT NULL,
    batch_id BIGINT not null,
+   page_id int(11) NOT NULL,
    job_status BIGINT not null default 1,
-   job_type BIGINT not null default 1,
    created TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
    last_update TIMESTAMP,
    results varchar(255),
    PRIMARY KEY (id),
    FOREIGN KEY (page_id) REFERENCES pages (pg_page_id),
-   FOREIGN KEY (batch_id) REFERENCES ocr_batch (id),
+   FOREIGN KEY (batch_id) REFERENCES batch_job (id),
    FOREIGN KEY (job_status) REFERENCES job_status (id),
-   FOREIGN KEY (job_type) REFERENCES job_status (id),
-   index(page_id),
-   index (batch_id)
+   index(page_id)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Individual page results from a completed OCR run
+-- Individual page results from a completed OCR run. Each
+-- entry in the pages table will have multiple entries here;
+-- one for each time it has been run thru OCR
 --
 CREATE TABLE IF NOT EXISTS page_results (
    id BIGINT NOT NULL AUTO_INCREMENT,
@@ -81,6 +82,6 @@ CREATE TABLE IF NOT EXISTS page_results (
    juxta_change_index float(4,3),
    alt_change_index float(4,3),
    PRIMARY KEY (id),
-   FOREIGN KEY (batch_id) REFERENCES ocr_batch (id),
+   FOREIGN KEY (batch_id) REFERENCES batch_job (id),
    FOREIGN KEY (page_id) REFERENCES pages (pg_page_id)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;

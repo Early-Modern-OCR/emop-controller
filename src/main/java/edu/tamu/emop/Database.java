@@ -6,10 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 
-import edu.tamu.emop.model.EmopJob;
-import edu.tamu.emop.model.EmopJob.Status;
-import edu.tamu.emop.model.OcrBatch;
+import edu.tamu.emop.model.JobPage;
+import edu.tamu.emop.model.JobPage.Status;
+import edu.tamu.emop.model.BatchJob;
 
 /**
  * Handles all database interactions fro the eMOP controller
@@ -19,8 +20,8 @@ import edu.tamu.emop.model.OcrBatch;
  */
 public class Database {
     private Connection connection;
-    private static final String JOB_TABLE = "emop_job_queue";
-    private static final String BATCH_TABLE = "ocr_batch";
+    private static final String JOB_TABLE = "job_queue";
+    private static final String BATCH_TABLE = "batch_job";
     
     /**
      * connect to the emop database
@@ -37,26 +38,37 @@ public class Database {
     }
     
     /**
-     * Get an active job from the head of the work queue
+     * Get an active job from the head of the work queue. The unit of work for all jobs is
+     * one page. Each page is related to a parent batch.
+     * 
      * @return
      * @throws SQLException 
      */
-    public EmopJob getJob() throws SQLException {
+    public JobPage getJob() throws SQLException {
         PreparedStatement smt = null;
         ResultSet rs = null;
         try {
             // Note the 'for update' at the end. This locks the row so others cannot access
             // it during this process. The lock is released when a job is found and its
             // status is marked as STARTED. 
-            final String sql = "select id, page_id, batch_id, job_status, job_type, created" +
+            final String sql = "select id, page_id, batch_id, job_status, created" +
             		" from "+JOB_TABLE+" where job_status=? order by created ASC limit 1 for update";
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L));
             rs = smt.executeQuery();
             if (rs.first()) {
-                // grab the job and mark it as started
-                EmopJob job = jobFromRs(rs);
+                // Create the job and mark it as started. This releases the lock
+                JobPage job = new JobPage();
+                Long batchId = rs.getLong("batch_id") ;
+                job.setId( rs.getLong("id") );
+                job.setPageId( rs.getLong("page_id") );
+                job.setStatus( rs.getLong("job_status") );
+                job.setCreated( rs.getDate("created") );
                 updateJobStatus(job.getId(), Status.PROCESSING);
+                
+                // now pull the batch that this page is a part 
+                BatchJob batch = getBatch(batchId);
+                job.setBatch(batch);
                 return job;
             } else {
                 this.connection.rollback();
@@ -83,19 +95,19 @@ public class Database {
     public void updateJobStatus(Long jobId, Status jobStatus, String result ) throws SQLException {
         PreparedStatement smt = null;
         try {
-            String sql = "update "+JOB_TABLE+" set job_status=?";
+            String sql = "update "+JOB_TABLE+" set last_update=?, job_status=?";
             if ( result != null) {
                 sql += ", results=?";
             }
             sql += " where id=?";
             smt = this.connection.prepareStatement(sql);
-            smt.setLong(1, (jobStatus.ordinal()+1L) ); 
+            smt.setTimestamp(1, new Timestamp(System.currentTimeMillis())); 
+            smt.setLong(2, (jobStatus.ordinal()+1L) ); 
             if ( result != null) {
-                smt.setString(2, result);
-                smt.setLong(3, jobId);
-                
+                smt.setString(3, result);
+                smt.setLong(4, jobId);
             } else {
-                smt.setLong(2, jobId);
+                smt.setLong(3, jobId);
             }
             smt.executeUpdate();
             this.connection.commit();
@@ -166,7 +178,7 @@ public class Database {
                 } else {
                     obj = rs.getObject("wks_eebo_directory");
                     if ( obj != null ) {
-                        // EEBO format: 00014.000.001.tif
+                        // EEBO format: 00014.000.001.tif where 00014 is the page number.
                         return String.format("%s/%05d.000.001.tif", rs.getString("wks_eebo_directory"), rs.getInt("pg_ref_number") );
                     }
                     return "";
@@ -180,27 +192,51 @@ public class Database {
             closeQuietly(rs);
             closeQuietly(smt);
         }
-        
     }
     
     /**
-     * Get details about the specified OCR Batch ids
-     * 
-     * @param id
-     * @return
-     * @throws SQLException
+     * Check for processing jobs that are older than the kill time. Mark them
+     * as failed with a reason of timed out
+     * @param killTimeSec
+     * @throws SQLException 
      */
-    public OcrBatch getBatch( Long id ) throws SQLException {
+    public void timeoutStalledJobs(long killTimeSec) throws SQLException {
+        PreparedStatement smt = null;
+        try {
+            final String sql = 
+                "update " + JOB_TABLE 
+                +" set job_status=?, last_update=?, results=? where job_status=? and last_update < date_sub(now(),interval "
+                +killTimeSec+" second)";
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, (Status.FAILED.ordinal()+1L));
+            smt.setTimestamp(2, new Timestamp(System.currentTimeMillis())); 
+            smt.setString(3, "Timed Out");
+            smt.setLong(4, (Status.PROCESSING.ordinal()+1L));
+            smt.executeUpdate();
+            this.connection.commit();
+        } finally {
+            closeQuietly(smt);
+        }
+    }
+    
+    private BatchJob getBatch( Long id ) throws SQLException {
         PreparedStatement smt = null;
         ResultSet rs = null;
         try {
-            final String sql = "select id, engine_id, parameters, version, notes" +
+            final String sql = "select id, job_type, ocr_engine_id, parameters, name, notes" +
                     " from "+BATCH_TABLE+" where id=?";
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L));
             rs = smt.executeQuery();
             if (rs.first()) {
-                return batchFromRs(rs);
+                BatchJob batch = new BatchJob();
+                batch.setId( rs.getLong("id") );
+                batch.setJobType( rs.getLong("job_type") );
+                batch.setOcrEngine( rs.getLong("ocr_engine_id") );
+                batch.setParameters( rs.getString("parameters") );
+                batch.setName( rs.getString("name") );
+                batch.setNotes( rs.getString("notes") );
+                return batch;
             } else {
                 return null;
             }
@@ -208,27 +244,6 @@ public class Database {
             closeQuietly(rs);
             closeQuietly(smt);
         }
-    }
-    
-    private OcrBatch batchFromRs( ResultSet rs) throws SQLException {
-        OcrBatch batch = new OcrBatch();
-        batch.setId( rs.getLong("id") );
-        batch.setOcrEngine( rs.getLong("engine_id") );
-        batch.setParameters( rs.getString("parameters") );
-        batch.setVersion( rs.getString("version") );
-        batch.setNotes( rs.getString("notes") );
-        return batch;
-    }
-    
-    private EmopJob jobFromRs( ResultSet rs) throws SQLException {
-        EmopJob job = new EmopJob();
-        job.setId( rs.getLong("id") );
-        job.setPageId( rs.getLong("page_id") );
-        job.setBatchId( rs.getLong("batch_id") );
-        job.setStatus( rs.getLong("job_status") );
-        job.setJobType( rs.getLong("job_type") );
-        job.setCreated( rs.getDate("created") );
-        return job;
     }
     
     private void closeQuietly(Statement smt ) {
@@ -239,6 +254,7 @@ public class Database {
             }
         }
     }
+    
     private void closeQuietly(ResultSet rs ) {
         if ( rs != null ) {
             try {
