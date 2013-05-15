@@ -66,7 +66,7 @@ public class Database {
                 job.setCreated( rs.getDate("created") );
                 updateJobStatus(job.getId(), Status.PROCESSING);
                 
-                // now pull the batch that this page is a part 
+                // now pull the batch that this page is a part of
                 BatchJob batch = getBatch(batchId);
                 job.setBatch(batch);
                 return job;

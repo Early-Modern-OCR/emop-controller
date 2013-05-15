@@ -19,6 +19,10 @@
 -- Table structure for table `eebo_word_freq`
 --
 
+DROP DATABASE IF EXISTS emop;
+CREATE DATABASE emop CHARACTER SET=utf8;
+use emop;
+
 DROP TABLE IF EXISTS `eebo_word_freq`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

@@ -197,14 +197,18 @@ public class EmopController {
     }
 
     private void doGroundTruthCompare(JobPage job) throws SQLException {  
+        // get paths to files that will be compared. Always need GT.
+        String gtPath = this.db.getPageGroundTruth(job.getPageId());
+        
+        // now pull page result based on OCR engine
+        String ocrPath = "";
+        
         try {
             String out = "";
             ProcessBuilder pb = new ProcessBuilder(
-                "java", "-jar", "-server", "-Xmn512M", "-Xms1G", "-Xmx1G", 
+                "java", "-jar", "-server", 
                 this.juxtaHome+"/juxta-cl.jar", "-diff",
-                "/Users/loufoster/Desktop/MD_AmerCh1b.xml", 
-                "/Users/loufoster/Desktop/MD_Brit_v1CH1a.xml",
-                "-algorithm", "jaro_winkler");
+                gtPath, ocrPath, "-algorithm", "jaro_winkler");
             pb.directory( new File(this.juxtaHome) );
             Process jxProc = pb.start();
             awaitProcess(jxProc, JX_TIMEOUT_MS);

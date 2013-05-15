@@ -85,3 +85,11 @@ CREATE TABLE IF NOT EXISTS page_results (
    FOREIGN KEY (batch_id) REFERENCES batch_job (id),
    FOREIGN KEY (page_id) REFERENCES pages (pg_page_id)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- add a new column to the pages table to hold the page level
+-- gale text file path
+--
+alter table pages add pg_gale_text_file varchar(200) DEFAULT NULL;
+
+
