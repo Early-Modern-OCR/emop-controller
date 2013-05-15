@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 
+import edu.tamu.emop.model.BatchJob.OcrEngine;
 import edu.tamu.emop.model.JobPage;
 import edu.tamu.emop.model.JobPage.Status;
 import edu.tamu.emop.model.BatchJob;
@@ -147,14 +148,47 @@ public class Database {
     }
     
     /**
-     * Get the path to the OCR'd text for the specied pageID
+     * Get the path to the OCR'd text from an OCR engine for the specied pageID. This will always
+     * work on the latest available version of OCR data in the history. Exception to this rule
+     * is the Gale OCR. There is only one version of this, and the path to this file
+     * is found in the pages table
+     * 
      * @param pageId
+     * @param ocrEngine 
      * @return
+     * @throws SQLException 
      */
-    public String getPageOcrText(Long pageId) {
+    public String getPageOcrText(Long pageId, OcrEngine ocrEngine) throws SQLException {
+        if ( ocrEngine.equals(OcrEngine.GALE)) {
+            return getGaleOcrPageText(pageId);
+        }
         return "";
     }
     
+    private String getGaleOcrPageText(Long pageId) throws SQLException {
+        // this is the simple case for retrieving OCR page text.
+        // Gale has only one version, and the path is found in 
+        // the pages table.
+        PreparedStatement smt = null;
+        ResultSet rs = null;
+        try {
+            final String sql = "select pg_gale_text_file from pages where pg_page_id=?";
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, pageId);
+            rs = smt.executeQuery();
+            if (rs.first()) {
+                return rs.getString("pg_gale_text_file");
+            } else {
+                return "";
+            }
+        } catch (SQLException e ) {
+            throw e;
+        } finally {
+            closeQuietly(rs);
+            closeQuietly(smt);
+        }
+    }
+
     /**
      * Get the path to the page image for the specified pageID
      * @param pageId

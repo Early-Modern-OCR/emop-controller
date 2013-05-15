@@ -27,10 +27,13 @@ import edu.tamu.emop.model.JobPage.Status;
  * 
  * This process depends upon environment variables and .my.cnf to execute properly.
  * Expected environment:
- *    EMOP_WALLTIME
- *    JUXTA_HOME
- *    EMOP_RESULTS_DIR
- * 
+ *    EMOP_WALLTIME     - max time this process will live
+ *    JUXTA_HOME        - base directory of juxtaCL install
+ *    EMOP_RESULTS_DIR  - output data dir
+ *    
+ * Optional Environment:
+ *    PATH_PREFIX       - prefix to append to all paths read from db. used for testing only
+ *    
  * @author loufoster
  *
  */
@@ -40,6 +43,7 @@ public class EmopController {
     private long wallTimeSec;
     private String juxtaHome;
     private String resultsRoot;
+    private String pathPrefix = "";
     
     private static Logger LOG = Logger.getLogger(EmopController.class);
     
@@ -109,7 +113,7 @@ public class EmopController {
         
         // Get other runtime config from environment
         String strWorkTimeSec =  System.getenv("EMOP_WALLTIME");
-        this.wallTimeSec = 2;
+        this.wallTimeSec = 60;
         if ( strWorkTimeSec != null && strWorkTimeSec.length() > 0) {
             this.wallTimeSec = Integer.parseInt(strWorkTimeSec);
         }
@@ -123,6 +127,12 @@ public class EmopController {
         this.resultsRoot =  System.getenv("EMOP_RESULTS_DIR");
         if ( this.resultsRoot == null || this.resultsRoot.length() == 0) {
             throw new RuntimeException("Missing require EMOP_RESULTS_DIR environment variable");
+        }
+        
+        // optional path prefix for testing modes
+        String prefix =  System.getenv("PATH_PREFIX");
+        if ( prefix != null && prefix.length() > 0) {
+            this.pathPrefix = prefix;
         }
 
         // connect to database
@@ -190,6 +200,7 @@ public class EmopController {
     
     private void doOCR(JobPage job) {
         // TODO Auto-generated method stub
+        // NOTES: after OCR is complete, run the GT compare on the results (if availble)
         try {
             Thread.sleep(1000);
         } catch (Exception e ) {}
@@ -201,14 +212,15 @@ public class EmopController {
         String gtPath = this.db.getPageGroundTruth(job.getPageId());
         
         // now pull page result based on OCR engine
-        String ocrPath = "";
+        String ocrPath = this.db.getPageOcrText(job.getPageId(), job.getBatch().getOcrEngine());
         
         try {
             String out = "";
             ProcessBuilder pb = new ProcessBuilder(
                 "java", "-jar", "-server", 
                 this.juxtaHome+"/juxta-cl.jar", "-diff",
-                gtPath, ocrPath, "-algorithm", "jaro_winkler");
+                this.pathPrefix+gtPath, this.pathPrefix+ocrPath, 
+                "-algorithm", "jaro_winkler");
             pb.directory( new File(this.juxtaHome) );
             Process jxProc = pb.start();
             awaitProcess(jxProc, JX_TIMEOUT_MS);
