@@ -121,6 +121,61 @@ public class Database {
     }
     
     /**
+     * Get the number of versions of a specific page ocr'd by a specific engine. This
+     * will be used to determine the filename of the ocr results.
+     * 
+     * @param pageId
+     * @param ocrEngine
+     * @return
+     * @throws SQLException 
+     */
+    public int getNumVersions( Long pageId, OcrEngine ocrEngine ) throws SQLException {
+        PreparedStatement smt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select  count(*) as cnt from pages inner join batch_job on batch_job.id = batch_id where page_id=? && ocr_engine_id=?";
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, pageId ); 
+            smt.setLong(2, ocrEngine.ordinal()+1L);
+            rs = smt.executeQuery();
+            if ( rs.first() ) {
+                return rs.getInt("cnt");
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            closeQuietly(rs);
+            closeQuietly(smt);
+        }
+    }
+    
+    /**
+     * Get edition page number for a specific page id
+     * 
+     * @param pageId
+     * @param ocrEngine
+     * @return
+     * @throws SQLException 
+     */
+    public int getPageNumber( Long pageId ) throws SQLException {
+        PreparedStatement smt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select  pg_ref_number from pages where page_id=?";
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, pageId ); 
+            rs = smt.executeQuery();
+            return rs.getInt("pg_ref_number");
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            closeQuietly(rs);
+            closeQuietly(smt);
+        }
+    }
+    
+    /**
      * Get the path to the ground truth file for the specified pageID
      * @param pageId
      * @return
@@ -234,7 +289,7 @@ public class Database {
      * @param killTimeSec
      * @throws SQLException 
      */
-    public void timeoutStalledJobs(long killTimeSec) throws SQLException {
+    public void failStalledJobs(long killTimeSec) throws SQLException {
         PreparedStatement smt = null;
         try {
             final String sql = 

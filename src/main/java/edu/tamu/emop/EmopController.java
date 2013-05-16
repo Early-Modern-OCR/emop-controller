@@ -160,7 +160,7 @@ public class EmopController {
         // the controller that started it has been killed and the job will 
         // not complete. mark it as timed out
         try {
-            this.db.timeoutStalledJobs( this.wallTimeSec);
+            this.db.failStalledJobs( this.wallTimeSec);
         } catch (SQLException e ) {
             LOG.error("Unabled to flag long-running jobs as timed out", e);
         }
@@ -207,13 +207,14 @@ public class EmopController {
      */
     private void doOCR(JobPage job) throws SQLException {
         String img = this.db.getPageImage(job.getPageId());
+        int versionCnt = this.db.getNumVersions(job.getPageId(), job.getBatch().getOcrEngine());
         String ocrTxtFile = "";
         
         try {
             // call the correct engine based upon batch config
             if ( job.getBatch().getOcrEngine().equals(OcrEngine.TESSERACT)) {
                 LOG.info("Using Tesseract to ORC "+img);
-                ocrTxtFile = doTesseractOcr(img, job.getBatch().getParameters());
+                ocrTxtFile = doTesseractOcr(img, versionCnt, job.getBatch().getParameters());
             } else {
                 LOG.error("OCR with "+job.getBatch().getOcrEngine()+" not yet supported");
                 this.db.updateJobStatus(job.getId(), Status.FAILED, job.getBatch().getOcrEngine()+" not supported");
@@ -257,13 +258,14 @@ public class EmopController {
     /**
      * Use Tesseract to OCR the specified image file. Pass along any params from the batch
      * 
-     * @param img
-     * @param string
-     * @return
+     * @param img Path to the page image
+     * @param priorVersionCnt number of pre-existing ocr'd versions of this page
+     * @param params (may be null) Parameters to pass along to tesseract
+     * @return Name of the OCR text file
      * @throws InterruptedException
      * @throws IOException
      */
-    private String doTesseractOcr(String img, String params) throws InterruptedException, IOException {
+    private String doTesseractOcr(String img, int priorVersionCnt, String params) throws InterruptedException, IOException {
         String outFile = addPrefix(this.resultsRoot); // TODO need to figure out out to generate page name for OCR result
         ProcessBuilder pb = new ProcessBuilder(
             "tesseract", addPrefix(img), outFile);
