@@ -17,6 +17,7 @@ import org.apache.log4j.RollingFileAppender;
 
 import edu.tamu.emop.model.BatchJob;
 import edu.tamu.emop.model.BatchJob.JobType;
+import edu.tamu.emop.model.BatchJob.OcrEngine;
 import edu.tamu.emop.model.JobPage;
 import edu.tamu.emop.model.JobPage.Status;
 
@@ -42,7 +43,7 @@ public class EmopController {
     private long timeLeftMs;
     private long wallTimeSec;
     private String juxtaHome;
-    private String resultsRoot;
+    private String resultsRoot = "/data/data/shared/text-xml/ECCO-IDHMC-ocr";
     private String pathPrefix = "";
     
     private static Logger LOG = Logger.getLogger(EmopController.class);
@@ -198,28 +199,41 @@ public class EmopController {
         } while ( this.timeLeftMs > 0);
     }
     
-    private void doOCR(JobPage job) {
-        // TODO Auto-generated method stub
-        // NOTES: after OCR is complete, run the GT compare on the results (if availble)
-        try {
-            Thread.sleep(1000);
-        } catch (Exception e ) {}
-        
-    }
-
-    private void doGroundTruthCompare(JobPage job) throws SQLException {  
-        // get paths to files that will be compared. Always need GT.
-        String gtPath = this.db.getPageGroundTruth(job.getPageId());
-        
-        // now pull page result based on OCR engine
-        String ocrPath = this.db.getPageOcrText(job.getPageId(), job.getBatch().getOcrEngine());
+    /**
+     * Run an OCR job. If successful and GT is available, run a GT comparison and record results
+     * 
+     * @param job
+     * @throws SQLException
+     */
+    private void doOCR(JobPage job) throws SQLException {
+        String img = this.db.getPageImage(job.getPageId());
+        String ocrTxtFile = "";
         
         try {
+            // call the correct engine based upon batch config
+            if ( job.getBatch().getOcrEngine().equals(OcrEngine.TESSERACT)) {
+                LOG.info("Using Tesseract to ORC "+img);
+                ocrTxtFile = doTesseractOcr(img, job.getBatch().getParameters());
+            } else {
+                LOG.error("OCR with "+job.getBatch().getOcrEngine()+" not yet supported");
+                this.db.updateJobStatus(job.getId(), Status.FAILED, job.getBatch().getOcrEngine()+" not supported");
+                return;
+            }
+            
+            // has ground truth?
+            String gtPath = this.db.getPageGroundTruth(job.getPageId());
+            if ( gtPath.length() == 0 ) {
+                LOG.warn("Ground truth does not exist for page "+job.getPageId());
+                this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "GT does not exist");
+                return;
+            }
+            
+            LOG.info("Compare OCR results with ground truth");
             String out = "";
             ProcessBuilder pb = new ProcessBuilder(
                 "java", "-jar", "-server", 
                 this.juxtaHome+"/juxta-cl.jar", "-diff",
-                this.pathPrefix+gtPath, this.pathPrefix+ocrPath, 
+                addPrefix(gtPath), ocrTxtFile, 
                 "-algorithm", "jaro_winkler");
             pb.directory( new File(this.juxtaHome) );
             Process jxProc = pb.start();
@@ -237,6 +251,69 @@ public class EmopController {
         } catch ( Exception e ) {
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
         }
+        
+    }
+
+    /**
+     * Use Tesseract to OCR the specified image file. Pass along any params from the batch
+     * 
+     * @param img
+     * @param string
+     * @return
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    private String doTesseractOcr(String img, String params) throws InterruptedException, IOException {
+        String outFile = addPrefix(this.resultsRoot); // TODO need to figure out out to generate page name for OCR result
+        ProcessBuilder pb = new ProcessBuilder(
+            "tesseract", addPrefix(img), outFile);
+        pb.directory( new File(this.juxtaHome) );
+        Process jxProc = pb.start();
+        awaitProcess(jxProc, JX_TIMEOUT_MS);
+        return outFile;
+    }
+
+    private void doGroundTruthCompare(JobPage job) throws SQLException {  
+        // get paths to files that will be compared. Always need GT.
+        String gtPath = this.db.getPageGroundTruth(job.getPageId());
+        if ( gtPath.length() == 0 ) {
+            LOG.warn("Ground truth does not exist for page "+job.getPageId());
+            this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "GT does not exist");
+            return;
+        }
+        
+        // now pull page result based on OCR engine
+        String ocrPath = this.db.getPageOcrText(job.getPageId(), job.getBatch().getOcrEngine());
+        
+        try {
+            String out = "";
+            ProcessBuilder pb = new ProcessBuilder(
+                "java", "-jar", "-server", 
+                this.juxtaHome+"/juxta-cl.jar", "-diff",
+                addPrefix(gtPath),addPrefix(ocrPath), 
+                "-algorithm", "jaro_winkler");
+            pb.directory( new File(this.juxtaHome) );
+            Process jxProc = pb.start();
+            awaitProcess(jxProc, JX_TIMEOUT_MS);
+            out = IOUtils.toString(jxProc.getInputStream());
+            
+            if (jxProc.exitValue() == 0) {
+                this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+out.trim()+"\"}");
+            } else {
+                this.db.updateJobStatus(job.getId(), Status.FAILED, out);
+            }
+            
+        } catch (InterruptedException e) {
+            this.db.updateJobStatus(job.getId(), Status.FAILED, "Timed Out");
+        } catch ( Exception e ) {
+            this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
+        }
+    }
+    
+    public String addPrefix (String path) {
+        File file1 = new File(this.pathPrefix);
+        File file2 = new File(file1, path);
+        return file2.getPath();
     }
     
     private void awaitProcess(Process p, long timeoutMs) throws InterruptedException {
