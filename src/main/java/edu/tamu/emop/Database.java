@@ -133,7 +133,7 @@ public class Database {
         PreparedStatement smt = null;
         ResultSet rs = null;
         try {
-            String sql = "select  count(*) as cnt from pages inner join batch_job on batch_job.id = batch_id where page_id=? && ocr_engine_id=?";
+            String sql = "select  count(*) as cnt from page_results inner join batch_job on batch_job.id = batch_id where page_id=? && ocr_engine_id=?";
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, pageId ); 
             smt.setLong(2, ocrEngine.ordinal()+1L);
@@ -162,10 +162,11 @@ public class Database {
         PreparedStatement smt = null;
         ResultSet rs = null;
         try {
-            String sql = "select  pg_ref_number from pages where page_id=?";
+            String sql = "select  pg_ref_number from pages where pg_page_id=?";
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, pageId ); 
             rs = smt.executeQuery();
+            rs.first();
             return rs.getInt("pg_ref_number");
         } catch (SQLException e) {
             throw e;
@@ -315,7 +316,7 @@ public class Database {
             final String sql = "select id, job_type, ocr_engine_id, parameters, name, notes" +
                     " from "+BATCH_TABLE+" where id=?";
             smt = this.connection.prepareStatement(sql);
-            smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L));
+            smt.setLong(1, id);
             rs = smt.executeQuery();
             if (rs.first()) {
                 BatchJob batch = new BatchJob();

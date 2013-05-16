@@ -16,6 +16,7 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 
 import edu.tamu.emop.model.BatchJob;
+import edu.tamu.emop.model.PageImage;
 import edu.tamu.emop.model.BatchJob.JobType;
 import edu.tamu.emop.model.BatchJob.OcrEngine;
 import edu.tamu.emop.model.JobPage;
@@ -30,10 +31,10 @@ import edu.tamu.emop.model.JobPage.Status;
  * Expected environment:
  *    EMOP_WALLTIME     - max time this process will live
  *    JUXTA_HOME        - base directory of juxtaCL install
- *    EMOP_RESULTS_DIR  - output data dir
  *    
  * Optional Environment:
- *    PATH_PREFIX       - prefix to append to all paths read from db. used for testing only
+ *    PATH_PREFIX        - prefix to append to all paths read from db. used for testing only
+ *     EMOP_RESULTS_DIR  - output data dir. defaults to /data/data/shared/text-xml/ECCO-IDHMC-ocr
  *    
  * @author loufoster
  *
@@ -125,9 +126,10 @@ public class EmopController {
             throw new RuntimeException("Missing require JUXTA_HOME environment variable");
         }
         
-        this.resultsRoot =  System.getenv("EMOP_RESULTS_DIR");
-        if ( this.resultsRoot == null || this.resultsRoot.length() == 0) {
-            throw new RuntimeException("Missing require EMOP_RESULTS_DIR environment variable");
+        // optional results path
+        String results =  System.getenv("EMOP_RESULTS_DIR");
+        if ( results != null && results.length() > 0) {
+            this.resultsRoot = results;
         }
         
         // optional path prefix for testing modes
@@ -208,13 +210,16 @@ public class EmopController {
     private void doOCR(JobPage job) throws SQLException {
         String img = this.db.getPageImage(job.getPageId());
         int versionCnt = this.db.getNumVersions(job.getPageId(), job.getBatch().getOcrEngine());
+        int pageNum = this.db.getPageNumber(job.getPageId());
+        PageImage pageImg = new PageImage(addPrefix(img), pageNum, versionCnt+1);   
+        // TODO also need the EDITION identifier. ECCO or EEBO.
         String ocrTxtFile = "";
         
         try {
             // call the correct engine based upon batch config
             if ( job.getBatch().getOcrEngine().equals(OcrEngine.TESSERACT)) {
                 LOG.info("Using Tesseract to ORC "+img);
-                ocrTxtFile = doTesseractOcr(img, versionCnt, job.getBatch().getParameters());
+                ocrTxtFile = doTesseractOcr(pageImg, job.getBatch().getParameters());
             } else {
                 LOG.error("OCR with "+job.getBatch().getOcrEngine()+" not yet supported");
                 this.db.updateJobStatus(job.getId(), Status.FAILED, job.getBatch().getOcrEngine()+" not supported");
@@ -265,14 +270,15 @@ public class EmopController {
      * @throws InterruptedException
      * @throws IOException
      */
-    private String doTesseractOcr(String img, int priorVersionCnt, String params) throws InterruptedException, IOException {
-        String outFile = addPrefix(this.resultsRoot); // TODO need to figure out out to generate page name for OCR result
+    private String doTesseractOcr(PageImage pageImage, String params) throws InterruptedException, IOException {
+        File outFile = new File(addPrefix(this.resultsRoot), pageImage.getTxtFilename());
+        
         ProcessBuilder pb = new ProcessBuilder(
-            "tesseract", addPrefix(img), outFile);
+            "tesseract", pageImage.getImagePath(), outFile.getPath());
         pb.directory( new File(this.juxtaHome) );
         Process jxProc = pb.start();
         awaitProcess(jxProc, JX_TIMEOUT_MS);
-        return outFile;
+        return outFile.getPath();
     }
 
     private void doGroundTruthCompare(JobPage job) throws SQLException {  
