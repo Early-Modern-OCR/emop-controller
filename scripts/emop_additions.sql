@@ -77,7 +77,6 @@ CREATE TABLE IF NOT EXISTS page_results (
    page_id int(11) NOT NULL,
    batch_id BIGINT not null,
    ocr_text_path varchar(200) not null,
-   ocr_xml_path varchar(200) not null,
    ocr_completed DATETIME not null,
    juxta_change_index float(4,3),
    alt_change_index float(4,3),

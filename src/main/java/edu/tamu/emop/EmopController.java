@@ -46,8 +46,9 @@ public class EmopController {
     private String pathPrefix = "";
     
     private static Logger LOG = Logger.getLogger(EmopController.class);
+    private static final long JX_TIMEOUT_MS = 1000*60*2;    //2 mins
     
-    private static final long JX_TIMEOUT_MS = 1000*60*2;//2 mins
+    // TODO add command line processing to handle console, juxtaCL algorithm, walltime, prefix, etc
 
     public static void main(String[] args) {        
         boolean consoleLog =  ( args.length == 1 && args[0].equals("-console") );
@@ -70,6 +71,11 @@ public class EmopController {
         }
     }
 
+    /**
+     * Initialize controller logging. In debug mode, just write all logs out to std:out
+     * @param consoleLogger
+     * @throws IOException
+     */
     protected static void initLogging( boolean consoleLogger ) throws IOException {
         LogManager.getRootLogger().removeAllAppenders();
         LogManager.getRootLogger().setLevel(Level.DEBUG);
@@ -113,7 +119,7 @@ public class EmopController {
         
         // Get other runtime config from environment
         String strWorkTimeSec =  System.getenv("EMOP_WALLTIME");
-        this.wallTimeSec = 60;
+        this.wallTimeSec = 600;
         if ( strWorkTimeSec != null && strWorkTimeSec.length() > 0) {
             this.wallTimeSec = Integer.parseInt(strWorkTimeSec);
         }
@@ -238,6 +244,7 @@ public class EmopController {
             
             if (jxProc.exitValue() == 0) {
                 this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+out.trim()+"\"}");
+                this.db.addPageResult(job, ocrTxtFile, Float.parseFloat(out), 0.0f);
             } else {
                 this.db.updateJobStatus(job.getId(), Status.FAILED, out);
             }
@@ -302,6 +309,7 @@ public class EmopController {
             
             if (jxProc.exitValue() == 0) {
                 this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+out.trim()+"\"}");
+                this.db.addPageResult(job, ocrPath, Float.parseFloat(out), 0.0f);
             } else {
                 this.db.updateJobStatus(job.getId(), Status.FAILED, out);
             }

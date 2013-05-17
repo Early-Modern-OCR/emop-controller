@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 
+import edu.tamu.emop.model.BatchJob;
 import edu.tamu.emop.model.BatchJob.OcrEngine;
 import edu.tamu.emop.model.JobPage;
 import edu.tamu.emop.model.JobPage.Status;
-import edu.tamu.emop.model.BatchJob;
 
 /**
  * Handles all database interactions fro the eMOP controller
@@ -23,6 +23,7 @@ public class Database {
     private Connection connection;
     private static final String JOB_TABLE = "job_queue";
     private static final String BATCH_TABLE = "batch_job";
+    private static final String RESULT_TABLE = "page_results";
     
     /**
      * connect to the emop database
@@ -251,6 +252,35 @@ public class Database {
             throw e;
         } finally {
             closeQuietly(rs);
+            closeQuietly(smt);
+        }
+    }
+    
+    /**
+     * Add OCR page results
+     * 
+     * @param job
+     * @param parseFloat
+     * @param f
+     * @throws SQLException 
+     */
+    public void addPageResult(JobPage job, String ocrFile, float juxtaChangeIndex, float altChangeIndex) throws SQLException {
+        PreparedStatement smt = null;
+        try {
+            final String sql = 
+                "insert into " + RESULT_TABLE 
+                + " (page_id,batch_id,ocr_text_path,ocr_completed,juxta_change_index,alt_change_index)"
+                + " values (?, ?, ?, ?, ?, ?)";
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, job.getPageId());
+            smt.setLong(2, job.getBatch().getId() );
+            smt.setString(3, ocrFile);
+            smt.setTimestamp(4, new Timestamp(System.currentTimeMillis())); 
+            smt.setFloat(5, juxtaChangeIndex);
+            smt.setFloat(6, altChangeIndex);
+            smt.executeUpdate();
+            this.connection.commit();
+        } finally {
             closeQuietly(smt);
         }
     }
