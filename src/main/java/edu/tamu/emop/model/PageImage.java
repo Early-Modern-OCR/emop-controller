@@ -1,18 +1,43 @@
 package edu.tamu.emop.model;
 
+import java.io.File;
+
 public class PageImage {
     private final String imagePath;
     private final int pageNumber;
-    private final int version;
     
-    public PageImage(String img, int page, int rev) {
+    private static final String ECCO_OCR_ROOT = "/data/shared/text-xml/ECCO-IDHMC-ocr";
+    private static final String EEBO_OCR_ROOT = "/data/shared/text-xml/EEBO-IDHMC-ocr";
+    
+    public PageImage(String img, int page) {
         this.imagePath = img;
         this.pageNumber = page;
-        this.version = rev;
     }
     
-    public String getTxtFilename() {
-        return String.format("%d.%d.txt", getPageNumber(), getVersion());
+    /**
+     * Generate the OCR output file based upon the page image path
+     * @param batchId
+     * @return
+     */
+    public String getOcrOutPath(Long batchId ) {
+        // Two possible image formats, ecco and eebo:
+        // ECCO: /data/ecco/ECCO_2of2/LitAndLang_2/0331501100/images/033150110000010.TIF
+        // EEBO: /data/eebo/e0011/53/[file].tif
+        
+        // get the path to the image file (not includign the image itself)
+        File imgFile = new File(this.imagePath);
+        String path = imgFile.getParent();
+        
+        // replace base path with the new path to shared txt results
+        // and strip any trailing images directory.
+        path = path.replaceAll("/data/ecco", ECCO_OCR_ROOT);
+        path = path.replaceAll("/data/eebo", EEBO_OCR_ROOT);
+        path = path.replaceAll("/images", "");
+        
+        // at this point, we have a path to the OCR output for the work
+        // now append the batch and final filename
+        String fileName = String.format("%d.txt", getPageNumber());
+        return path+"/"+batchId+"/"+fileName;
     }
 
     public String getImagePath() {
@@ -23,9 +48,6 @@ public class PageImage {
         return this.pageNumber;
     }
 
-    public int getVersion() {
-        return this.version;
-    }
 
     @Override
     public int hashCode() {
@@ -33,7 +55,6 @@ public class PageImage {
         int result = 1;
         result = prime * result + ((this.imagePath == null) ? 0 : this.imagePath.hashCode());
         result = prime * result + this.pageNumber;
-        result = prime * result + this.version;
         return result;
     }
 
@@ -53,15 +74,12 @@ public class PageImage {
             return false;
         if (this.pageNumber != other.pageNumber)
             return false;
-        if (this.version != other.version)
-            return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "PageImage [imagePath=" + this.imagePath + ", pageNumber=" + this.pageNumber
-            + ", version=" + this.version + "]";
+        return "PageImage [imagePath=" + this.imagePath + ", pageNumber=" + this.pageNumber;
     }
     
 }
