@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 
+import edu.tamu.emop.Database.ResultType;
 import edu.tamu.emop.model.BatchJob;
 import edu.tamu.emop.model.BatchJob.JobType;
 import edu.tamu.emop.model.BatchJob.OcrEngine;
@@ -419,7 +420,7 @@ public class EmopController {
         }
         
         // now pull page result based on OCR engine
-        String ocrPath = this.db.getPageOcrText(job.getPageId(), job.getBatch().getOcrEngine());
+        String ocrPath = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), ResultType.TEXT);
         
         try {
             String out = "";

@@ -25,6 +25,8 @@ public class Database {
     private static final String BATCH_TABLE = "batch_job";
     private static final String RESULT_TABLE = "page_results";
     
+    public enum ResultType {TEXT, XML};
+    
     /**
      * connect to the emop database
      * @param host
@@ -185,14 +187,34 @@ public class Database {
      * @return
      * @throws SQLException 
      */
-    public String getPageOcrText(Long pageId, OcrEngine ocrEngine) throws SQLException {
+    public String getPageOcrResult(Long pageId, OcrEngine ocrEngine, ResultType resultType) throws SQLException {
         if ( ocrEngine.equals(OcrEngine.GALE)) {
             return getGaleOcrPageText(pageId);
         }
-        // FIXME not impemented
-        return "";
+        
+        PreparedStatement smt = null;
+        ResultSet rs = null;
+        try {
+            final String sql = "select ocr_text_path,ocr_xml_path from page_results " +
+            		"inner join batch_job on batch_id=batch_job.id " +
+            		"where batch_job.ocr_engine_id=? and page_id=? order by ocr_completed desc limit 1;";
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, ocrEngine.ordinal()+1);
+            smt.setLong(2, pageId);
+            rs = smt.executeQuery();
+            rs.first();
+            if ( resultType.equals(ResultType.XML)) {
+                return rs.getString("ocr_xml_path");
+            }
+            return rs.getString("ocr_text_path");
+        } catch (SQLException e ) {
+            throw e;
+        } finally {
+            closeQuietly(rs);
+            closeQuietly(smt);
+        }
     }
-    
+        
     private String getGaleOcrPageText(Long pageId) throws SQLException {
         // this is the simple case for retrieving OCR page text.
         // Gale has only one version, and the path is found in 
