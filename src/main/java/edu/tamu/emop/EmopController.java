@@ -27,13 +27,14 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 
-import edu.tamu.emop.Database.ResultType;
 import edu.tamu.emop.model.BatchJob;
 import edu.tamu.emop.model.BatchJob.JobType;
 import edu.tamu.emop.model.BatchJob.OcrEngine;
 import edu.tamu.emop.model.JobPage;
 import edu.tamu.emop.model.JobPage.Status;
-import edu.tamu.emop.model.PageImage;
+import edu.tamu.emop.model.PageInfo;
+import edu.tamu.emop.model.PageInfo.OutputFormat;
+import edu.tamu.emop.model.WorkInfo;
 
 /**
  * eMOP controller app. Responsible for pulling jobs from the work
@@ -333,37 +334,38 @@ public class EmopController {
      * @throws SQLException
      */
     private void doOCR(JobPage job) throws SQLException {
-        String img = this.db.getPageImage(job.getPageId());
-        int pageNum = this.db.getPageNumber(job.getPageId());
-        PageImage pageImg = new PageImage(addPrefix(img), pageNum);   
-        String ocrTxtFile = pageImg.getOcrOutPath(job.getBatch().getId());
+        // get details about the page and work associated with this job
+        PageInfo pageInfo = this.db.getPageInfo(job.getPageId());
+        WorkInfo workInfo = this.db.getWorkInfo(pageInfo.getWorkId());
+        String img = workInfo.getPageImage(pageInfo.getPageNumber());
+        String ocrTxtFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.TXT, pageInfo.getPageNumber());
         
         try {
             // call the correct engine based upon batch config
             if ( job.getBatch().getOcrEngine().equals(OcrEngine.TESSERACT)) {
                 LOG.info("Using Tesseract to OCR "+img);
-                doTesseractOcr(pageImg, job.getBatch().getParameters(), ocrTxtFile);
+                doTesseractOcr( addPrefix(img), job.getBatch().getParameters(), addPrefix(ocrTxtFile) );
             } else {
                 LOG.error("OCR with "+job.getBatch().getOcrEngine()+" not yet supported");
                 this.db.updateJobStatus(job.getId(), Status.FAILED, job.getBatch().getOcrEngine()+" not supported");
                 return;
             }
             
-            // has ground truth?
-            String gtPath = this.db.getPageGroundTruth(job.getPageId());
-            if ( gtPath.length() == 0 ) {
+            // If no ground truth, we are done
+            if ( pageInfo.hasGroundTruth() == false ) {
                 LOG.warn("Ground truth does not exist for page "+job.getPageId());
                 this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "GT does not exist");
                 return;
             }
             
+            // do the GT comparea
             LOG.info("Compare OCR results with ground truth");
             String out = "";
             ProcessBuilder pb = new ProcessBuilder(
                 "java", "-jar", "-server", 
                 this.juxtaHome+"/juxta-cl.jar", "-diff",
-                addPrefix(gtPath), ocrTxtFile, 
-                "-algorithm", "jaro_winkler");
+                addPrefix( pageInfo.getGroundTruthFile() ), ocrTxtFile, 
+                "-algorithm", this.algorithm.toString().toLowerCase());
             pb.directory( new File(this.juxtaHome) );
             Process jxProc = pb.start();
             awaitProcess(jxProc, JX_TIMEOUT_MS);
@@ -393,34 +395,39 @@ public class EmopController {
      * @throws InterruptedException
      * @throws IOException
      */
-    private void doTesseractOcr(PageImage pageImage, String params, String outFile) throws InterruptedException, IOException { 
+    private void doTesseractOcr(String pageImage, String params, String outFile) throws InterruptedException, IOException { 
         // ensure that the directory tree is present
         File out = new File(outFile);
         out.getParentFile().mkdirs();
+        final String exe = this.tesseractHome+"/tesseract";
+        
+        // NOTE: strip the .txt extension; tesseract auto-appends it
+        final String trimmedOut = outFile.substring(0,outFile.length()-4);
         
         // kickoff the OCR engine and wait until it completes
-        // NOTE: strip the .txt extension; tesseract auto-appends it
-        ProcessBuilder pb = new ProcessBuilder(
-            this.tesseractHome+"/tesseract", pageImage.getImagePath(), outFile.replaceAll(".txt", ""));
+        ProcessBuilder pb = new ProcessBuilder( exe, pageImage, trimmedOut );
         Process jxProc = pb.start();
         awaitProcess(jxProc, JX_TIMEOUT_MS);
         if (jxProc.exitValue() != 0) {
-            String results = IOUtils.toString(jxProc.getInputStream());
-            throw new RuntimeException("OCR failed: "+results);
+            String err = IOUtils.toString(jxProc.getErrorStream());
+            throw new RuntimeException("OCR failed: "+err);
         }
     }
 
     private void doGroundTruthCompare(JobPage job) throws SQLException {  
-        // get paths to files that will be compared. Always need GT.
-        String gtPath = this.db.getPageGroundTruth(job.getPageId());
-        if ( gtPath.length() == 0 ) {
+        // get details about the page associated with this job
+        PageInfo pageInfo = this.db.getPageInfo(job.getPageId());
+        if ( pageInfo.hasGroundTruth() == false) {
             LOG.warn("Ground truth does not exist for page "+job.getPageId());
             this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "GT does not exist");
             return;
         }
         
+        // GT exists, grab the path
+        String gtPath = pageInfo.getGroundTruthFile();
+        
         // now pull page result based on OCR engine
-        String ocrPath = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), ResultType.TEXT);
+        String ocrPath = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), OutputFormat.TXT);
         
         try {
             String out = "";

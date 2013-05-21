@@ -12,6 +12,9 @@ import edu.tamu.emop.model.BatchJob;
 import edu.tamu.emop.model.BatchJob.OcrEngine;
 import edu.tamu.emop.model.JobPage;
 import edu.tamu.emop.model.JobPage.Status;
+import edu.tamu.emop.model.PageInfo;
+import edu.tamu.emop.model.PageInfo.OutputFormat;
+import edu.tamu.emop.model.WorkInfo;
 
 /**
  * Handles all database interactions fro the eMOP controller
@@ -24,8 +27,6 @@ public class Database {
     private static final String JOB_TABLE = "job_queue";
     private static final String BATCH_TABLE = "batch_job";
     private static final String RESULT_TABLE = "page_results";
-    
-    public enum ResultType {TEXT, XML};
     
     /**
      * connect to the emop database
@@ -124,25 +125,29 @@ public class Database {
     }
     
     /**
-     * Get edition page number for a specific page id
+     * Get details about a work
      * 
      * @param pageId
-     * @param ocrEngine
      * @return
      * @throws SQLException 
      */
-    public int getPageNumber( Long pageId ) throws SQLException {
+    public WorkInfo getWorkInfo(Long id ) throws SQLException {
         PreparedStatement smt = null;
         ResultSet rs = null;
         try {
-            String sql = "select  pg_ref_number from pages where pg_page_id=?";
+            String sql = "select  wks_work_id, wks_title, wks_organizational_unit,wks_eebo_directory,wks_ecco_directory,wks_ecco_number from works where wks_work_id=?";
             smt = this.connection.prepareStatement(sql);
-            smt.setLong(1, pageId ); 
+            smt.setLong(1, id ); 
             rs = smt.executeQuery();
             rs.first();
-            return rs.getInt("pg_ref_number");
-        } catch (SQLException e) {
-            throw e;
+            WorkInfo work = new WorkInfo();
+            work.setId( rs.getLong("wks_work_id"));
+            work.setTitle( rs.getString("wks_title"));
+            work.setOrganizationalUnit(rs.getLong("wks_organizational_unit"));
+            work.setEccoNumber(rs.getString("wks_ecco_number"));
+            work.setEccoDirectory(rs.getString("wks_ecco_directory"));
+            work.setEeboDirectory(rs.getString("wks_eebo_directory"));
+            return work;
         } finally {
             closeQuietly(rs);
             closeQuietly(smt);
@@ -150,26 +155,29 @@ public class Database {
     }
     
     /**
-     * Get the path to the ground truth file for the specified pageID
+     * Get details about a page
+     * 
      * @param pageId
      * @return
      * @throws SQLException 
      */
-    public String getPageGroundTruth(Long pageId) throws SQLException {
+    public PageInfo getPageInfo(Long id ) throws SQLException {
         PreparedStatement smt = null;
         ResultSet rs = null;
         try {
-            final String sql = "select pg_ground_truth_file from pages where pg_page_id=?";
+            String sql = "select  pg_page_id, pg_work_id, pg_ref_number,pg_ground_truth_file,pg_gale_text_file from pages where pg_page_id=?";
             smt = this.connection.prepareStatement(sql);
-            smt.setLong(1, pageId);
+            smt.setLong(1, id ); 
             rs = smt.executeQuery();
-            if (rs.first()) {
-                return rs.getString("pg_ground_truth_file");
-            } else {
-                return "";
-            }
-        } catch (SQLException e ) {
-            throw e;
+            rs.first();
+            PageInfo page = new PageInfo();
+            page.setId( rs.getLong("pg_page_id"));
+            page.setWorkId( rs.getLong("pg_work_id"));
+            page.setPageNumber( rs.getInt("pg_ref_number"));
+            page.setGroundTruthFile(rs.getString("pg_ground_truth_file"));
+            page.setGaleTextFile(rs.getString("pg_gale_text_file"));
+            
+            return page;
         } finally {
             closeQuietly(rs);
             closeQuietly(smt);
@@ -187,7 +195,7 @@ public class Database {
      * @return
      * @throws SQLException 
      */
-    public String getPageOcrResult(Long pageId, OcrEngine ocrEngine, ResultType resultType) throws SQLException {
+    public String getPageOcrResult(Long pageId, OcrEngine ocrEngine, OutputFormat fmt) throws SQLException {
         if ( ocrEngine.equals(OcrEngine.GALE)) {
             return getGaleOcrPageText(pageId);
         }
@@ -203,7 +211,7 @@ public class Database {
             smt.setLong(2, pageId);
             rs = smt.executeQuery();
             rs.first();
-            if ( resultType.equals(ResultType.XML)) {
+            if ( fmt.equals(OutputFormat.XML)) {
                 return rs.getString("ocr_xml_path");
             }
             return rs.getString("ocr_text_path");
@@ -228,45 +236,6 @@ public class Database {
             rs = smt.executeQuery();
             if (rs.first()) {
                 return rs.getString("pg_gale_text_file");
-            } else {
-                return "";
-            }
-        } catch (SQLException e ) {
-            throw e;
-        } finally {
-            closeQuietly(rs);
-            closeQuietly(smt);
-        }
-    }
-
-    /**
-     * Get the path to the page image for the specified pageID
-     * @param pageId
-     * @return
-     * @throws SQLException 
-     */
-    public String getPageImage(Long pageId) throws SQLException {
-        PreparedStatement smt = null;
-        ResultSet rs = null;
-        try {
-            final String sql = 
-                "select wks_eebo_directory,wks_ecco_directory,wks_ecco_number,pg_ref_number from works inner join pages on pg_work_id=wks_work_id where pg_page_id=?";
-            smt = this.connection.prepareStatement(sql);
-            smt.setLong(1, pageId);
-            rs = smt.executeQuery();
-            if (rs.first()) {
-                Object obj = rs.getObject("wks_ecco_directory");
-                if ( obj != null ) {
-                    // ECCO format: ECCO number + 4 digit page + 0.tif
-                    return String.format("%s/images/%s%04d0.TIF", rs.getString("wks_ecco_directory"), rs.getString("wks_ecco_number"), rs.getInt("pg_ref_number") );
-                } else {
-                    obj = rs.getObject("wks_eebo_directory");
-                    if ( obj != null ) {
-                        // EEBO format: 00014.000.001.tif where 00014 is the page number.
-                        return String.format("%s/%05d.000.001.tif", rs.getString("wks_eebo_directory"), rs.getInt("pg_ref_number") );
-                    }
-                    return "";
-                }
             } else {
                 return "";
             }
