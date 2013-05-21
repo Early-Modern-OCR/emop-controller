@@ -59,7 +59,7 @@ import edu.tamu.emop.model.WorkInfo;
  *
  */
 public class EmopController {
-    public enum Algorithm {JUXTA, LEVENSHTEIN, JARO_WINKLER, DICE_SORENSEN};
+    public enum Algorithm {JUXTA, LEVENSHTEIN, JARO_WINKLER};
     
     private Database db;
     private long timeLeftMs;
@@ -67,7 +67,7 @@ public class EmopController {
     private String juxtaHome;
     private String tesseractHome = "";
     private String pathPrefix = "";
-    private Algorithm algorithm = Algorithm.JARO_WINKLER;
+    private Algorithm algorithm = Algorithm.LEVENSHTEIN;
     private HocrTransformer hocrTransformer;
     
     private static Logger LOG = Logger.getLogger(EmopController.class);
@@ -157,7 +157,6 @@ public class EmopController {
         diffSet.add("juxta");
         diffSet.add("levenshtein");
         diffSet.add("jaro_winkler");
-        diffSet.add("dice_sorensen");
         EnumValidator algoVal = new EnumValidator( diffSet );
         Option algo = oBuilder
           .withShortName("algorithm")
