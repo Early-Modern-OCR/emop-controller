@@ -3,11 +3,15 @@ package edu.tamu.emop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.xml.transform.TransformerException;
 
 import org.apache.commons.cli2.Argument;
 import org.apache.commons.cli2.CommandLine;
@@ -26,6 +30,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
+import org.xml.sax.SAXException;
 
 import edu.tamu.emop.model.BatchJob;
 import edu.tamu.emop.model.BatchJob.JobType;
@@ -60,9 +65,10 @@ public class EmopController {
     private long timeLeftMs;
     private long wallTimeSec;
     private String juxtaHome;
-    private String tesseractHome;
+    private String tesseractHome = "";
     private String pathPrefix = "";
     private Algorithm algorithm = Algorithm.JARO_WINKLER;
+    private HocrTransformer hocrTransformer;
     
     private static Logger LOG = Logger.getLogger(EmopController.class);
     private static final long JX_TIMEOUT_MS = 1000*60*2;    //2 mins
@@ -72,8 +78,11 @@ public class EmopController {
     /**
      * Main entry point for the controller
      * @param args
+     * @throws Exception 
      */
-    public static void main(String[] args) {        
+    public static void main(String[] args) throws Exception {   
+        System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
+        
         try {
             EmopController emop = new EmopController();
             if ( emop.init( args ) ) {
@@ -120,10 +129,7 @@ public class EmopController {
      * @throws FileNotFoundException 
      */
     public boolean init( String[] args ) throws IOException, SQLException, OptionException {
-                   
-        // pull some cfg from environment settings
-        getEnvironmentConfig();
-        
+                           
         // parse the commandline settings
         final ArgumentBuilder aBuilder = new ArgumentBuilder();
         final DefaultOptionBuilder oBuilder = new DefaultOptionBuilder();
@@ -218,6 +224,9 @@ public class EmopController {
                 this.pathPrefix = outVal;
             }
         }
+        
+        // pull some cfg from environment settings
+        getEnvironmentConfig();
 
         LOG.info("Initialize eMOP controller");
         initDatabase();
@@ -301,6 +310,7 @@ public class EmopController {
      * @throws SQLException 
      */
     public void doWork() throws SQLException {
+        long totalMs = 0;
         do {
             long t0 = System.currentTimeMillis();
             
@@ -322,9 +332,11 @@ public class EmopController {
             }
             
             long durationMs = (System.currentTimeMillis()-t0);
+            totalMs+= durationMs;
             LOG.info("Job ["+job.getId()+"] COMPLETE. Duration: "+(durationMs/1000f)+" secs");
             this.timeLeftMs -= durationMs;
         } while ( this.timeLeftMs > 0);
+        LOG.info("==> TOTAL TIME: "+totalMs/1000f);
     }
     
     /**
@@ -338,13 +350,14 @@ public class EmopController {
         PageInfo pageInfo = this.db.getPageInfo(job.getPageId());
         WorkInfo workInfo = this.db.getWorkInfo(pageInfo.getWorkId());
         String img = workInfo.getPageImage(pageInfo.getPageNumber());
+        String ocrXmlFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.XML, pageInfo.getPageNumber());
         String ocrTxtFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.TXT, pageInfo.getPageNumber());
         
         try {
             // call the correct engine based upon batch config
             if ( job.getBatch().getOcrEngine().equals(OcrEngine.TESSERACT)) {
                 LOG.info("Using Tesseract to OCR "+img);
-                doTesseractOcr( addPrefix(img), job.getBatch().getParameters(), addPrefix(ocrTxtFile) );
+                doTesseractOcr( addPrefix(img), job.getBatch().getParameters(), addPrefix(ocrXmlFile) );
             } else {
                 LOG.error("OCR with "+job.getBatch().getOcrEngine()+" not yet supported");
                 this.db.updateJobStatus(job.getId(), Status.FAILED, job.getBatch().getOcrEngine()+" not supported");
@@ -358,13 +371,15 @@ public class EmopController {
                 return;
             }
             
+            this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "DONE");
+            
             // do the GT comparea
             LOG.info("Compare OCR results with ground truth");
             String out = "";
             ProcessBuilder pb = new ProcessBuilder(
                 "java", "-jar", "-server", 
                 this.juxtaHome+"/juxta-cl.jar", "-diff",
-                addPrefix( pageInfo.getGroundTruthFile() ), ocrTxtFile, 
+                addPrefix( pageInfo.getGroundTruthFile() ), addPrefix(ocrTxtFile), 
                 "-algorithm", this.algorithm.toString().toLowerCase());
             pb.directory( new File(this.juxtaHome) );
             Process jxProc = pb.start();
@@ -373,14 +388,17 @@ public class EmopController {
             
             if (jxProc.exitValue() == 0) {
                 this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+out.trim()+"\"}");
-                this.db.addPageResult(job, ocrTxtFile, Float.parseFloat(out), 0.0f);
+                this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, Float.parseFloat(out), 0.0f);
             } else {
+                LOG.error(out);
                 this.db.updateJobStatus(job.getId(), Status.FAILED, out);
             }
             
         } catch (InterruptedException e) {
+            LOG.error("Job timed out");
             this.db.updateJobStatus(job.getId(), Status.FAILED, "Timed Out");
         } catch ( Exception e ) {
+            LOG.error("Job Failed", e);
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
         }
     }
@@ -394,24 +412,41 @@ public class EmopController {
      * @return Name of the OCR text file
      * @throws InterruptedException
      * @throws IOException
+     * @throws TransformerException 
+     * @throws SAXException 
      */
-    private void doTesseractOcr(String pageImage, String params, String outFile) throws InterruptedException, IOException { 
+    private void doTesseractOcr(String pageImage, String params, String outFile) throws InterruptedException, IOException, SAXException, TransformerException { 
         // ensure that the directory tree is present
         File out = new File(outFile);
         out.getParentFile().mkdirs();
-        final String exe = this.tesseractHome+"/tesseract";
+        String exe = "tesseract";
+        if ( this.tesseractHome != null  && this.tesseractHome.length() > 0 ) {
+            exe  = this.tesseractHome+"/tesseract";
+        }
         
         // NOTE: strip the .txt extension; tesseract auto-appends it
         final String trimmedOut = outFile.substring(0,outFile.length()-4);
         
         // kickoff the OCR engine and wait until it completes
-        ProcessBuilder pb = new ProcessBuilder( exe, pageImage, trimmedOut );
+        ProcessBuilder pb = new ProcessBuilder( exe, pageImage, trimmedOut, "hocr" );
         Process jxProc = pb.start();
         awaitProcess(jxProc, JX_TIMEOUT_MS);
         if (jxProc.exitValue() != 0) {
             String err = IOUtils.toString(jxProc.getErrorStream());
             throw new RuntimeException("OCR failed: "+err);
         }
+        
+        // end result is an XHTML file containing all of the work coordinates
+        LOG.info("Extract TXT content from hOCR");
+        if ( this.hocrTransformer == null ) {
+            this.hocrTransformer = new HocrTransformer();
+            this.hocrTransformer.initialize();
+        }
+        String txtOut = this.hocrTransformer.extractTxt(trimmedOut+".html");
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(trimmedOut+".txt"), "UTF-8");
+        IOUtils.write(txtOut, osw);
+        osw.close();
+
     }
 
     private void doGroundTruthCompare(JobPage job) throws SQLException {  
@@ -443,14 +478,17 @@ public class EmopController {
             
             if (jxProc.exitValue() == 0) {
                 this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+out.trim()+"\"}");
-                this.db.addPageResult(job, ocrPath, Float.parseFloat(out), 0.0f);
+                this.db.addPageResult(job, ocrPath, "", Float.parseFloat(out), 0.0f);
             } else {
+                LOG.error(out);
                 this.db.updateJobStatus(job.getId(), Status.FAILED, out);
             }
             
         } catch (InterruptedException e) {
+            LOG.error("Job timed out");
             this.db.updateJobStatus(job.getId(), Status.FAILED, "Timed Out");
         } catch ( Exception e ) {
+            LOG.error("Job Failed", e);
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
         }
     }

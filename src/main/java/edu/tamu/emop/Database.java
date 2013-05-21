@@ -255,20 +255,21 @@ public class Database {
      * @param f
      * @throws SQLException 
      */
-    public void addPageResult(JobPage job, String ocrFile, float juxtaChangeIndex, float altChangeIndex) throws SQLException {
+    public void addPageResult(JobPage job, String ocrTxtFile, String ocrXmlFile, float juxtaChangeIndex, float altChangeIndex) throws SQLException {
         PreparedStatement smt = null;
         try {
             final String sql = 
                 "insert into " + RESULT_TABLE 
-                + " (page_id,batch_id,ocr_text_path,ocr_completed,juxta_change_index,alt_change_index)"
-                + " values (?, ?, ?, ?, ?, ?)";
+                + " (page_id,batch_id,ocr_text_path,ocr_xml_path,ocr_completed,juxta_change_index,alt_change_index)"
+                + " values (?, ?, ?, ?, ?, ?, ?)";
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, job.getPageId());
             smt.setLong(2, job.getBatch().getId() );
-            smt.setString(3, ocrFile);
-            smt.setTimestamp(4, new Timestamp(System.currentTimeMillis())); 
-            smt.setFloat(5, juxtaChangeIndex);
-            smt.setFloat(6, altChangeIndex);
+            smt.setString(3, ocrTxtFile);
+            smt.setString(4, ocrXmlFile);
+            smt.setTimestamp(5, new Timestamp(System.currentTimeMillis())); 
+            smt.setFloat(6, juxtaChangeIndex);
+            smt.setFloat(7, altChangeIndex);
             smt.executeUpdate();
             this.connection.commit();
         } finally {
