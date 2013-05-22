@@ -379,7 +379,7 @@ public class EmopController {
                 "java", "-jar", "-server", 
                 this.juxtaHome+"/juxta-cl.jar", "-diff",
                 addPrefix( pageInfo.getGroundTruthFile() ), addPrefix(ocrTxtFile), 
-                "-algorithm", this.algorithm.toString().toLowerCase());
+                "-algorithm", this.algorithm.toString().toLowerCase(), "-hyphen", "none");
             pb.directory( new File(this.juxtaHome) );
             Process jxProc = pb.start();
             awaitProcess(jxProc, JX_TIMEOUT_MS);
@@ -469,7 +469,7 @@ public class EmopController {
                 "java", "-jar", "-server", 
                 this.juxtaHome+"/juxta-cl.jar", "-diff",
                 addPrefix(gtPath),addPrefix(ocrPath), 
-                "-algorithm", this.algorithm.toString().toLowerCase());
+                "-algorithm", this.algorithm.toString().toLowerCase(), "-hyphen", "none");
             pb.directory( new File(this.juxtaHome) );
             Process jxProc = pb.start();
             awaitProcess(jxProc, JX_TIMEOUT_MS);
