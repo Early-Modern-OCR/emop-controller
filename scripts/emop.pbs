@@ -8,12 +8,16 @@
 module load tesseract/3.02.02
 module load java/sun-jre-1.6
 
+export JUXTA_HOME=[juxta home dir]
+export RETAS_HOME=[retas home dir]
+export EMOP_HOME=[emop controller home dir]
+
 # Print out the starting time and host.
 echo "$PBS_JOBID started on $(hostname) at $(date)"
 echo "-=-"
 
-
-# TODO
+# launch with a lifespan of 30 minutes
+java -jar $EMOP_HOME/emop-controller.jar -wall 1800
 
 # Done; print the end time and host.
 echo "-=-"

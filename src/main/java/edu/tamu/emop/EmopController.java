@@ -49,9 +49,9 @@ import edu.tamu.emop.model.WorkInfo;
  * This process depends upon environment variables and .my.cnf to execute properly.
  * Expected environment:
  *    JUXTA_HOME         - base directory of juxtaCL install
+ *    RETAS_HOME         - base directory of RETAS install
  *    
  * Optional Environment:
- *    PATH_PREFIX        - prefix to append to all paths read from db. used for testing only
  *    TESSERACT_HOME     - base directory of tesseract install
 
  *    
@@ -65,9 +65,10 @@ public class EmopController {
     private long timeLeftMs;
     private long wallTimeSec;
     private String juxtaHome;
+    private String retasHome;
     private String tesseractHome = "";
     private String pathPrefix = "";
-    private Algorithm algorithm = Algorithm.LEVENSHTEIN;
+    private Algorithm algorithm = Algorithm.JARO_WINKLER;
     private HocrTransformer hocrTransformer;
     
     private static Logger LOG = Logger.getLogger(EmopController.class);
@@ -238,6 +239,11 @@ public class EmopController {
             throw new RuntimeException("Missing require JUXTA_HOME environment variable");
         }
         
+        this.retasHome =  System.getenv("RETAS_HOME");
+        if ( this.retasHome == null || this.retasHome.length() == 0) {
+            throw new RuntimeException("Missing require RETAS_HOME environment variable");
+        }
+        
         String th =  System.getenv("TESSERACT_HOME");
         if ( th != null && th.length() > 0) {
             this.tesseractHome = th;
@@ -372,26 +378,13 @@ public class EmopController {
             
             this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "DONE");
             
-            // do the GT comparea
-            LOG.info("Compare OCR results with ground truth");
-            String out = "";
-            ProcessBuilder pb = new ProcessBuilder(
-                "java", "-jar", "-server", 
-                this.juxtaHome+"/juxta-cl.jar", "-diff",
-                addPrefix( pageInfo.getGroundTruthFile() ), addPrefix(ocrTxtFile), 
-                "-algorithm", this.algorithm.toString().toLowerCase(), "-hyphen", "none");
-            pb.directory( new File(this.juxtaHome) );
-            Process jxProc = pb.start();
-            awaitProcess(jxProc, JX_TIMEOUT_MS);
-            out = IOUtils.toString(jxProc.getInputStream());
+            // do the GT compares
+            float juxtaVal = juxtaCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
+            float retasVal = retasCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
             
-            if (jxProc.exitValue() == 0) {
-                this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+out.trim()+"\"}");
-                this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, Float.parseFloat(out), 0.0f);
-            } else {
-                LOG.error(out);
-                this.db.updateJobStatus(job.getId(), Status.FAILED, out);
-            }
+            // log the results
+            this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+juxtaVal+"\", \"RETAS\": \""+retasVal+"\"}");
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, juxtaVal, retasVal);
             
         } catch (InterruptedException e) {
             LOG.error("Job timed out");
@@ -399,6 +392,50 @@ public class EmopController {
         } catch ( Exception e ) {
             LOG.error("Job Failed", e);
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
+        }
+    }
+    
+    private float juxtaCompare(String gtFile, String ocrTxtFile) throws InterruptedException, IOException, SQLException {
+        LOG.info("Compare OCR results with ground truth using JuxtaCL");
+        String out = "";
+        ProcessBuilder pb = new ProcessBuilder(
+            "java", "-jar", "-server", 
+            this.juxtaHome+"/juxta-cl.jar", "-diff",
+            addPrefix( gtFile ), addPrefix(ocrTxtFile), 
+            "-algorithm", this.algorithm.toString().toLowerCase(), "-hyphen", "none");
+        pb.directory( new File(this.juxtaHome) );
+        Process jxProc = pb.start();
+        awaitProcess(jxProc, JX_TIMEOUT_MS);
+        out = IOUtils.toString(jxProc.getInputStream());
+        
+        if (jxProc.exitValue() == 0) {
+            return Float.parseFloat(out.trim());
+        } else {
+            LOG.error(out);
+            throw new IOException( out);
+        }
+    }
+    
+    private float retasCompare(String gtFile, String ocrTxtFile) throws InterruptedException, IOException, SQLException {
+        LOG.info("Compare OCR results with ground truth using RETAS");
+        String out = "";
+        ProcessBuilder pb = new ProcessBuilder(
+            "java", "-jar", "-server", 
+            this.retasHome+"/retas.jar",
+            addPrefix( gtFile ), addPrefix(ocrTxtFile), 
+            "-opt", this.retasHome+"/config.txt");
+        pb.directory( new File(this.retasHome) );
+        Process jxProc = pb.start();
+        awaitProcess(jxProc, JX_TIMEOUT_MS);
+        out = IOUtils.toString(jxProc.getInputStream());
+        
+        if (jxProc.exitValue() == 0) {
+            // retas output is 3 tab delimited values. First 2 are the 
+            // comparands, last is the result. it is all we care about
+            return Float.parseFloat(out.trim().split("\t")[2]);
+        } else {
+            LOG.error(out);
+            throw new IOException( out);
         }
     }
 
@@ -461,27 +498,17 @@ public class EmopController {
         String gtPath = pageInfo.getGroundTruthFile();
         
         // now pull page result based on OCR engine
-        String ocrPath = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), OutputFormat.TXT);
+        String ocrTxtFile = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), OutputFormat.TXT);
+        String ocrXmlFile = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), OutputFormat.XML);
         
         try {
-            String out = "";
-            ProcessBuilder pb = new ProcessBuilder(
-                "java", "-jar", "-server", 
-                this.juxtaHome+"/juxta-cl.jar", "-diff",
-                addPrefix(gtPath),addPrefix(ocrPath), 
-                "-algorithm", this.algorithm.toString().toLowerCase(), "-hyphen", "none");
-            pb.directory( new File(this.juxtaHome) );
-            Process jxProc = pb.start();
-            awaitProcess(jxProc, JX_TIMEOUT_MS);
-            out = IOUtils.toString(jxProc.getInputStream());
+            // do the GT compares
+            float juxtaVal = juxtaCompare( gtPath, ocrTxtFile );
+            float retasVal = retasCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
             
-            if (jxProc.exitValue() == 0) {
-                this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+out.trim()+"\"}");
-                this.db.addPageResult(job, ocrPath, "", Float.parseFloat(out), 0.0f);
-            } else {
-                LOG.error(out);
-                this.db.updateJobStatus(job.getId(), Status.FAILED, out);
-            }
+            // log the results
+            this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+juxtaVal+"\", \"RETAS\": \""+retasVal+"\"}");
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, juxtaVal, retasVal);
             
         } catch (InterruptedException e) {
             LOG.error("Job timed out");
