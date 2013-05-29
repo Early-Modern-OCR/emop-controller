@@ -1,0 +1,17 @@
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00010.txt" where pg_work_id=151311 and pg_ref_number=1;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00020.txt" where pg_work_id=151311 and pg_ref_number=2;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00030.txt" where pg_work_id=151311 and pg_ref_number=3;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00040.txt" where pg_work_id=151311 and pg_ref_number=4;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00050.txt" where pg_work_id=151311 and pg_ref_number=5;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00060.txt" where pg_work_id=151311 and pg_ref_number=6;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00070.txt" where pg_work_id=151311 and pg_ref_number=7;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00080.txt" where pg_work_id=151311 and pg_ref_number=8;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00090.txt" where pg_work_id=151311 and pg_ref_number=9;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00100.txt" where pg_work_id=151311 and pg_ref_number=10;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00110.txt" where pg_work_id=151311 and pg_ref_number=12;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00120.txt" where pg_work_id=151311 and pg_ref_number=13;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00130.txt" where pg_work_id=151311 and pg_ref_number=13;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00140.txt" where pg_work_id=151311 and pg_ref_number=14;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00150.txt" where pg_work_id=151311 and pg_ref_number=15;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00160.txt" where pg_work_id=151311 and pg_ref_number=16;
+update pages set pg_gale_text_file="/data/shared/text-xml/ECCO-Gale-page-OCR/0331501100/00170.txt" where pg_work_id=151311 and pg_ref_number=17;
