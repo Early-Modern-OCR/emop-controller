@@ -165,7 +165,7 @@ public class Database {
         PreparedStatement smt = null;
         ResultSet rs = null;
         try {
-            String sql = "select  pg_page_id, pg_work_id, pg_ref_number,pg_ground_truth_file,pg_gale_text_file from pages where pg_page_id=?";
+            String sql = "select  pg_page_id, pg_work_id, pg_ref_number,pg_ground_truth_file,pg_gale_ocr_file from pages where pg_page_id=?";
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, id ); 
             rs = smt.executeQuery();
@@ -175,7 +175,7 @@ public class Database {
             page.setWorkId( rs.getLong("pg_work_id"));
             page.setPageNumber( rs.getInt("pg_ref_number"));
             page.setGroundTruthFile(rs.getString("pg_ground_truth_file"));
-            page.setGaleTextFile(rs.getString("pg_gale_text_file"));
+            page.setGaleTextFile(rs.getString("pg_gale_ocr_file"));
             
             return page;
         } finally {
@@ -230,12 +230,12 @@ public class Database {
         PreparedStatement smt = null;
         ResultSet rs = null;
         try {
-            final String sql = "select pg_gale_text_file from pages where pg_page_id=?";
+            final String sql = "select pg_gale_ocr_file from pages where pg_page_id=?";
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, pageId);
             rs = smt.executeQuery();
             if (rs.first()) {
-                return rs.getString("pg_gale_text_file");
+                return rs.getString("pg_gale_ocr_file");
             } else {
                 return "";
             }

@@ -90,6 +90,6 @@ CREATE TABLE IF NOT EXISTS page_results (
 -- add a new column to the pages table to hold the page level
 -- gale text file path
 --
-alter table pages add pg_gale_text_file varchar(200) DEFAULT NULL;
+alter table pages add pg_gale_ocr_file varchar(200) DEFAULT NULL;
 alter table works add wks_organizational_unit int(11) not null default 0;
 
