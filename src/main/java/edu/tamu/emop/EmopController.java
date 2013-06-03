@@ -74,7 +74,7 @@ public class EmopController {
     private static Logger LOG = Logger.getLogger(EmopController.class);
     private static final long JX_TIMEOUT_MS = 1000*60*2;    //2 mins
     
-    private static final String version = "1.0-SNAPSHOT";
+    private static final String version = "1.0-RC1";
     
     /**
      * Main entry point for the controller
