@@ -8,28 +8,15 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.cli2.Argument;
-import org.apache.commons.cli2.CommandLine;
-import org.apache.commons.cli2.Group;
-import org.apache.commons.cli2.Option;
-import org.apache.commons.cli2.OptionException;
-import org.apache.commons.cli2.builder.ArgumentBuilder;
-import org.apache.commons.cli2.builder.DefaultOptionBuilder;
-import org.apache.commons.cli2.builder.GroupBuilder;
-import org.apache.commons.cli2.commandline.Parser;
-import org.apache.commons.cli2.validation.EnumValidator;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.apache.log4j.RollingFileAppender;
 import org.xml.sax.SAXException;
 
 import edu.tamu.emop.model.BatchJob;
@@ -62,8 +49,8 @@ public class EmopController {
     public enum Algorithm {JUXTA, LEVENSHTEIN, JARO_WINKLER};
     
     private Database db;
-    private long timeLeftMs;
-    private long wallTimeSec;
+    private long timeLeftMs = -1;   // run til all jobs done
+    private long wallTimeSec = -1;  // run til all jobs done
     private String juxtaHome;
     private String retasHome;
     private String tesseractHome = "";
@@ -73,9 +60,7 @@ public class EmopController {
     
     private static Logger LOG = Logger.getLogger(EmopController.class);
     private static final long JX_TIMEOUT_MS = 1000*60*2;    //2 mins
-    
-    private static final String version = "1.0-RC1";
-    
+        
     /**
      * Main entry point for the controller
      * @param args
@@ -107,20 +92,13 @@ public class EmopController {
      * @param consoleLogger
      * @throws IOException
      */
-    private void initLogging( boolean consoleLogger ) throws IOException {
+    private void initLogging( ) throws IOException {
         LogManager.getRootLogger().removeAllAppenders();
         LogManager.getRootLogger().setLevel(Level.DEBUG);
-        if ( consoleLogger == false ) {
-            RollingFileAppender fileApp = new RollingFileAppender(new PatternLayout("%d{E MMM dd, HH:mm:ss} [%p] - %m%n"), "log/emop.log", true);
-            fileApp.setThreshold(Level.DEBUG);
-            fileApp.activateOptions();
-            LogManager.getRootLogger().addAppender(fileApp);
-        } else {
-            ConsoleAppender console = new ConsoleAppender(new PatternLayout("%m%n")); 
-            console.setThreshold(Level.DEBUG);
-            console.activateOptions();
-            LogManager.getRootLogger().addAppender(console);
-        }
+        ConsoleAppender console = new ConsoleAppender(new PatternLayout("%d{E MMM dd, HH:mm:ss} [%p] - %m%n")); 
+        console.setThreshold(Level.DEBUG);
+        console.activateOptions();
+        LogManager.getRootLogger().addAppender(console);
     }
     
     /**
@@ -129,107 +107,37 @@ public class EmopController {
      * @throws OptionException 
      * @throws FileNotFoundException 
      */
-    public boolean init( String[] args ) throws IOException, SQLException, OptionException {
-                           
-        // parse the commandline settings
-        final ArgumentBuilder aBuilder = new ArgumentBuilder();
-        final DefaultOptionBuilder oBuilder = new DefaultOptionBuilder();
-        final GroupBuilder gBuilder = new GroupBuilder();
+    public boolean init( String[] args ) throws IOException, SQLException {
         
-        Option version = oBuilder
-            .withShortName("version")
-            .create();
-        Option help = oBuilder
-            .withShortName("help")
-            .create();
-        Option consoleLog = oBuilder
-            .withShortName("console")
-            .create();
+        // setup console logger. this will be re-routed when running
+        // on brazos to a log file named with the job id    
+        initLogging() ;
+        LOG.info("Initialize eMOP controller");
         
-        // out directory
-        Argument outArg = aBuilder.withMinimum(1).withMaximum(1).withName("path").create();
-        Option out = oBuilder
-            .withShortName("out")
-            .withArgument(outArg )
-            .create();
+        Properties props = new Properties();
+        FileInputStream fis = new FileInputStream("emop.properties");
+        props.load(fis);
         
-        // algorithm
-        Set<String> diffSet = new TreeSet<String>();
-        diffSet.add("juxta");
-        diffSet.add("levenshtein");
-        diffSet.add("jaro_winkler");
-        EnumValidator algoVal = new EnumValidator( diffSet );
-        Option algo = oBuilder
-          .withShortName("algorithm")
-          .withArgument(
-              aBuilder
-                  .withMinimum(0)
-                  .withMaximum(1)
-                  .withDefault("juxta")
-                  .withValidator(algoVal)
-                  .create())
-          .create();
-        
-        Group jobOpts = gBuilder.withOption(consoleLog).withOption(out).withOption(algo).create(); 
-        
-        // main param: job wall time
-        Argument wallTimeArg = aBuilder.withMinimum(1).withMaximum(1).withName("time").create();
-        Option job = oBuilder
-            .withShortName("wall")
-            .withArgument(wallTimeArg )
-            .withChildren(jobOpts)
-            .create();
+        // required DB stuff:
+        initDatabase(props);
 
-        
-        // glom all of the options together into the main grouping. it will be used for the parse.
-        Group opts = gBuilder
-            .withOption(job)
-            .withOption(help)
-            .withOption(version).create();
-
-        // parse the options passed in
-        Parser parser = new Parser();
-        parser.setGroup(opts);
-        CommandLine cl = parser.parse(args);
-       
-        if ( cl.hasOption(version)) {
-            System.out.println("eMOP Controller Version "+EmopController.version);
-            return false;
-        } 
-        
-        if ( cl.hasOption(help)) { 
-            showHelp();
-            return false;
-        } 
-        
-        boolean logToConsole = cl.hasOption(consoleLog);
-        initLogging(logToConsole) ;
-        
-        if ( cl.hasOption(algo)) {
-            String a = (String)cl.getValue(algo);
-            this.algorithm = Algorithm.valueOf(a.toUpperCase());
+        // optional 
+        if ( props.containsKey("path_prefix")) {
+            this.pathPrefix = props.getProperty("path_prefix");
+        }
+        if ( props.containsKey("jx_algorithm")) {
+            String algo = props.getProperty("jx_algorithm").trim();
+            this.algorithm = Algorithm.valueOf(algo.toUpperCase());
+        }
+        if ( props.containsKey("wall_time_sec")) {
+            String timeStr = props.getProperty("wall_time_sec");
+            this.wallTimeSec = Integer.parseInt(timeStr);
+            this.timeLeftMs = this.wallTimeSec*1000;
         }
         
-        if ( cl.hasOption(job)) {
-            String timeStr = (String)cl.getValue(job);
-            if ( timeStr != null && timeStr.length() > 0 ) {
-                this.wallTimeSec = Integer.parseInt(timeStr);
-            }
-        }        
-        this.timeLeftMs = this.wallTimeSec*1000;
-
-        if ( cl.hasOption(out)) {
-            String outVal = (String)cl.getValue(out);
-            if ( outVal != null && outVal.length() > 0 ) {
-                this.pathPrefix = outVal;
-            }
-        }
-        
-        // pull some cfg from environment settings
+        // pull the rest of the cfg from environment settings
         getEnvironmentConfig();
 
-        LOG.info("Initialize eMOP controller");
-        initDatabase();
         return true;
     }
     
@@ -250,47 +158,19 @@ public class EmopController {
         }
     }
 
-    private void showHelp() {
-        StringBuilder out = new StringBuilder("Usage: emop wall [timeSec] [options]\n");
-        out.append("Where wall defines process lifespan in seconds.");
-        out.append("  Options:\n");
-        out.append("    out        : Path to root directory for output.\n");
-        out.append("    algorithm  : Algorithm used by JuxtaCL to determine change index.\n");
-        out.append("                   Options:\n");
-        out.append("                     juxta, levenshtein, dice_sorensen jaro_winkler\n");
-        out.append("                   Defaults to jaro_winkler\n");
-        System.out.println(out.toString());
-    }
-
-    private void initDatabase() throws IOException, SQLException {
+    private void initDatabase( Properties props ) throws IOException, SQLException {
         // pull settings .my.cf
-        Properties mySql = loadMySqlCfg();
-        String dbHost = mySql.getProperty("host");
-        if ( dbHost == null || dbHost.length() == 0) {
-            dbHost = "localhost";
+        String dbHost = "localhost";  
+        if ( props.containsKey("db_host")) {
+            dbHost = props.getProperty("db_host");
         }
         
-        String dbUser =   mySql.getProperty("user");
-        if ( dbUser == null || dbUser.length() == 0) {
-            dbUser = "root";
-        }
-        
-        String dbPass = mySql.getProperty("pass");
-        if ( dbPass == null || dbPass.length() == 0) {
-            dbPass = "";
-        }
-        this.db = new Database();
-        this.db.connect(dbHost, "emop", dbUser, dbPass);
-    }
+        String dbName = props.getProperty("db_name");   
+        String dbUser = props.getProperty("db_user");        
+        String dbPass = props.getProperty("db_pass");
 
-    private Properties loadMySqlCfg() throws IOException {
-        File home = new File(System.getenv("HOME"));
-        File myCnf = new File(home, ".my.cnf");
-        FileInputStream fis = new FileInputStream(myCnf );
-        Properties mySqlProp = new Properties();
-        mySqlProp.load(fis);
-        IOUtils.closeQuietly(fis);
-        return mySqlProp;
+        this.db = new Database();
+        this.db.connect(dbHost, dbName, dbUser, dbPass);
     }
     
     /**
@@ -339,8 +219,16 @@ public class EmopController {
             long durationMs = (System.currentTimeMillis()-t0);
             totalMs+= durationMs;
             LOG.info("Job ["+job.getId()+"] COMPLETE. Duration: "+(durationMs/1000f)+" secs");
-            this.timeLeftMs -= durationMs;
-        } while ( this.timeLeftMs > 0);
+            
+            // if configured to run until all jobs are processed,
+            // timeLeftMs will be set to -1. Do not decrement it if 
+            // this is the case. Also, in the while condition below,
+            // just loop forever (timeLeftMs will always be -1). The loop
+            // will terminate when there are no jobs left.
+            if ( this.timeLeftMs > 0 ) {
+                this.timeLeftMs -= durationMs;
+            }
+        } while ( this.timeLeftMs > 0 || this.timeLeftMs == -1);
         LOG.info("==> TOTAL TIME: "+totalMs/1000f);
     }
     

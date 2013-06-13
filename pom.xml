@@ -6,7 +6,7 @@
     <groupId>edu.tamu.emop</groupId>
     <artifactId>emop-controller</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-RC1</version>
+    <version>1.0</version>
     <name>eMOP Controller</name>
     <description>
 	 The controller process for eMOP workflow. Intended to run on the Brazos cluster.
@@ -50,25 +50,12 @@
 
     <!-- external library debendencies -->
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
         </dependency>
-        
-         <dependency>
-            <groupId>org.apache.mahout.commons</groupId>
-            <artifactId>commons-cli</artifactId>
-            <version>2.0-mahout</version>
-        </dependency>
-
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -84,7 +71,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.24</version>
         </dependency>
-
 
     </dependencies>
 
