@@ -5,6 +5,7 @@
 #PBS -N emop_controller
 
 # load required modules
+. /etc/profile.d/modules.sh
 module load tesseract/3.02.02
 module load java/sun-jre-1.6
 
