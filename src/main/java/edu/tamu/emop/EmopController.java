@@ -51,9 +51,12 @@ public class EmopController {
     private Database db;
     private long timeLeftMs = -1;   // run til all jobs done
     private long wallTimeSec = -1;  // run til all jobs done
+    
+    private String emopHome;
     private String juxtaHome;
     private String retasHome;
     private String tesseractHome = "";
+    
     private String pathPrefix = "";
     private Algorithm algorithm = Algorithm.JARO_WINKLER;
     private HocrTransformer hocrTransformer;
@@ -114,8 +117,12 @@ public class EmopController {
         initLogging() ;
         LOG.info("Initialize eMOP controller");
         
+        // get required env settings
+        getEnvironmentConfig();
+
+        // Use them to read emop controller settings from local properties file
         Properties props = new Properties();
-        FileInputStream fis = new FileInputStream("emop.properties");
+        FileInputStream fis = new FileInputStream(new File(this.emopHome,"emop.properties"));
         props.load(fis);
         
         // required DB stuff:
@@ -134,14 +141,15 @@ public class EmopController {
             this.wallTimeSec = Integer.parseInt(timeStr);
             this.timeLeftMs = this.wallTimeSec*1000;
         }
-        
-        // pull the rest of the cfg from environment settings
-        getEnvironmentConfig();
-
         return true;
     }
     
     private void getEnvironmentConfig() {
+        this.emopHome =  System.getenv("EMOP_HOME");
+        if ( this.emopHome == null || this.emopHome.length() == 0) {
+            throw new RuntimeException("Missing require EMOP_HOME environment variable");
+        }
+        
         this.juxtaHome =  System.getenv("JUXTA_HOME");
         if ( this.juxtaHome == null || this.juxtaHome.length() == 0) {
             throw new RuntimeException("Missing require JUXTA_HOME environment variable");
