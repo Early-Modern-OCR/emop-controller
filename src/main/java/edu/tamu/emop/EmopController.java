@@ -416,9 +416,12 @@ public class EmopController {
     }
     
     public String addPrefix (String path) {
-        File file1 = new File(this.pathPrefix);
-        File file2 = new File(file1, path);
-        return file2.getPath();
+        if ( this.pathPrefix != null && this.pathPrefix.trim().length() > 0 ) {
+            File file1 = new File(this.pathPrefix);
+            File file2 = new File(file1, path);
+            return file2.getPath();
+        } 
+        return path;
     }
     
     private void awaitProcess(Process p, long timeoutMs) throws InterruptedException {
