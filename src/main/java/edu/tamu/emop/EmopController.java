@@ -293,12 +293,17 @@ public class EmopController {
     
     private float juxtaCompare(String gtFile, String ocrTxtFile) throws InterruptedException, IOException, SQLException {
         LOG.info("Compare OCR results with ground truth using JuxtaCL");
+
         String out = "";
+        String cmd = this.juxtaHome+"/juxta-cl.jar";
+        String gt = addPrefix( gtFile );
+        String ocr = addPrefix(ocrTxtFile);
+        String alg = this.algorithm.toString().toLowerCase();
+
         ProcessBuilder pb = new ProcessBuilder(
-            "java", "-jar", "-server", 
-            this.juxtaHome+"/juxta-cl.jar", "-diff",
-            addPrefix( gtFile ), addPrefix(ocrTxtFile), 
-            "-algorithm", this.algorithm.toString().toLowerCase(), "-hyphen", "none");
+            "java", "-Xms512M", "-Xmx512M", "-jar", 
+            cmd, "-diff", gt, ocr, 
+            "-algorithm", alg, "-hyphen", "none");
         pb.directory( new File(this.juxtaHome) );
         Process jxProc = pb.start();
         awaitProcess(jxProc, JX_TIMEOUT_MS);
@@ -316,7 +321,7 @@ public class EmopController {
         LOG.info("Compare OCR results with ground truth using RETAS");
         String out = "";
         ProcessBuilder pb = new ProcessBuilder(
-            "java", "-jar", "-server", 
+            "java",  "-Xms512M", "-Xmx512M", "-jar",  
             this.retasHome+"/retas.jar",
             addPrefix( gtFile ), addPrefix(ocrTxtFile), 
             "-opt", this.retasHome+"/config.txt");
@@ -394,6 +399,7 @@ public class EmopController {
         String gtPath = pageInfo.getGroundTruthFile();
         
         // now pull page result based on OCR engine
+        LOG.info("pageID "+job.getPageId()+", engineID: "+job.getBatch().getOcrEngine());
         String ocrTxtFile = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), OutputFormat.TXT);
         String ocrXmlFile = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), OutputFormat.XML);
         

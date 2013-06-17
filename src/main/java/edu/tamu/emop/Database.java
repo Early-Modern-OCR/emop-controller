@@ -225,19 +225,26 @@ public class Database {
         
     private String getGaleOcrPageText(Long pageId) throws SQLException {
         // this is the simple case for retrieving OCR page text.
-        // Gale has only one version, and the path is found in 
-        // the pages table.
         PreparedStatement smt = null;
         ResultSet rs = null;
         try {
-            final String sql = "select pg_gale_ocr_file from pages where pg_page_id=?";
+            final String sql = 
+                "select works.wks_ecco_number as ecco, pg_ref_number as page_num" +
+            	" from pages inner join works on pg_work_id = wks_work_id where pg_page_id=?";
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, pageId);
             rs = smt.executeQuery();
             if (rs.first()) {
-                return rs.getString("pg_gale_ocr_file");
+                String ecco = rs.getString("ecco");
+                int pageNum = rs.getInt("page_num");
+                
+                // target path:
+                // /data/shared/text-xml/ECCO-Gale-page-OCR/[works.wks_ecco_number]/[formatted-page-number].txt
+                // 0+3digit page+0.txt
+                return String.format("/data/shared/text-xml/ECCO-Gale-page-OCR/%s/0%03d0.txt", ecco,pageNum);
+                
             } else {
-                return "";
+                throw new RuntimeException("Unable to find Gale page results");
             }
         } catch (SQLException e ) {
             throw e;
