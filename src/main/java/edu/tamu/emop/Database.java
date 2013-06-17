@@ -241,7 +241,7 @@ public class Database {
                 // target path:
                 // /data/shared/text-xml/ECCO-Gale-page-OCR/[works.wks_ecco_number]/[formatted-page-number].txt
                 // 0+3digit page+0.txt
-                return String.format("/data/shared/text-xml/ECCO-Gale-page-OCR/%s/0%03d0.txt", ecco,pageNum);
+                return String.format("/data/shared/text-xml/ECCO-Gale-page-OCR/%s/%04d0.txt", ecco,pageNum);
                 
             } else {
                 throw new RuntimeException("Unable to find Gale page results");
