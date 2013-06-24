@@ -184,11 +184,11 @@ public class EmopController {
      * long. Mark them as failed with a result of Timed Out.
      */
     public void killStalledJobs() {
-        // if something has been in process for longer than the wall time
+        // if something has been in process for longer 15 mins
         // the controller that started it has been killed and the job will 
         // not complete. mark it as timed out
         try {
-            this.db.failStalledJobs( this.wallTimeSec);
+            this.db.failStalledJobs( 15*60);
         } catch (SQLException e ) {
             LOG.error("Unabled to flag long-running jobs as timed out", e);
         }
