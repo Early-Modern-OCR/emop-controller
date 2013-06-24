@@ -23,6 +23,22 @@ truncate table job_type;
 insert into job_type (name) values ('Ground Truth Compare'), ('OCR'), ('Other');
 
 --
+-- Font training library
+--
+CREATE TABLE `fonts` (
+  `font_id` int(11) NOT NULL DEFAULT '0',
+  `font_name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `font_italic` tinyint(4) DEFAULT NULL,
+  `font_bold` tinyint(4) DEFAULT NULL,
+  `font_fixed` tinyint(4) DEFAULT NULL,
+  `font_serif` tinyint(4) DEFAULT NULL,
+  `font_fraktur` tinyint(4) DEFAULT NULL,
+  `font_line_height` int(11) DEFAULT NULL,
+  `font_library_path` varchar(200) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`font_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
 -- Lookup table to define job status
 --
 CREATE TABLE IF NOT EXISTS job_status (
@@ -44,8 +60,10 @@ CREATE TABLE IF NOT EXISTS batch_job (
    parameters varchar(255),
    name varchar(50) not null,
    notes varchar(255),
+   font_id BIGINT DEFAULT NULL,
    FOREIGN KEY (ocr_engine_id) REFERENCES ocr_engine (id),
    FOREIGN KEY (job_type) REFERENCES job_type (id),
+   FOREIGN KEY (font_id) REFERENCES font (id),
    PRIMARY KEY (id)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
