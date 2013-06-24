@@ -73,7 +73,7 @@ public class EmopController {
         try {
             EmopController emop = new EmopController();
             if ( emop.init( args ) ) {
-                emop.killStalledJobs();
+                emop.restartStalledJobs();
                 emop.doWork();
                 emop.shutdown();
             }
@@ -183,14 +183,14 @@ public class EmopController {
      * Scan the job queue for jobs that have stayed in the PROCESSING state for too
      * long. Mark them as failed with a result of Timed Out.
      */
-    public void killStalledJobs() {
+    public void restartStalledJobs() {
         // if something has been in process for longer 15 mins
         // the controller that started it has been killed and the job will 
         // not complete. mark it as timed out
         try {
-            this.db.failStalledJobs( 15*60);
+            this.db.restartStalledJobs( 15*60);
         } catch (SQLException e ) {
-            LOG.error("Unabled to flag long-running jobs as timed out", e);
+            LOG.error("Unable to restart long-running job", e);
         }
     }
 

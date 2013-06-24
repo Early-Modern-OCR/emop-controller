@@ -291,12 +291,11 @@ public class Database {
     }
     
     /**
-     * Check for processing jobs that are older than the kill time. Mark them
-     * as failed with a reason of timed out
+     * Check for processing jobs that are older than the kill time. Restart them
      * @param killTimeSec
      * @throws SQLException 
      */
-    public void failStalledJobs(long killTimeSec) throws SQLException {
+    public void restartStalledJobs(long killTimeSec) throws SQLException {
         PreparedStatement smt = null;
         try {
             final String sql = 
@@ -304,9 +303,9 @@ public class Database {
                 +" set job_status=?, last_update=?, results=? where job_status=? and last_update < date_sub(now(),interval "
                 +killTimeSec+" second)";
             smt = this.connection.prepareStatement(sql);
-            smt.setLong(1, (Status.FAILED.ordinal()+1L));
+            smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L));
             smt.setTimestamp(2, new Timestamp(System.currentTimeMillis())); 
-            smt.setString(3, "Timed Out");
+            smt.setString(3, "Restarted...");
             smt.setLong(4, (Status.PROCESSING.ordinal()+1L));
             smt.executeUpdate();
             this.connection.commit();

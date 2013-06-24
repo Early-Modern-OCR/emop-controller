@@ -22,6 +22,14 @@ CREATE TABLE IF NOT EXISTS job_type (
 truncate table job_type;
 insert into job_type (name) values ('Ground Truth Compare'), ('OCR'), ('Other');
 
+-- 
+-- PRINT fonts
+--
+CREATE TABLE `print_fonts` (
+  `pf_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `pf_name` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 --
 -- Font training library
 --
@@ -110,4 +118,5 @@ CREATE TABLE IF NOT EXISTS page_results (
 --
 alter table pages add pg_gale_ocr_file varchar(200) DEFAULT NULL;
 alter table works add wks_organizational_unit int(11) not null default 0;
+alter table works add wks_primary_print_font int(11) default null;
 
