@@ -1,9 +1,12 @@
 package edu.tamu.emop;
 
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.io.StringWriter;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -66,11 +69,14 @@ public  class HocrTransformer {
      * @throws TransformerException 
      * @throws Exception 
      */
-    public String extractTxt( final String hOcrPath ) throws SAXException, IOException, TransformerException {
-        SAXSource xmlSource = new SAXSource(this.xmlReader, new InputSource( new FileReader(hOcrPath)));
-        StreamResult xmlOutput = new StreamResult(new StringWriter());       
+    public File extractTxt( final String hOcrPath, final String outPath ) throws SAXException, IOException, TransformerException {
+        FileInputStream fis = new FileInputStream(hOcrPath);
+        InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+        SAXSource xmlSource = new SAXSource(this.xmlReader, new InputSource(isr));
+        File out = new File(outPath);
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(out), "UTF-8");
+        StreamResult xmlOutput = new StreamResult(osw);       
         this.transformer.transform(xmlSource, xmlOutput);
-        return xmlOutput.getWriter().toString();
-        
+        return out;
     }
 }

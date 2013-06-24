@@ -56,8 +56,13 @@ public class Database {
             // Note the 'for update' at the end. This locks the row so others cannot access
             // it during this process. The lock is released when a job is found and its
             // status is marked as STARTED. 
-            final String sql = "select id, page_id, batch_id, job_status, created" +
-            		" from "+JOB_TABLE+" where job_status=? order by created ASC limit 1 for update";
+            final String sql = 
+                "select job_queue.id, page_id, batch_id, job_status, created, font_library_path "+
+                " from job_queue" +
+                " inner join batch_job on job_queue.batch_id = batch_job.id" +
+                " left outer join fonts on batch_job.font_id = fonts.font_id" +
+                " where job_status=? order by created ASC limit 1 for update";
+            
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L));
             rs = smt.executeQuery();
@@ -69,6 +74,7 @@ public class Database {
                 job.setPageId( rs.getLong("page_id") );
                 job.setStatus( rs.getLong("job_status") );
                 job.setCreated( rs.getDate("created") );
+                job.setTrainingFont( rs.getString("font_library_path"));
                 updateJobStatus(job.getId(), Status.PROCESSING);
                 
                 // now pull the batch that this page is a part of

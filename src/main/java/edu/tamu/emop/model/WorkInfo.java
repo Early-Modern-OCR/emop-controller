@@ -69,6 +69,10 @@ public class WorkInfo {
         return OCR_ROOT+"/"+getOrganizationalUnit()+"/"+getId()+"/"+batch.getId()+"/"+pageNum+"."+fmt.toString().toLowerCase();
     }
     
+    public String getOcrRootDirectory() {
+        return OCR_ROOT+"/"+getOrganizationalUnit();
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;

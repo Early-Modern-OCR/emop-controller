@@ -3,9 +3,7 @@ package edu.tamu.emop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -253,17 +251,25 @@ public class EmopController {
         String img = workInfo.getPageImage(pageInfo.getPageNumber());
         String ocrXmlFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.XML, pageInfo.getPageNumber());
         String ocrTxtFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.TXT, pageInfo.getPageNumber());
+        String trainingFont = "";
+        if ( job.hasTraingFont() ) {
+            trainingFont = addPrefix( job.getTrainingFont() );
+        }
         
         try {
             // call the correct engine based upon batch config
             if ( job.getBatch().getOcrEngine().equals(OcrEngine.TESSERACT)) {
                 LOG.info("Using Tesseract to OCR "+img);
-                doTesseractOcr( addPrefix(img), job.getBatch().getParameters(), addPrefix(ocrXmlFile) );
+                doTesseractOcr( addPrefix(img), job.getBatch().getParameters(), addPrefix(ocrXmlFile), trainingFont );
             } else {
                 LOG.error("OCR with "+job.getBatch().getOcrEngine()+" not yet supported");
                 this.db.updateJobStatus(job.getId(), Status.FAILED, job.getBatch().getOcrEngine()+" not supported");
                 return;
             }
+            
+            String ocrRoot = addPrefix(workInfo.getOcrRootDirectory());
+            LOG.info("Update "+ocrRoot+" permissions");
+            Runtime.getRuntime().exec("chmod 755 -R "+ocrRoot);
             
             // If no ground truth, we are done
             if ( pageInfo.hasGroundTruth() == false ) {
@@ -346,13 +352,14 @@ public class EmopController {
      * @param img Path to the page image
      * @param priorVersionCnt number of pre-existing ocr'd versions of this page
      * @param params (may be null) Parameters to pass along to tesseract
+     * @param trainingFont 
      * @return Name of the OCR text file
      * @throws InterruptedException
      * @throws IOException
      * @throws TransformerException 
      * @throws SAXException 
      */
-    private void doTesseractOcr(String pageImage, String params, String outFile) throws InterruptedException, IOException, SAXException, TransformerException { 
+    private void doTesseractOcr(String pageImage, String params, String outFile, String trainingFont) throws InterruptedException, IOException, SAXException, TransformerException { 
         // ensure that the directory tree is present
         File out = new File(outFile);
         out.getParentFile().mkdirs();
@@ -365,25 +372,32 @@ public class EmopController {
         final String trimmedOut = outFile.substring(0,outFile.length()-4);
         
         // kickoff the OCR engine and wait until it completes
-        ProcessBuilder pb = new ProcessBuilder( exe, pageImage, trimmedOut, "hocr" );
+        LOG.info("Training Font ["+trainingFont+"]");
+        ProcessBuilder pb = null;
+        if ( trainingFont.length() > 0 ) {
+            pb = new ProcessBuilder( exe, pageImage, trimmedOut, "hocr" );
+        } else {
+            pb = new ProcessBuilder( exe, pageImage, trimmedOut, "-1", trainingFont, "hocr" );
+        }
         Process jxProc = pb.start();
         awaitProcess(jxProc, JX_TIMEOUT_MS);
         if (jxProc.exitValue() != 0) {
             String err = IOUtils.toString(jxProc.getErrorStream());
             throw new RuntimeException("OCR failed: "+err);
         }
-        
+           
         // end result is an XHTML file containing all of the work coordinates
         LOG.info("Extract TXT content from hOCR");
         if ( this.hocrTransformer == null ) {
             this.hocrTransformer = new HocrTransformer();
             this.hocrTransformer.initialize();
         }
-        String txtOut = this.hocrTransformer.extractTxt(trimmedOut+".html");
-        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(trimmedOut+".txt"), "UTF-8");
-        IOUtils.write(txtOut, osw);
-        osw.close();
-
+        this.hocrTransformer.extractTxt(trimmedOut+".html", trimmedOut+".txt");
+        
+        LOG.info("Update permissions on "+trimmedOut+".txt");
+        Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".txt");
+        LOG.info("Update permissions on "+trimmedOut+".html");
+        Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".html");
     }
 
     private void doGroundTruthCompare(JobPage job) throws SQLException {  
