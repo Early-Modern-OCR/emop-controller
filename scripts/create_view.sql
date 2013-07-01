@@ -11,4 +11,4 @@ create view work_ocr_results as
           avg(alt_change_index) as retas_accuracy
       from pages, page_results, batch_job 
       where pg_page_id=page_id and batch_id=batch_job.id
-      group by batch_id;
+      group by work_id,batch_id;
