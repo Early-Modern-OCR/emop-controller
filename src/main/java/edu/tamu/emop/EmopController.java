@@ -307,7 +307,7 @@ public class EmopController {
         String alg = this.algorithm.toString().toLowerCase();
 
         ProcessBuilder pb = new ProcessBuilder(
-            "java", "-Xms512M", "-Xmx512M", "-jar", 
+            "java", "-Xms128M", "-Xmx128M", "-jar", 
             cmd, "-diff", gt, ocr, 
             "-algorithm", alg, "-hyphen", "none");
         pb.directory( new File(this.juxtaHome) );
@@ -316,9 +316,11 @@ public class EmopController {
         out = IOUtils.toString(jxProc.getInputStream());
         
         if (jxProc.exitValue() == 0) {
+            jxProc.destroy();
             return Float.parseFloat(out.trim());
         } else {
             LOG.error(out);
+            jxProc.destroy();
             throw new IOException( out);
         }
     }
@@ -327,7 +329,7 @@ public class EmopController {
         LOG.info("Compare OCR results with ground truth using RETAS");
         String out = "";
         ProcessBuilder pb = new ProcessBuilder(
-            "java",  "-Xms512M", "-Xmx512M", "-jar",  
+            "java",  "-Xms128M", "-Xmx128M", "-jar",  
             this.retasHome+"/retas.jar",
             addPrefix( gtFile ), addPrefix(ocrTxtFile), 
             "-opt", this.retasHome+"/config.txt");
@@ -339,9 +341,11 @@ public class EmopController {
         if (jxProc.exitValue() == 0) {
             // retas output is 3 tab delimited values. First 2 are the 
             // comparands, last is the result. it is all we care about
+            jxProc.destroy();
             return Float.parseFloat(out.trim().split("\t")[2]);
         } else {
             LOG.error(out);
+            jxProc.destroy();
             throw new IOException( out);
         }
     }
@@ -382,9 +386,11 @@ public class EmopController {
         Process jxProc = pb.start();
         awaitProcess(jxProc, JX_TIMEOUT_MS);
         if (jxProc.exitValue() != 0) {
+            jxProc.destroy();
             String err = IOUtils.toString(jxProc.getErrorStream());
             throw new RuntimeException("OCR failed: "+err);
         }
+        jxProc.destroy();
            
         // end result is an XHTML file containing all of the work coordinates
         LOG.info("Extract TXT content from hOCR");

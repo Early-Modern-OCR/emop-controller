@@ -56,7 +56,7 @@ public class WorkInfo {
     public String getPageImage( int pageNumber ) {
         if ( isEcco() ) {
             // ECCO format: ECCO number + 4 digit page + 0.tif
-            return String.format("%s/images/%s%04d0.TIF", this.eccoDirectory, this.eccoId, pageNumber );
+            return String.format("%s/%s%04d0.TIF", this.eccoDirectory, this.eccoId, pageNumber );
         } else {
             // EEBO format: 00014.000.001.tif where 00014 is the page number.
             return String.format("%s/%05d.000.001.tif", this.eeboDirectory, pageNumber );
