@@ -18,9 +18,17 @@ export TESSERACT_HOME=/apps/tesseract-3.02.02/bin
 echo "$PBS_JOBID started on $(hostname) at $(date)"
 echo "-=-"
 
-# launch  controller. it will run until killed or
-# no jobs remain
-java -Xms128M -Xmx128M -jar $EMOP_HOME/emop-controller.jar
+# launch  instances of the controller. they run until killed or no jobs remain
+java -Xms128M -Xmx128M -jar $EMOP_HOME/emop-controller.jar &
+java -Xms128M -Xmx128M -jar $EMOP_HOME/emop-controller.jar &
+java -Xms128M -Xmx128M -jar $EMOP_HOME/emop-controller.jar &
+java -Xms128M -Xmx128M -jar $EMOP_HOME/emop-controller.jar &
+java -Xms128M -Xmx128M -jar $EMOP_HOME/emop-controller.jar &
+java -Xms128M -Xmx128M -jar $EMOP_HOME/emop-controller.jar &
+java -Xms128M -Xmx128M -jar $EMOP_HOME/emop-controller.jar &
+java -Xms128M -Xmx128M -jar $EMOP_HOME/emop-controller.jar &
+
+wait # wait for the above background jobs to finish
 
 # Done; print the end time and host.
 echo "-=-"
