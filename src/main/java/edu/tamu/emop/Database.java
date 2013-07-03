@@ -269,6 +269,14 @@ public class Database {
      * @throws SQLException 
      */
     public void addPageResult(JobPage job, String ocrTxtFile, String ocrXmlFile, float juxtaChangeIndex, float altChangeIndex) throws SQLException {
+        // protect against bad data from comparisons
+        if ( juxtaChangeIndex == Float.NaN ) {
+            juxtaChangeIndex = 0.0f;
+        }
+        if ( altChangeIndex == Float.NaN ) {
+            altChangeIndex = 0.0f;
+        }
+        
         PreparedStatement smt = null;
         try {
             final String sql = 
