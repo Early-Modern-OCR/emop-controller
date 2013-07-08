@@ -17,6 +17,10 @@
     </fileSets>
     <files>
         <file>
+            <source>scripts/emop.sh</source>
+            <outputDirectory></outputDirectory>
+        </file>
+        <file>
             <source>scripts/emop.pbs</source>
             <outputDirectory></outputDirectory>
         </file>
