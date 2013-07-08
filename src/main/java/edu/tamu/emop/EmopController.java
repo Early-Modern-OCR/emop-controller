@@ -402,8 +402,9 @@ public class EmopController {
         
         LOG.info("Update permissions on "+trimmedOut+".txt");
         Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".txt");
-        LOG.info("Update permissions on "+trimmedOut+".html");
+        LOG.info("Update permissions on "+trimmedOut+".html, and rename to *.xml");
         Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".html");
+        Runtime.getRuntime().exec("mv "+trimmedOut+".html "+trimmedOut+".xml" );
     }
 
     private void doGroundTruthCompare(JobPage job) throws SQLException {  
