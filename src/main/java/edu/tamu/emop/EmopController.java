@@ -45,6 +45,7 @@ import edu.tamu.emop.model.WorkInfo;
  */
 public class EmopController {
     public enum Algorithm {JUXTA, LEVENSHTEIN, JARO_WINKLER};
+    public enum Mode {NORMAL, WORK_CHECK}
     
     private Database db;
     private long timeLeftMs = -1;   // run til all jobs done
@@ -70,13 +71,28 @@ public class EmopController {
     public static void main(String[] args) throws Exception {   
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
         
+        Mode mode = Mode.NORMAL;
+        if (args.length == 1 ) {
+            if ( args[0].equals("-check")) {
+                mode = Mode.WORK_CHECK;
+            } else {
+                System.err.println("eMOP Controller failed; invalid command-line param");
+                System.exit(-1);
+            }
+        } else if ( args.length > 1 ) {
+            System.err.println("eMOP Controller failed; invalid command-line params");
+            System.exit(-1);
+        }
         try {
             EmopController emop = new EmopController();
-            if ( emop.init( args ) ) {
+            emop.init( mode );
+            if ( mode.equals(Mode.WORK_CHECK)) {
+                emop.getPendingJobs();
+            } else {
                 emop.restartStalledJobs();
                 emop.doWork();
-                emop.shutdown();
             }
+            emop.shutdown();
         } catch ( SQLException e) {
             System.err.println("eMOP Controller database error");
             e.printStackTrace();
@@ -86,6 +102,11 @@ public class EmopController {
             e.printStackTrace();
             System.exit(-1);
         }
+    }
+
+    private void getPendingJobs() throws SQLException {
+        int cnt = this.db.getJobCount();
+        System.out.println(""+cnt);
     }
 
     /**
@@ -108,7 +129,12 @@ public class EmopController {
      * @throws OptionException 
      * @throws FileNotFoundException 
      */
-    public boolean init( String[] args ) throws IOException, SQLException {
+    public void init( Mode mode ) throws IOException, SQLException {
+        
+        if ( mode.equals(Mode.WORK_CHECK)) {
+            initWorkCheckMode();
+            return;
+        }
         
         // setup console logger. this will be re-routed when running
         // on brazos to a log file named with the job id    
@@ -139,9 +165,22 @@ public class EmopController {
             this.wallTimeSec = Integer.parseInt(timeStr);
             this.timeLeftMs = this.wallTimeSec*1000;
         }
-        return true;
     }
     
+    private void initWorkCheckMode() throws IOException, SQLException {
+        this.emopHome =  System.getenv("EMOP_HOME");
+        if ( this.emopHome == null || this.emopHome.length() == 0) {
+            throw new RuntimeException("Missing require EMOP_HOME environment variable");
+        }
+        
+        Properties props = new Properties();
+        FileInputStream fis = new FileInputStream(new File(this.emopHome,"emop.properties"));
+        props.load(fis);
+        
+        // required DB stuff:
+        initDatabase(props);
+    }
+
     private void getEnvironmentConfig() {
         this.emopHome =  System.getenv("EMOP_HOME");
         if ( this.emopHome == null || this.emopHome.length() == 0) {
@@ -479,7 +518,6 @@ public class EmopController {
      * Shutdown the emop controller and release any allocated resources
      */
     public void shutdown() {
-        LOG.info("Shutdown eMOP controller");
         if ( this.db != null ) {
             this.db.disconnect();
         }

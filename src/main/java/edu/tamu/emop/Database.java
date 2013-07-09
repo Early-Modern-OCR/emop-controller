@@ -43,6 +43,36 @@ public class Database {
     }
     
     /**
+     * Get the total number of pending jobs
+     * @return
+     * @throws SQLException
+     */
+    public int getJobCount() throws SQLException {
+        PreparedStatement smt = null;
+        ResultSet rs = null;
+        try {
+            final String sql = 
+                "select count(id) as cnt from job_queue where job_status=?";
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L));
+            rs = smt.executeQuery();
+            if (rs.first()) {
+                int cnt = rs.getInt("cnt");
+                return cnt;
+            } else {
+                this.connection.rollback();
+                return 0;
+            }
+        } catch (SQLException e ) {
+            this.connection.rollback();
+            throw e;
+        } finally {
+            closeQuietly(rs);
+            closeQuietly(smt);
+        }
+    }
+    
+    /**
      * Get an active job from the head of the work queue. The unit of work for all jobs is
      * one page. Each page is related to a parent batch.
      * 
