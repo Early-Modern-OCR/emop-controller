@@ -77,6 +77,7 @@ public  class HocrTransformer {
         OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(out), "UTF-8");
         StreamResult xmlOutput = new StreamResult(osw);       
         this.transformer.transform(xmlSource, xmlOutput);
+        IOUtils.closeQuietly(osw);
         return out;
     }
 }

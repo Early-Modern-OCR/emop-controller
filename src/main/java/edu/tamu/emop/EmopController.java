@@ -116,9 +116,9 @@ public class EmopController {
      */
     private void initLogging( ) throws IOException {
         LogManager.getRootLogger().removeAllAppenders();
-        LogManager.getRootLogger().setLevel(Level.DEBUG);
+        LogManager.getRootLogger().setLevel(Level.INFO);
         ConsoleAppender console = new ConsoleAppender(new PatternLayout("%d{E MMM dd, HH:mm:ss} [%p] - %m%n")); 
-        console.setThreshold(Level.DEBUG);
+        console.setThreshold(Level.INFO);
         console.activateOptions();
         LogManager.getRootLogger().addAppender(console);
     }
@@ -153,6 +153,16 @@ public class EmopController {
         initDatabase(props);
 
         // optional 
+        if ( props.containsKey("log_level")) {
+            String level = props.getProperty("log_level");
+            if ( level.equals("DEBUG")) {
+                LOG.setLevel(Level.DEBUG);
+            } else if ( level.equals("INFO")) {
+                LOG.setLevel(Level.INFO);
+            } else if ( level.equals("ERROR")) {
+                LOG.setLevel(Level.ERROR);
+            }
+        }
         if ( props.containsKey("path_prefix")) {
             this.pathPrefix = props.getProperty("path_prefix");
         }
@@ -298,7 +308,7 @@ public class EmopController {
         try {
             // call the correct engine based upon batch config
             if ( job.getBatch().getOcrEngine().equals(OcrEngine.TESSERACT)) {
-                LOG.info("Using Tesseract to OCR "+img);
+                LOG.debug("Using Tesseract to OCR "+img);
                 doTesseractOcr( addPrefix(img), job.getBatch().getParameters(), addPrefix(ocrXmlFile), trainingFont );
             } else {
                 LOG.error("OCR with "+job.getBatch().getOcrEngine()+" not yet supported");
@@ -307,37 +317,34 @@ public class EmopController {
             }
             
             String ocrRoot = addPrefix(workInfo.getOcrRootDirectory());
-            LOG.info("Update "+ocrRoot+" permissions");
+            LOG.debug("Update "+ocrRoot+" permissions");
             Runtime.getRuntime().exec("chmod 755 -R "+ocrRoot);
             
-            // If no ground truth, we are done
+            // Can we do GT compare on this page?
             if ( pageInfo.hasGroundTruth() == false ) {
-                LOG.warn("Ground truth does not exist for page "+job.getPageId());
-                this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "GT does not exist");
-                return;
+                LOG.info("Ground truth does not exist for page "+job.getPageId());
+                this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
+                this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "OCR Complete, no GT");
+            } else {
+                float juxtaVal = juxtaCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
+                float retasVal = retasCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
+                this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, juxtaVal, retasVal);
+                this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "JuxtaCL: "+juxtaVal+", RETAS: "+retasVal);
             }
-            
-            this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "DONE");
-            
-            // do the GT compares
-            float juxtaVal = juxtaCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
-            float retasVal = retasCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
-            
-            // log the results
-            this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+juxtaVal+"\", \"RETAS\": \""+retasVal+"\"}");
-            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, juxtaVal, retasVal);
             
         } catch (InterruptedException e) {
             LOG.error("Job timed out");
             this.db.updateJobStatus(job.getId(), Status.FAILED, "Timed Out");
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
         } catch ( Exception e ) {
             LOG.error("Job Failed", e);
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
         }
     }
     
     private float juxtaCompare(String gtFile, String ocrTxtFile) throws InterruptedException, IOException, SQLException {
-        LOG.info("Compare OCR results with ground truth using JuxtaCL");
+        LOG.debug("Compare OCR results with ground truth using JuxtaCL");
 
         String out = "";
         String cmd = this.juxtaHome+"/juxta-cl.jar";
@@ -365,7 +372,7 @@ public class EmopController {
     }
     
     private float retasCompare(String gtFile, String ocrTxtFile) throws InterruptedException, IOException, SQLException {
-        LOG.info("Compare OCR results with ground truth using RETAS");
+        LOG.debug("Compare OCR results with ground truth using RETAS");
         String out = "";
         ProcessBuilder pb = new ProcessBuilder(
             "java",  "-Xms128M", "-Xmx128M", "-jar",  
@@ -415,7 +422,6 @@ public class EmopController {
         final String trimmedOut = outFile.substring(0,outFile.length()-4);
         
         // kickoff the OCR engine and wait until it completes
-        LOG.info("Training Font ["+trainingFont+"]");
         ProcessBuilder pb = null;
         if ( trainingFont.length() > 0 ) {
             pb = new ProcessBuilder( exe, pageImage, trimmedOut, "hocr" );
@@ -432,16 +438,15 @@ public class EmopController {
         jxProc.destroy();
            
         // end result is an XHTML file containing all of the work coordinates
-        LOG.info("Extract TXT content from hOCR");
+        LOG.debug("Extract TXT content from hOCR "+trimmedOut+".html");
         if ( this.hocrTransformer == null ) {
             this.hocrTransformer = new HocrTransformer();
             this.hocrTransformer.initialize();
         }
         this.hocrTransformer.extractTxt(trimmedOut+".html", trimmedOut+".txt");
         
-        LOG.info("Update permissions on "+trimmedOut+".txt");
+        LOG.debug("Update permissions on "+trimmedOut+" and rename html to xml");
         Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".txt");
-        LOG.info("Update permissions on "+trimmedOut+".html, and rename to *.xml");
         Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".html");
         Runtime.getRuntime().exec("mv "+trimmedOut+".html "+trimmedOut+".xml" );
     }
@@ -450,7 +455,7 @@ public class EmopController {
         // get details about the page associated with this job
         PageInfo pageInfo = this.db.getPageInfo(job.getPageId());
         if ( pageInfo.hasGroundTruth() == false) {
-            LOG.warn("Ground truth does not exist for page "+job.getPageId());
+            LOG.info("Ground truth does not exist for page "+job.getPageId());
             this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "GT does not exist");
             return;
         }
@@ -459,7 +464,7 @@ public class EmopController {
         String gtPath = pageInfo.getGroundTruthFile();
         
         // now pull page result based on OCR engine
-        LOG.info("pageID "+job.getPageId()+", engineID: "+job.getBatch().getOcrEngine());
+        LOG.debug("pageID "+job.getPageId()+", engineID: "+job.getBatch().getOcrEngine());
         String ocrTxtFile = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), OutputFormat.TXT);
         String ocrXmlFile = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), OutputFormat.XML);
         

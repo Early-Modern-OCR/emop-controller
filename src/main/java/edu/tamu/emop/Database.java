@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 
 import edu.tamu.emop.model.BatchJob;
 import edu.tamu.emop.model.BatchJob.OcrEngine;
@@ -319,8 +320,16 @@ public class Database {
             smt.setString(3, ocrTxtFile);
             smt.setString(4, ocrXmlFile);
             smt.setTimestamp(5, new Timestamp(System.currentTimeMillis())); 
-            smt.setFloat(6, juxtaChangeIndex);
-            smt.setFloat(7, altChangeIndex);
+            if ( juxtaChangeIndex < 0) {
+                smt.setNull(6, Types.FLOAT);
+            } else {
+                smt.setFloat(6, juxtaChangeIndex);
+            }
+            if ( altChangeIndex < 0) {
+                smt.setNull(7, Types.FLOAT);
+            } else {
+                smt.setFloat(7, altChangeIndex);
+            }
             smt.executeUpdate();
             this.connection.commit();
         } finally {
