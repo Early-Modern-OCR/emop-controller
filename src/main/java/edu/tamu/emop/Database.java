@@ -299,12 +299,12 @@ public class Database {
      * @param f
      * @throws SQLException 
      */
-    public void addPageResult(JobPage job, String ocrTxtFile, String ocrXmlFile, float juxtaChangeIndex, float altChangeIndex) throws SQLException {
+    public void addPageResult(JobPage job, String ocrTxtFile, String ocrXmlFile, float juxtaChangeIndex, float altChangeIndex) throws SQLException {        
         // protect against bad data from comparisons
-        if ( juxtaChangeIndex == Float.NaN ) {
+        if ( Float.isNaN(juxtaChangeIndex) ) {
             juxtaChangeIndex = 0.0f;
         }
-        if ( altChangeIndex == Float.NaN ) {
+        if ( Float.isNaN(altChangeIndex) ) {
             altChangeIndex = 0.0f;
         }
         
