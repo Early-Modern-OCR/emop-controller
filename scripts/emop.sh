@@ -7,12 +7,11 @@ cd $(dirname $0)
 EMOP_HOME=$(pwd)
 
 APP_NAME="emop_controller"
-USER_NAME=$(whoami)
-CMD="qstat -u${USER_NAME}"
+CMD="qselect -N ${APP_NAME}"
 Q_STATUS=$($CMD)
 
 # only allow one emop controler to be schedulated at a time
-if [[ "$Q_STATUS" == *$APP_NAME* ]]
+if [ ! -z "$Q_STATUS" ]
 then
    echo "An instance of ${APP_NAME} is already running."
    exit 1
@@ -24,6 +23,7 @@ else
    then
       # do not submit a new controller if there were  errors checking count
       echo "Unable to determine job count. Not launching eMOP controller"
+		exit 1
    else
       if [ $JOB_CNT -gt 0 ];
       then
