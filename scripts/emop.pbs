@@ -12,7 +12,6 @@ module load java/sun-jre-1.6
 export JUXTA_HOME=$HOME/juxta-cl-1.0
 export RETAS_HOME=$HOME/retas
 export EMOP_HOME=$HOME/emop-controller-1.0
-export TESSERACT_HOME=/apps/tesseract-3.02.02/bin
 
 # Print out the starting time and host.
 echo "$PBS_JOBID started on $(hostname) at $(date)"

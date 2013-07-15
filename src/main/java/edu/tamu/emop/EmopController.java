@@ -36,9 +36,6 @@ import edu.tamu.emop.model.WorkInfo;
  *    JUXTA_HOME         - base directory of juxtaCL install
  *    RETAS_HOME         - base directory of RETAS install
  *    
- * Optional Environment:
- *    TESSERACT_HOME     - base directory of tesseract install
-
  *    
  * @author loufoster
  *
@@ -54,7 +51,6 @@ public class EmopController {
     private String emopHome;
     private String juxtaHome;
     private String retasHome;
-    private String tesseractHome = "";
     
     private String pathPrefix = "";
     private Algorithm algorithm = Algorithm.JARO_WINKLER;
@@ -178,10 +174,7 @@ public class EmopController {
     }
     
     private void initWorkCheckMode() throws IOException, SQLException {
-        this.emopHome =  System.getenv("EMOP_HOME");
-        if ( this.emopHome == null || this.emopHome.length() == 0) {
-            throw new RuntimeException("Missing require EMOP_HOME environment variable");
-        }
+        this.emopHome =  new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
         
         Properties props = new Properties();
         FileInputStream fis = new FileInputStream(new File(this.emopHome,"emop.properties"));
@@ -192,10 +185,7 @@ public class EmopController {
     }
 
     private void getEnvironmentConfig() {
-        this.emopHome =  System.getenv("EMOP_HOME");
-        if ( this.emopHome == null || this.emopHome.length() == 0) {
-            throw new RuntimeException("Missing require EMOP_HOME environment variable");
-        }
+        this.emopHome =  new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
         
         this.juxtaHome =  System.getenv("JUXTA_HOME");
         if ( this.juxtaHome == null || this.juxtaHome.length() == 0) {
@@ -205,11 +195,6 @@ public class EmopController {
         this.retasHome =  System.getenv("RETAS_HOME");
         if ( this.retasHome == null || this.retasHome.length() == 0) {
             throw new RuntimeException("Missing require RETAS_HOME environment variable");
-        }
-        
-        String th =  System.getenv("TESSERACT_HOME");
-        if ( th != null && th.length() > 0) {
-            this.tesseractHome = th;
         }
     }
 
@@ -414,9 +399,6 @@ public class EmopController {
         File out = new File(outFile);
         out.getParentFile().mkdirs();
         String exe = "tesseract";
-        if ( this.tesseractHome != null  && this.tesseractHome.length() > 0 ) {
-            exe  = this.tesseractHome+"/tesseract";
-        }
         
         // NOTE: strip the .txt extension; tesseract auto-appends it
         final String trimmedOut = outFile.substring(0,outFile.length()-4);
