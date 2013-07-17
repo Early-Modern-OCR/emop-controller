@@ -57,7 +57,7 @@ public class EmopController {
     private HocrTransformer hocrTransformer;
     
     private static Logger LOG = Logger.getLogger(EmopController.class);
-    private static final long JX_TIMEOUT_MS = 1000*60*2;    //2 mins
+    private static final long JX_TIMEOUT_MS = 1000*60*10;    //10 mins
         
     /**
      * Main entry point for the controller
@@ -290,6 +290,7 @@ public class EmopController {
             trainingFont = addPrefix( job.getTrainingFont() );
         }
         
+        // First, do the OCR
         try {
             // call the correct engine based upon batch config
             if ( job.getBatch().getOcrEngine().equals(OcrEngine.TESSERACT)) {
@@ -300,7 +301,20 @@ public class EmopController {
                 this.db.updateJobStatus(job.getId(), Status.FAILED, job.getBatch().getOcrEngine()+" not supported");
                 return;
             }
+        } catch (InterruptedException e) {
+            LOG.error("Job timed out");
+            this.db.updateJobStatus(job.getId(), Status.FAILED, "OCR Timed Out");
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
+            return;
+        } catch ( Exception e ) {
+            LOG.error("Job Failed", e);
+            this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
+            return;
+        }
             
+        // If that was successful, see if GT compare is possible
+        try {
             String ocrRoot = addPrefix(workInfo.getOcrRootDirectory());
             LOG.debug("Update "+ocrRoot+" permissions");
             Runtime.getRuntime().exec("chmod 755 -R "+ocrRoot);
@@ -319,7 +333,7 @@ public class EmopController {
             
         } catch (InterruptedException e) {
             LOG.error("Job timed out");
-            this.db.updateJobStatus(job.getId(), Status.FAILED, "Timed Out");
+            this.db.updateJobStatus(job.getId(), Status.FAILED, "OCR GT Compare Timed Out");
             this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
         } catch ( Exception e ) {
             LOG.error("Job Failed", e);
