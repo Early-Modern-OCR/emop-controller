@@ -288,6 +288,7 @@ public class EmopController {
         String trainingFont = "";
         if ( job.hasTraingFont() ) {
             trainingFont = addPrefix( job.getTrainingFont() );
+            LOG.debug("Using training font: "+trainingFont);
         }
         
         try {
@@ -408,7 +409,7 @@ public class EmopController {
         if ( trainingFont.length() > 0 ) {
             pb = new ProcessBuilder( exe, pageImage, trimmedOut, "hocr" );
         } else {
-            pb = new ProcessBuilder( exe, pageImage, trimmedOut, "-1", trainingFont, "hocr" );
+            pb = new ProcessBuilder( exe, pageImage, trimmedOut, "-l", trainingFont, "hocr" );
         }
         Process jxProc = pb.start();
         awaitProcess(jxProc, JX_TIMEOUT_MS);
