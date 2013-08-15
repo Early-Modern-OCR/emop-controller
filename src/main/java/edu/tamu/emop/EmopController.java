@@ -285,18 +285,13 @@ public class EmopController {
         String img = workInfo.getPageImage(pageInfo.getPageNumber());
         String ocrXmlFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.XML, pageInfo.getPageNumber());
         String ocrTxtFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.TXT, pageInfo.getPageNumber());
-        String trainingFont = "";
-        if ( job.hasTraingFont() ) {
-            trainingFont = addPrefix( job.getTrainingFont() );
-            LOG.debug("Using training font: "+trainingFont);
-        }
-        
+       
         // First, do the OCR
         try {
             // call the correct engine based upon batch config
             if ( job.getBatch().getOcrEngine().equals(OcrEngine.TESSERACT)) {
                 LOG.debug("Using Tesseract to OCR "+img);
-                doTesseractOcr( addPrefix(img), job.getBatch().getParameters(), addPrefix(ocrXmlFile), trainingFont );
+                doTesseractOcr( addPrefix(img), job.getBatch().getParameters(), addPrefix(ocrXmlFile), job.getTrainingFont() );
             } else {
                 LOG.error("OCR with "+job.getBatch().getOcrEngine()+" not yet supported");
                 this.db.updateJobStatus(job.getId(), Status.FAILED, job.getBatch().getOcrEngine()+" not supported");
@@ -419,17 +414,14 @@ public class EmopController {
         final String trimmedOut = outFile.substring(0,outFile.length()-4);
         
         // kickoff the OCR engine and wait until it completes
-        ProcessBuilder pb = null;
-        if ( trainingFont.length() > 0 ) {
-            pb = new ProcessBuilder( exe, pageImage, trimmedOut, "hocr" );
-        } else {
-            pb = new ProcessBuilder( exe, pageImage, trimmedOut, "-l", trainingFont, "hocr" );
-        }
+        File cfgFile = new File(this.emopHome, "tess_cfg.txt" );
+        ProcessBuilder pb = new ProcessBuilder( exe, pageImage, trimmedOut, "-l", trainingFont, cfgFile.getAbsolutePath() );
+        LOG.info("Command: "+pb.command());
         Process jxProc = pb.start();
         awaitProcess(jxProc, JX_TIMEOUT_MS);
         if (jxProc.exitValue() != 0) {
-            jxProc.destroy();
             String err = IOUtils.toString(jxProc.getErrorStream());
+            jxProc.destroy();
             throw new RuntimeException("OCR failed: "+err);
         }
         jxProc.destroy();

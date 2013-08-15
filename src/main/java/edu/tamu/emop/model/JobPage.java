@@ -11,7 +11,7 @@ public class JobPage {
     private String results;
     private Date created;
     private Date updated;
-    private String trainingFont;
+    private String trainingFont = "eng";
     
     public Long getId() {
         return id;
@@ -61,9 +61,6 @@ public class JobPage {
     }
     public void setTrainingFont(String name) {
         this.trainingFont = name;
-    }
-    public boolean hasTraingFont() {
-        return (this.trainingFont != null && this.trainingFont.trim().length() > 0);
     }
     @Override
     public int hashCode() {

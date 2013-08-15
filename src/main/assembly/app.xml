@@ -28,6 +28,10 @@
             <source>config/emop.example.properties</source>
             <outputDirectory></outputDirectory>
         </file>
+        <file>
+            <source>config/tess_cfg.txt</source>
+            <outputDirectory></outputDirectory>
+        </file>
     </files>
     <dependencySets>
         <dependencySet>
