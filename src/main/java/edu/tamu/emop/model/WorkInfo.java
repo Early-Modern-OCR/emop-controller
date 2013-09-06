@@ -53,16 +53,6 @@ public class WorkInfo {
         return (this.eccoDirectory != null && this.eccoDirectory.length() > 0);
     }
     
-    public String getPageImage( int pageNumber ) {
-        if ( isEcco() ) {
-            // ECCO format: ECCO number + 4 digit page + 0.tif
-            return String.format("%s/%s%04d0.TIF", this.eccoDirectory, this.eccoId, pageNumber );
-        } else {
-            // EEBO format: 00014.000.001.tif where 00014 is the page number.
-            return String.format("%s/%05d.000.001.tif", this.eeboDirectory, pageNumber );
-        }
-    }
-    
     public String getOcrOutFile(BatchJob batch, OutputFormat fmt, int pageNum) {
         // Final directory structure is this:
         // /data/shared/text-xml/IDHMC-OCR/<org_unit>/<work_id>/<batch>/<image-file-name>.[txt | xml]

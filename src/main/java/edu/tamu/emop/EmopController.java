@@ -272,6 +272,47 @@ public class EmopController {
         LOG.info("==> TOTAL TIME: "+totalMs/1000f);
     }
     
+    
+    /**
+     * Find the original scanned image for a page of a work. The retuned path will
+     * include ant extra prefix to the DB path.
+     * 
+     * @param workInfo
+     * @param pageInfo
+     * @return
+     */
+    private String getPageImage( WorkInfo workInfo, PageInfo pageInfo ) {
+        // first, see if the image path was stored in DB. If so, use it
+        String img = pageInfo.getPageImage();
+        if ( img != null && img.trim().length() > 0 ) {
+            return addPrefix(img);
+        }
+        
+        // Not in database. Guess at path
+        int pageNumber = pageInfo.getPageNumber();
+        if ( workInfo.isEcco() ) {
+            // ECCO format: ECCO number + 4 digit page + 0.tif
+            img = String.format("%s/%s%04d0.TIF", workInfo.getEccoDirectory(), workInfo.getEccoNumber(), pageNumber );
+            return addPrefix(img);
+        } else {
+            // EEBO format: 00014.000.001.tif where 00014 is the page number.
+            // EEBO is a problem because of the last segment before .tif. It is some
+            // kind of version info and can vary. Start with 0 and increase til 
+            // a file is found.
+            int versionNum = 0;
+            while (versionNum < 100) {
+                img = String.format("%s/%05d.000.%03d.tif", workInfo.getEeboDirectory(), pageNumber, versionNum );
+                img = addPrefix(img);
+                LOG.debug("Looking for EEBO image: "+img);
+                File test = new File(img);
+                if ( test.exists() ) {
+                    return img;
+                }
+            }
+            return "";  // NOT FOUND!
+        }
+    }
+    
     /**
      * Run an OCR job. If successful and GT is available, run a GT comparison and record results
      * 
@@ -282,16 +323,24 @@ public class EmopController {
         // get details about the page and work associated with this job
         PageInfo pageInfo = this.db.getPageInfo(job.getPageId());
         WorkInfo workInfo = this.db.getWorkInfo(pageInfo.getWorkId());
-        String img = workInfo.getPageImage(pageInfo.getPageNumber());
         String ocrXmlFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.XML, pageInfo.getPageNumber());
         String ocrTxtFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.TXT, pageInfo.getPageNumber());
+        
+        // try to determine location of original TIF image
+        String pathToImage = getPageImage(workInfo, pageInfo);
+        if ( pathToImage.length() == 0 ) {
+            LOG.error("Job Failed - couldn't find page image");
+            this.db.updateJobStatus(job.getId(), Status.FAILED, "Couldn't find page image");
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
+            return;
+        }
        
         // First, do the OCR
         try {
             // call the correct engine based upon batch config
             if ( job.getBatch().getOcrEngine().equals(OcrEngine.TESSERACT)) {
-                LOG.debug("Using Tesseract to OCR "+img);
-                doTesseractOcr( addPrefix(img), job.getBatch().getParameters(), addPrefix(ocrXmlFile), job.getTrainingFont() );
+                LOG.debug("Using Tesseract to OCR "+pathToImage);
+                doTesseractOcr( pathToImage, job.getBatch().getParameters(), addPrefix(ocrXmlFile), job.getTrainingFont() );
             } else {
                 LOG.error("OCR with "+job.getBatch().getOcrEngine()+" not yet supported");
                 this.db.updateJobStatus(job.getId(), Status.FAILED, job.getBatch().getOcrEngine()+" not supported");
