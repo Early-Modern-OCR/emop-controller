@@ -308,6 +308,7 @@ public class EmopController {
                 if ( test.exists() ) {
                     return img;
                 }
+                versionNum++;
             }
             return "";  // NOT FOUND!
         }
