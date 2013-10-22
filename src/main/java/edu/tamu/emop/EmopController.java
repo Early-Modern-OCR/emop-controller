@@ -54,7 +54,6 @@ public class EmopController {
     
     private String pathPrefix = "";
     private Algorithm algorithm = Algorithm.JARO_WINKLER;
-    private HocrTransformer hocrTransformer;
     
     private static Logger LOG = Logger.getLogger(EmopController.class);
     private static final long JX_TIMEOUT_MS = 1000*60*10;    //10 mins
@@ -475,19 +474,15 @@ public class EmopController {
             throw new RuntimeException("OCR failed: "+err);
         }
         jxProc.destroy();
-           
-        // end result is an XHTML file containing all of the work coordinates
-        LOG.debug("Extract TXT content from hOCR "+trimmedOut+".html");
-        if ( this.hocrTransformer == null ) {
-            this.hocrTransformer = new HocrTransformer();
-            this.hocrTransformer.initialize();
-        }
-        this.hocrTransformer.extractTxt(trimmedOut+".html", trimmedOut+".txt");
+          
+        // NOTES - 
+        // MJC: the latest version of Tesseract was installed by Trey (10/10/13)
+        //      and it now seems to produce both hOCR, with .hocr extension
         
-        LOG.debug("Update permissions on "+trimmedOut+" and rename html to xml");
+        LOG.debug("Update permissions on "+trimmedOut+" and rename hocr to xml");
         Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".txt");
-        Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".html");
-        Runtime.getRuntime().exec("mv "+trimmedOut+".html "+trimmedOut+".xml" );
+        Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".hocr");
+        Runtime.getRuntime().exec("mv "+trimmedOut+".hocr "+trimmedOut+".xml" );
     }
 
     private void doGroundTruthCompare(JobPage job) throws SQLException {  
