@@ -4,6 +4,8 @@ eMOP Controller
 
 The Brazos Cluster controller process for the eMOP workflow.
 
+To build the package run the `mvn package` command which generates a tar.gz file under the 'target' directory.
+
 Depends on .my.cnf for MySql connection parameters
 
 Depends on several environment variables as well. They are:
