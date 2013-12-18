@@ -6,7 +6,7 @@
     <groupId>edu.tamu.emop</groupId>
     <artifactId>emop-controller</artifactId>
     <packaging>jar</packaging>
-    <version>1.1</version>
+    <version>1.2.0</version>
     <name>eMOP Controller</name>
     <description>
 	 The controller process for eMOP workflow. Intended to run on the Brazos cluster.
