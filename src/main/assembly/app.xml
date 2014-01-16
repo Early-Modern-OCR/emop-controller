@@ -17,6 +17,10 @@
     </fileSets>
     <files>
         <file>
+            <source>README.md</source>
+            <outputDirectory></outputDirectory>
+        </file>
+        <file>
             <source>scripts/emop.sh</source>
             <outputDirectory></outputDirectory>
         </file>
