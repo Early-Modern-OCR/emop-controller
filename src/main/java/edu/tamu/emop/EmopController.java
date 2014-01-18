@@ -360,8 +360,6 @@ public class EmopController {
             
         // If that was successful, see if GT compare is possible
         try {
-            String ocrRoot = addPrefix(workInfo.getOcrRootDirectory());
-            
             // Can we do GT compare on this page?
             if ( pageInfo.hasGroundTruth() == false ) {
                 LOG.info("Ground truth does not exist for page "+job.getPageId());
