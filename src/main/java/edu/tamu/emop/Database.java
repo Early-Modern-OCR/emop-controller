@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 
+import org.apache.log4j.Logger;
+
 import edu.tamu.emop.model.BatchJob;
 import edu.tamu.emop.model.BatchJob.OcrEngine;
 import edu.tamu.emop.model.JobPage;
@@ -28,6 +30,7 @@ public class Database {
     private static final String JOB_TABLE = "job_queue";
     private static final String BATCH_TABLE = "batch_job";
     private static final String RESULT_TABLE = "page_results";
+    private static Logger LOG = Logger.getLogger(Database.class);
     
     /**
      * connect to the emop database
@@ -89,7 +92,7 @@ public class Database {
             // status is marked as STARTED. 
             final String sql = 
                 "select job_queue.id, page_id, batch_id, job_status, created, font_name "+
-                " from job_queue" +
+                " from job_queue" + //JOB_TABLE
                 " inner join batch_job on job_queue.batch_id = batch_job.id" +
                 " left outer join fonts on batch_job.font_id = fonts.font_id" +
                 " where job_status=? order by created ASC limit 1 for update";
@@ -136,28 +139,50 @@ public class Database {
     }
     public void updateJobStatus(Long jobId, Status jobStatus, String result ) throws SQLException {
         PreparedStatement smt = null;
-        try {
-            String sql = "update "+JOB_TABLE+" set last_update=?, job_status=?";
-            if ( result != null) {
-                sql += ", results=?";
+        int retryCount = 5;
+        boolean transactionComplete = false;
+        do {
+            try {
+                String sql = "update "+JOB_TABLE+" set last_update=?, job_status=?";
+                if ( result != null) {
+                    sql += ", results=?";
+                }
+                sql += " where id=?";
+                smt = this.connection.prepareStatement(sql);
+                smt.setTimestamp(1, new Timestamp(System.currentTimeMillis())); 
+                smt.setLong(2, (jobStatus.ordinal()+1L) ); 
+                if ( result != null) {
+                    smt.setString(3, result);
+                    smt.setLong(4, jobId);
+                } else {
+                    smt.setLong(3, jobId);
+                }
+                smt.executeUpdate();
+                this.connection.commit();
+                transactionComplete = true;
+            } catch (SQLException sqlEx) {
+                // State 40001 is a deadlock. If detected, retry the update
+                String sqlState = sqlEx.getSQLState();
+                if ( sqlState.equals("40001")) {
+                    LOG.info("Deadlock detected when updating status of "+jobId+". Retrying...");
+                    retryCount--;
+                    try {
+                        Thread.sleep(500) ;
+                    } catch (InterruptedException e) {}
+                } else {
+                    // not a deadlock; bail
+                    this.connection.rollback();
+                    throw sqlEx;
+                }
+            } finally {
+                closeQuietly(smt);
             }
-            sql += " where id=?";
-            smt = this.connection.prepareStatement(sql);
-            smt.setTimestamp(1, new Timestamp(System.currentTimeMillis())); 
-            smt.setLong(2, (jobStatus.ordinal()+1L) ); 
-            if ( result != null) {
-                smt.setString(3, result);
-                smt.setLong(4, jobId);
-            } else {
-                smt.setLong(3, jobId);
-            }
-            smt.executeUpdate();
-            this.connection.commit();
-        } catch (SQLException e) {
-            this.connection.rollback();
-            throw e;
-        } finally {
-            closeQuietly(smt);
+        } while ( transactionComplete == false && retryCount > 0 );
+        
+        // no more retries and  transcation not complete, throw an error
+        if ( retryCount == 0 && transactionComplete == false ) {
+            LOG.error("No more retries for deadlock when updating status of "+jobId+".  Failing update.");
+            throw new SQLException("Deadlock when updating status of "+jobId);
         }
     }
     
