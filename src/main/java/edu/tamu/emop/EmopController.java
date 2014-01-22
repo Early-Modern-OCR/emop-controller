@@ -360,10 +360,6 @@ public class EmopController {
             
         // If that was successful, see if GT compare is possible
         try {
-            String ocrRoot = addPrefix(workInfo.getOcrRootDirectory());
-            LOG.debug("Update "+ocrRoot+" permissions");
-            Runtime.getRuntime().exec("chmod 755 -R "+ocrRoot);
-            
             // Can we do GT compare on this page?
             if ( pageInfo.hasGroundTruth() == false ) {
                 LOG.info("Ground truth does not exist for page "+job.getPageId());
@@ -479,9 +475,7 @@ public class EmopController {
         // MJC: the latest version of Tesseract was installed by Trey (10/10/13)
         //      and it now seems to produce both hOCR, with .hocr extension
         
-        LOG.debug("Update permissions on "+trimmedOut+" and rename hocr to xml");
-        Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".txt");
-        Runtime.getRuntime().exec("chmod 644 "+trimmedOut+".hocr");
+        LOG.debug("Renaming "+trimmedOut+".hocr to "+trimmedOut+".xml");
         Runtime.getRuntime().exec("mv "+trimmedOut+".hocr "+trimmedOut+".xml" );
     }
 
