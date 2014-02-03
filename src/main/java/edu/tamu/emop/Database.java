@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -77,47 +78,27 @@ public class Database {
     }
     
     /**
-     * Get an active job from the head of the work queue. The unit of work for all jobs is
-     * one page. Each page is related to a parent batch.
-     * 
+     * Attempt to reserve pages for a job to OCR.  The goal is to reserve more than zero but no more than numPages pages.
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
-    public JobPage getJob() throws SQLException {
+    public int tryReservingPages(String procID, int numPages) throws SQLException {
+        ArrayList<Integer> jqIDs = new ArrayList<Integer>(); //we'll use this array to keep track of jobqueue id's we want to reserve
+        
+        //here, we're getting a list of jobqueue id's to reserve, limited by numPages
         PreparedStatement smt = null;
         ResultSet rs = null;
         try {
-            // Note the 'for update' at the end. This locks the row so others cannot access
-            // it during this process. The lock is released when a job is found and its
-            // status is marked as STARTED. 
             final String sql = 
-                "select job_queue.id, page_id, batch_id, job_status, created, font_name "+
-                " from job_queue" + //JOB_TABLE
-                " inner join batch_job on job_queue.batch_id = batch_job.id" +
-                " left outer join fonts on batch_job.font_id = fonts.font_id" +
-                " where job_status=? order by created ASC limit 1 for update";
-            
+                "select id from job_queue where job_status=? and proc_id is null limit ?";
             smt = this.connection.prepareStatement(sql);
-            smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L));
+            smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L)); //this sets the job_status (enum value starts at zero, so we're adding one)
+            smt.setInt(2, numPages); //sets the limit to numpages
             rs = smt.executeQuery();
-            if (rs.first()) {
-                // Create the job and mark it as started. This releases the lock
-                JobPage job = new JobPage();
-                Long batchId = rs.getLong("batch_id") ;
-                job.setId( rs.getLong("id") );
-                job.setPageId( rs.getLong("page_id") );
-                job.setStatus( rs.getLong("job_status") );
-                job.setCreated( rs.getDate("created") );
-                job.setTrainingFont( rs.getString("font_name"));
-                updateJobStatus(job.getId(), Status.PROCESSING);
-                
-                // now pull the batch that this page is a part of
-                BatchJob batch = getBatch(batchId);
-                job.setBatch(batch);
-                return job;
-            } else {
-                this.connection.rollback();
-                return null;
+            rs.beforeFirst();
+            
+            while(rs.next()) {
+                jqIDs.add(rs.getInt("id"));
             }
         } catch (SQLException e ) {
             this.connection.rollback();
@@ -126,6 +107,101 @@ public class Database {
             closeQuietly(rs);
             closeQuietly(smt);
         }
+        
+        if(jqIDs.size() > 0) {
+            try {
+                for(int x = 0; x < jqIDs.size(); x++) { //loop through and reserve the pages by setting the unique procid
+                    smt = null;
+                    String sql = "update "+JOB_TABLE+" set proc_id=?, last_update=? where id=?";
+                    smt = this.connection.prepareStatement(sql);
+                    smt.setString(1, procID); //set the procid to variable 1
+                    smt.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+                    smt.setInt(3, jqIDs.get(x)); //set the jobqueue id to the current id in the array
+                    smt.executeUpdate();
+                    this.connection.commit();
+                    closeQuietly(smt);
+                }
+            } catch (SQLException sqlEx) {
+                
+                /* THE FOLLOWING CODE HANDLES DEADLOCKING, WHICH WE'RE COMMENTING OUT FOR NOW ASSUMING NO MORE DEADLOCKING ISSUES
+                // State 40001 is a deadlock. If detected, retry the update
+                String sqlState = sqlEx.getSQLState();
+                //if ( sqlState.equals("40001")) {
+                    LOG.info("Deadlock detected when updating status of "+jobId+". Retrying...");
+                    retryCount--;
+                    try {
+                        Thread.sleep(500) ;
+                    } catch (InterruptedException e) {}
+                } else {
+                    // not a deadlock; bail
+                */
+                
+                this.connection.rollback();
+                throw sqlEx;
+            } finally {
+                closeQuietly(smt);
+            }
+        }
+        
+        /* MORE DEADLOCKING CODE THAT WE'RE COMMENTING OUT FOR NOW
+        // no more retries and  transcation not complete, throw an error
+        if ( retryCount == 0 && transactionComplete == false ) {
+            LOG.error("No more retries for deadlock when updating status of "+jobId+".  Failing update.");
+            throw new SQLException("Deadlock when updating status of "+jobId);
+        }
+        */
+        return jqIDs.size();
+    }
+    
+    /**
+     * Get reserved jobs from the work queue. The unit of work for all jobs is
+     * one page. Each page is related to a parent batch.
+     * @param procID
+     * @return
+     * @throws SQLException 
+     */
+    public ArrayList<JobPage> getJobs(String procID) throws SQLException {
+        ArrayList<JobPage> jobs = new ArrayList<JobPage>();
+        PreparedStatement smt = null;
+        ResultSet rs = null;
+        try {
+            // get the jobs that have been reserved for this procid
+            final String sql = 
+                "select job_queue.id, page_id, batch_id, job_status, created, font_name "+
+                " from job_queue" + //JOB_TABLE
+                " inner join batch_job on job_queue.batch_id = batch_job.id" +
+                " left outer join fonts on batch_job.font_id = fonts.font_id" +
+                " where job_status=? and job_queue.proc_id=? order by created ASC";
+            
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L));
+            smt.setString(2, procID);
+            rs = smt.executeQuery();
+            rs.beforeFirst();
+            
+            while(rs.next()) {
+                // Create the job and mark it as started. This releases the lock
+                JobPage job = new JobPage();
+                Long batchId = rs.getLong("batch_id") ;
+                job.setId( rs.getLong("id") );
+                job.setPageId( rs.getLong("page_id") );
+                job.setStatus( rs.getLong("job_status") );
+                job.setCreated( rs.getDate("created") );
+                job.setTrainingFont( rs.getString("font_name"));
+                // now pull the batch that this page is a part of
+                BatchJob batch = getBatch(batchId);
+                job.setBatch(batch);
+                jobs.add(job);
+            }
+        } catch (SQLException e ) {
+            this.connection.rollback();
+            throw e;
+        } finally {
+            closeQuietly(rs);
+            closeQuietly(smt);
+        }
+        
+        return jobs;
     }
     
     /**
@@ -364,22 +440,57 @@ public class Database {
     }
     
     /**
-     * Check for processing jobs that are older than the kill time. Restart them
+     * Check for reserved or processing jobs that are older than the kill time. Restart them
      * @param killTimeSec
      * @throws SQLException 
      */
     public void restartStalledJobs(long killTimeSec) throws SQLException {
+        //this update statement searches for jobs that have been processing longer than killTimeSec and frees them while incrementing number of tries
         PreparedStatement smt = null;
         try {
             final String sql = 
                 "update " + JOB_TABLE 
-                +" set job_status=?, last_update=?, results=? where job_status=? and last_update < date_sub(now(),interval "
+                +" set job_status=?, last_update=?, results=?, proc_id='', tries=tries+1 where job_status=? and tries < 4 and last_update < date_sub(now(),interval "
                 +killTimeSec+" second)";
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L));
             smt.setTimestamp(2, new Timestamp(System.currentTimeMillis())); 
             smt.setString(3, "Restarted...");
             smt.setLong(4, (Status.PROCESSING.ordinal()+1L));
+            smt.executeUpdate();
+            this.connection.commit();
+        } finally {
+            closeQuietly(smt);
+        }
+        
+        //this update statement marks jobs that have stalled more than 3 times as FAILED.
+        smt = null;
+        try {
+            final String sql = 
+                "update " + JOB_TABLE 
+                +" set job_status=?, last_update=?, results=? where tries > 3 and job_status !=?";
+            smt = this.connection.prepareStatement(sql);
+            smt.setLong(1, (Status.FAILED.ordinal()+1L));
+            smt.setTimestamp(2, new Timestamp(System.currentTimeMillis())); 
+            smt.setString(3, "Failed: stalled.");
+            smt.setLong(4, (Status.FAILED.ordinal()+1L));
+            smt.executeUpdate();
+            this.connection.commit();
+        } finally {
+            closeQuietly(smt);
+        }
+        
+        //this update statement searches for jobs that have been reserved and not started for longer than 1 hour and frees them
+        smt = null;
+        try {
+            final String sql = 
+                "update " + JOB_TABLE 
+                +" set last_update=?, results=?, proc_id = NULL where job_status=? and proc_id is not NULL and tries < 4 and last_update < date_sub(now(),interval "
+                +"3600 second)";
+            smt = this.connection.prepareStatement(sql);
+            smt.setTimestamp(1, new Timestamp(System.currentTimeMillis())); 
+            smt.setString(2, "Released...");
+            smt.setLong(3, (Status.NOT_STARTED.ordinal()+1L));
             smt.executeUpdate();
             this.connection.commit();
         } finally {

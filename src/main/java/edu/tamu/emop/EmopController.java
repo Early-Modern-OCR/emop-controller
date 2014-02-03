@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.ArrayList;
 
 import javax.xml.transform.TransformerException;
 
@@ -25,6 +26,7 @@ import edu.tamu.emop.model.JobPage.Status;
 import edu.tamu.emop.model.PageInfo;
 import edu.tamu.emop.model.PageInfo.OutputFormat;
 import edu.tamu.emop.model.WorkInfo;
+import org.apache.commons.cli.*;
 
 /**
  * eMOP controller app. Responsible for pulling jobs from the work
@@ -42,15 +44,17 @@ import edu.tamu.emop.model.WorkInfo;
  */
 public class EmopController {
     public enum Algorithm {JUXTA, LEVENSHTEIN, JARO_WINKLER};
-    public enum Mode {NORMAL, WORK_CHECK}
+    public enum Mode {RUN, CHECK, RESERVE}
     
     private Database db;
     private long timeLeftMs = -1;   // run til all jobs done
     private long wallTimeSec = -1;  // run til all jobs done
+    private int numPages = 0; // number of pages to reserve
     
     private String emopHome;
     private String juxtaHome;
     private String retasHome;
+    private String procID; // the process ID with which to reserve or OCR pages
     
     private String pathPrefix = "";
     private Algorithm algorithm = Algorithm.JARO_WINKLER;
@@ -66,23 +70,84 @@ public class EmopController {
     public static void main(String[] args) throws Exception {   
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
         
-        Mode mode = Mode.NORMAL;
-        if (args.length == 1 ) {
-            if ( args[0].equals("-check")) {
-                mode = Mode.WORK_CHECK;
-            } else {
-                System.err.println("eMOP Controller failed; invalid command-line param");
-                System.exit(-1);
+        Mode mode = Mode.RUN; // set the defailt operating mode
+        String procID = "";
+        int numPages = 0;
+        
+        // set up the available commandline options
+        Options cliOptions = new Options();
+        cliOptions.addOption( OptionBuilder.withDescription("Available options for mode are: run, reserve, and check.\r\n"
+                                    + "run: This mode kicks off the OCR job on reserved pages, and requires one additional parameter: the Process ID [procid], which tells the job which pages to OCR.\r\n"
+                                    + "reserve: This mode reserves a number of pages to be OCR'ed in the future given a Process ID, and requires two parameters: the Process ID [procid] to be associated with the pages, and the number of pages [numpages] to be OCR'ed.\r\n"
+                                    + "check: This mode checks for the number of pages in the job queue, and requires no parameters.")
+                                .hasArg()
+                                .withArgName("RUNMODE")
+                                .create("mode") );
+        cliOptions.addOption( OptionBuilder.withDescription("Process ID for reserving pages or running a job.")
+                                .hasArg()
+                                .withArgName("PROCESSID")
+                                .create("procid") );
+        cliOptions.addOption( OptionBuilder.withDescription("Number of pages to reserve.")
+                                .hasArg()
+                                .withArgName("NUMBER")
+                                .create("numpages") );
+        
+        // set up the commandline parser
+        CommandLineParser cliParser = new BasicParser();
+        CommandLine cliCommand;
+        boolean badCommand = true;
+        
+        //verify the commands passed in are valid, and determine appropriate mode
+        try {
+            cliCommand = cliParser.parse(cliOptions, args);
+            if(cliCommand.hasOption("mode")) {
+                String attemptedMode = cliCommand.getOptionValue("mode").trim();
+                if(attemptedMode.equals("check")) {
+                    mode = Mode.CHECK;
+                    badCommand = false;
+                } else if(attemptedMode.equals("reserve")) {
+                    if(cliCommand.hasOption("procid") && cliCommand.hasOption("numpages")) {
+                        mode = Mode.RESERVE;
+                        procID = cliCommand.getOptionValue("procid").trim();
+                        numPages = Integer.parseInt(cliCommand.getOptionValue("numpages").trim());   
+                        if(!procID.equals("") && numPages > 0) {
+                            badCommand = false;
+                        }
+                    } else { System.out.println("Requirements not found..."); }
+                } else if(attemptedMode.equals("run")) {
+                    if(cliCommand.hasOption("procid")) {
+                        mode = Mode.RUN;
+                        procID = cliCommand.getOptionValue("procid").trim();
+                        if(!procID.equals("")) {
+                            badCommand = false;
+                        }
+                    }
+                }
             }
-        } else if ( args.length > 1 ) {
-            System.err.println("eMOP Controller failed; invalid command-line params");
+        } catch (Exception e) {
+            System.out.println("Error parsing command line: "+e.getMessage());
+            //assume bad parameters passed, and print command line help
+            HelpFormatter cliFormatter = new HelpFormatter();
+            cliFormatter.printHelp("eMOP Controller", cliOptions);
             System.exit(-1);
         }
+        
+        //print help and exit if bad command line
+        if(badCommand) {
+            HelpFormatter cliFormatter = new HelpFormatter();
+            cliFormatter.printHelp("eMOP Controller", cliOptions);
+            System.exit(-1);
+        }
+        
+        //run the emop controller given the appropriate mode
         try {
             EmopController emop = new EmopController();
-            emop.init( mode );
-            if ( mode.equals(Mode.WORK_CHECK)) {
+            emop.init( mode, procID, numPages );
+            
+            if ( mode.equals(Mode.CHECK)) {
                 emop.getPendingJobs();
+            } else if(mode.equals(Mode.RESERVE)) {
+                emop.reservePages();
             } else {
                 emop.restartStalledJobs();
                 emop.doWork();
@@ -99,9 +164,22 @@ public class EmopController {
         }
     }
 
+    /**
+     * return the number of unreserved pages in the job queue
+     * @throws SQLException
+     */
     private void getPendingJobs() throws SQLException {
         int cnt = this.db.getJobCount();
         System.out.println(""+cnt);
+    }
+    
+    /**
+     * attempt to reserve pages, and return the number of pages reserved in the job queue given the procid
+     * @throws SQLException
+     */
+    private void reservePages() throws SQLException {
+        int reserved = this.db.tryReservingPages(procID, numPages);
+        System.out.println(""+reserved);
     }
 
     /**
@@ -124,9 +202,11 @@ public class EmopController {
      * @throws OptionException 
      * @throws FileNotFoundException 
      */
-    public void init( Mode mode ) throws IOException, SQLException {
+    public void init( Mode mode, String ProcessID, int NumberPages ) throws IOException, SQLException {
+        procID = ProcessID;
+        numPages = NumberPages;
         
-        if ( mode.equals(Mode.WORK_CHECK)) {
+        if ( mode.equals(Mode.CHECK) || mode.equals(Mode.RESERVE)) {
             initWorkCheckMode();
             return;
         }
@@ -228,46 +308,37 @@ public class EmopController {
     }
 
     /**
-     * Main work look for the controller. As long as time remains, pick off availble jobs.
+     * Main work look for the controller. As long as time remains, pick off available jobs.
      * Mark the as in-process and kick off a task to service them. When complete, 
      * record data to configured out location and mark task as pending post-processing.
      * @throws SQLException 
      */
     public void doWork() throws SQLException {
-        long totalMs = 0;
-        do {
-            long t0 = System.currentTimeMillis();
-            
-            // check for availble jobs; bail if none are available
-            JobPage job = this.db.getJob();
-            if ( job == null ) {
-                LOG.info("No jobs to process. Terminating.");
-                break;
-            }
-            
+        long totalMs = 0; //this keeps track of milliseconds spent in total
+        long t0; //this keeps track of milliseconds spent on each page
+
+        ArrayList<JobPage> jobs = this.db.getJobs(procID); //we get the jobs reserved for this procid
+        if ( jobs.size() == 0 ) {
+            LOG.info("No jobs to process. Terminating.");
+        }
+
+        for(int x = 0; x < jobs.size(); x++) { //iterate through the pages we have
+            t0 = System.currentTimeMillis();
             // get details about the OCR batch that is to be
             // used for this jobs
-            BatchJob batch = job.getBatch();
-            LOG.info("Got job ["+job.getId()+"] - Batch: "+batch.getName()+" job Type: "+batch.getJobType()+", OCR engine: " + batch.getOcrEngine());
+            this.db.updateJobStatus(jobs.get(x).getId(), Status.PROCESSING);
+            BatchJob batch = jobs.get(x).getBatch();
+            LOG.info("Got job ["+jobs.get(x).getId()+"] - Batch: "+batch.getName()+" job Type: "+batch.getJobType()+", OCR engine: " + batch.getOcrEngine());
             if ( batch.getJobType().equals(JobType.GT_COMPARE)) {
-                doGroundTruthCompare(job);
+                doGroundTruthCompare(jobs.get(x));
             } else {
-                doOCR(job);
+                doOCR(jobs.get(x));
             }
-            
+
             long durationMs = (System.currentTimeMillis()-t0);
             totalMs+= durationMs;
-            LOG.info("Job ["+job.getId()+"] COMPLETE. Duration: "+(durationMs/1000f)+" secs");
-            
-            // if configured to run until all jobs are processed,
-            // timeLeftMs will be set to -1. Do not decrement it if 
-            // this is the case. Also, in the while condition below,
-            // just loop forever (timeLeftMs will always be -1). The loop
-            // will terminate when there are no jobs left.
-            if ( this.timeLeftMs > 0 ) {
-                this.timeLeftMs -= durationMs;
-            }
-        } while ( this.timeLeftMs > 0 || this.timeLeftMs == -1);
+            LOG.info("Job ["+jobs.get(x).getId()+"] COMPLETE. Duration: "+(durationMs/1000f)+" secs");
+        }
         LOG.info("==> TOTAL TIME: "+totalMs/1000f);
     }
     
