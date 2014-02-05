@@ -57,7 +57,7 @@ public class Database {
         ResultSet rs = null;
         try {
             final String sql = 
-                "select count(id) as cnt from job_queue where job_status=?";
+                "select count(id) as cnt from job_queue where job_status=? and proc_id is null";
             smt = this.connection.prepareStatement(sql);
             smt.setLong(1, (Status.NOT_STARTED.ordinal()+1L));
             rs = smt.executeQuery();
