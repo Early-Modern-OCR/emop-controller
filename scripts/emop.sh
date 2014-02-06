@@ -94,6 +94,8 @@ export PATH=$PATH:/usr/local/bin
 # launched 
 cd $(dirname $0)
 EMOP_HOME=$(pwd)
+MODULES_SRC_DIR="${EMOP_HOME}/emop-modules/emop"
+MODULES_DIR="${HOME}/privatemodules/emop"
 HEAP_SIZE="128M"
 APP_NAME="emop_controller"
 
@@ -101,6 +103,7 @@ Q="idhmc"
 Q_LIMIT=128
 NUM_JOBS=0
 PAGES_PER_JOB=0
+TOTAL_PAGES_TO_RUN=0
 AVG_PAGE_RUNTIME=20
 MIN_JOB_RUNTIME=300
 MAX_JOB_RUNTIME=3600
@@ -116,6 +119,13 @@ echo_verbose() {
   local msg="$1"
   if [ $VERBOSE -eq 1 ]; then
     echo $msg
+  fi
+}
+
+bootstrap_modules() {
+  if [ ! -L $MODULES_DIR ]; then
+    echo_verbose "${NOOP_PREFIX}Creating symbolic link ${MODULES_SRC_DIR} -> ${MODULES_DIR}"
+    ln -sn ${MODULES_SRC_DIR} ${MODULES_DIR}
   fi
 }
 
@@ -189,7 +199,7 @@ qsub_job() {
 # Optimize pages per job based on maximum and minimum job runtimes
 optimize() {
   runOptionA=`echo "$PAGE_CNT / $Q_AVAIL"|bc`
-  runOptionB=`echo "( $MAX_JOB_RUNTIME / $AVG_PAGE_RUNTIME ) - 10"|bc`
+  runOptionB=`echo "$MAX_JOB_RUNTIME / $AVG_PAGE_RUNTIME"|bc`
   runOptionC=`echo "$MIN_JOB_RUNTIME / $AVG_PAGE_RUNTIME"|bc`
 
   if [ $runOptionA -lt 1 ]; then
@@ -199,6 +209,9 @@ optimize() {
     if [ $runOptionA -gt $runOptionB ]; then
       NUM_JOBS=$Q_AVAIL
       PAGES_PER_JOB=$runOptionB
+    elif [ $PAGE_CNT -lt $runOptionC ]; then
+      NUM_JOBS=$((PAGE_CNT / runOptionC))
+      PAGES_PER_JOB=$PAGE_CNT
     elif [ $runOptionA -lt $runOptionC ]; then
       NUM_JOBS=$((PAGE_CNT / runOptionC))
       PAGES_PER_JOB=$runOptionC
@@ -207,10 +220,14 @@ optimize() {
       PAGES_PER_JOB=$runOptionA
     fi
 
+    [ $NUM_JOBS -lt 1 ] && NUM_JOBS=1
+
     # Calculate expected runtime of a job based on average runtime
     expected_runtime=`echo "$PAGES_PER_JOB * $AVG_PAGE_RUNTIME"|bc`
     echo_verbose "Expected job runtime: ${expected_runtime} seconds"
   fi
+
+  TOTAL_PAGES_TO_RUN=$((NUM_JOBS * PAGES_PER_JOB))
 
   echo "Optimal submission is ${NUM_JOBS} jobs with ${PAGES_PER_JOB} pages per job"
 }
@@ -221,11 +238,11 @@ local_test() {
     PAGE_CNT=$pagecnt
     for qavail in 1 10 30 50 75 128; do
       Q_AVAIL=$qavail
-      echo "## TEST PAGE_CNT ${PAGE_CNT} , Q_AVAIL ${Q_AVAIL} ##"
+      echo "## TEST Q_AVAIL ${Q_AVAIL} | PAGE_CNT ${PAGE_CNT} ##"
       optimize
       
-      if [ $NUM_JOBS -gt $Q_LIMIT ]; then
-        echo "## TEST FAILED - PAGES_PER_JOB ${PAGES_PER_JOB} , NUM_JOBS ${NUM_JOBS} ##"
+      if [ $NUM_JOBS -eq 0 ] || [ $NUM_JOBS -gt $Q_LIMIT ]; then
+        echo "## TEST FAILED | NUM_JOBS ${NUM_JOBS} | PAGES_PER_JOB ${PAGES_PER_JOB} ##"
         exit 1
       fi
     done
@@ -237,6 +254,9 @@ local_test() {
 if [ $TEST -eq 1 ]; then
   local_test
 fi
+
+# Bootstrap setup for jobs to run
+bootstrap_modules
 
 # Check queue limits
 check_queue_limit
@@ -254,6 +274,12 @@ if [ $NOOP -eq 0 ]; then
   for i in $(seq 1 $NUM_JOBS); do
     qsub_job $PAGES_PER_JOB
   done
+fi
+
+if [ $PAGE_CNT -gt $TOTAL_PAGES_TO_RUN ] && [ $NUM_JOBS -lt $Q_AVAIL ]; then
+  PAGES_REMAINDER=`echo "$PAGE_CNT - $TOTAL_PAGES_TO_RUN"|bc`
+  echo "${NOOP_PREFIX}Executing 1 job with ${PAGES_REMAINDER} pages"
+  [ $NOOP -eq 0 ] && qsub_job $PAGES_REMAINDER
 fi
 
 exit 0
