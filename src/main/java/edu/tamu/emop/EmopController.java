@@ -145,11 +145,11 @@ public class EmopController {
             emop.init( mode, procID, numPages );
             
             if ( mode.equals(Mode.CHECK)) {
+                emop.restartStalledJobs();
                 emop.getPendingJobs();
             } else if(mode.equals(Mode.RESERVE)) {
                 emop.reservePages();
             } else {
-                emop.restartStalledJobs();
                 emop.doWork();
             }
             emop.shutdown();
