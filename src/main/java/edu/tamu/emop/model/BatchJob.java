@@ -2,9 +2,9 @@ package edu.tamu.emop.model;
 
 
 /***
- * Model of an OCR batch run. Includes the OCR enine
+ * Model of an OCR batch run. Includes the OCR engine
  * and the configuration used.
- * 
+ *
  * @author loufoster
  *
  */
@@ -18,7 +18,7 @@ public class BatchJob {
     private String parameters;
     private String name;
     private String notes;
-    
+
     public Long getId() {
         return id;
     }
@@ -44,7 +44,7 @@ public class BatchJob {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-    
+
     public JobType getJobType() {
         return jobType;
     }
@@ -86,5 +86,5 @@ public class BatchJob {
         return "BatchJob [id=" + id + ", jobType=" + jobType + ", ocrEngine=" + ocrEngine + ", parameters="
             + parameters + ", name=" + name + "]";
     }
-    
+
 }
