@@ -3,11 +3,11 @@
     <xsl:output method="text" indent="no"/>
     <xsl:variable name="display-linebreak" select="'&#10;'" />
 
-    <!-- add a libebreak after every ocr_line -->
+    <!-- add a linebreak after every ocr_line -->
     <xsl:template match="xhtml:span[@class='ocr_line'] ">
       <xsl:call-template name="line-break"/>
     </xsl:template>
-    
+
     <!-- dump stripped txt content for words and styled text -->
     <xsl:template match="xhtml:span[@class='ocrx_word']/text() | xhtml:strong/text() | xhtml:em/text() | xhtml:u/text() | xhtml:b/text() | xhtml:i/text() ">
         <xsl:variable name="a" select="replace(., '\s*$', ' ')"/>
@@ -16,7 +16,7 @@
         <xsl:variable name="d" select="replace($c, '\s+', ' ')"/>
         <xsl:value-of select="$d"/>
     </xsl:template>
-    
+
     <!-- skip the head and text of all tags except those above -->
     <xsl:template match="xhtml:head"/>
     <xsl:template match="text()"/>
