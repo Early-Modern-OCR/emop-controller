@@ -42,7 +42,7 @@ import edu.tamu.emop.model.WorkInfo;
  * Expected environment:
  *    JUXTA_HOME         - base directory of juxtaCL install
  *    RETAS_HOME         - base directory of RETAS install
- *
+ *    SEASR_HOME         - base directory of SEASR install
  *
  * @author loufoster
  *
