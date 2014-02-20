@@ -80,6 +80,8 @@ public class Database {
 
     /**
      * Attempt to reserve pages for a job to OCR.  The goal is to reserve more than zero but no more than numPages pages.
+     * @param procID
+     * @param numPages
      * @return
      * @throws SQLException
      */
@@ -398,18 +400,20 @@ public class Database {
      * Add OCR page results
      *
      * @param job
-     * @param parseFloat
-     * @param f
+     * @param ocrTxtFile
+     * @param ocrXmlFile
+     * @param juxtaChangeIndex
+     * @param altChangeIndex
+     * @param SEASReCorr
+     * @param SEASRstats
      * @throws SQLException
      */
-    public void addPageResult(JobPage job, String ocrTxtFile, String ocrXmlFile, float juxtaChangeIndex, float altChangeIndex) throws SQLException {
+    public void addPageResult(JobPage job, String ocrTxtFile, String ocrXmlFile, float juxtaChangeIndex, float altChangeIndex, float SEASReCorr, float SEASRstats) throws SQLException {
         // protect against bad data from comparisons
-        if ( Float.isNaN(juxtaChangeIndex) ) {
-            juxtaChangeIndex = 0.0f;
-        }
-        if ( Float.isNaN(altChangeIndex) ) {
-            altChangeIndex = 0.0f;
-        }
+        if ( Float.isNaN(juxtaChangeIndex) ) { juxtaChangeIndex = 0.0f; }
+        if ( Float.isNaN(altChangeIndex) ) { altChangeIndex = 0.0f; }
+        if (Float.isNaN(SEASReCorr)) SEASReCorr = 0.0f;
+        if (Float.isNaN(SEASRstats)) SEASRstats = 0.0f;
 
         PreparedStatement smt = null;
         try {
@@ -438,6 +442,29 @@ public class Database {
         } finally {
             closeQuietly(smt);
         }
+        
+        smt = null;
+        try {
+            final String sql =
+                "insert into " + POSTPROC_TABLE
+                + " (pp_page_id, pp_batch_id, pp_ecorr, pp_stats)"
+                + " values (?, ?, ?, ?)";
+            smt = this.connection.prepareStatement(sql);
+            
+            smt.setLong(1, job.getPageId());
+            smt.setLong(2, job.getBatch().getId() );
+            
+            if(SEASReCorr < 0) { smt.setNull(3, Types.FLOAT); } 
+            else { smt.setFloat(3, SEASReCorr); }
+            
+            if(SEASRstats < 0) { smt.setNull(4, Types.FLOAT); } 
+            else { smt.setFloat(4, SEASRstats); }
+            
+            smt.executeUpdate();
+            this.connection.commit();
+        } finally {
+            closeQuietly(smt);
+        }
     }
 
     /**
@@ -451,7 +478,7 @@ public class Database {
      * @param stats
      * @throws SQLException
      */
-    public void addPostProcResult(JobPage job, float juxtaScore, float retasScore, float healthScore, float ecorr, float stats) throws SQLException {
+    public void updatePostProcResult(JobPage job, float juxtaScore, float retasScore, float healthScore, float ecorr, float stats) throws SQLException {
         if (Float.isNaN(juxtaScore)) juxtaScore = 0.0f;
         if (Float.isNaN(retasScore)) retasScore = 0.0f;
         if (Float.isNaN(healthScore)) healthScore = 0.0f;
@@ -461,38 +488,39 @@ public class Database {
         PreparedStatement smt = null;
         try {
             final String sql =
-                "insert into " + POSTPROC_TABLE
-                + " (pp_page_id,pp_batch_id,pp_juxta,pp_retas,pp_health,pp_ecorr,pp_stats)"
-                + " values (?, ?, ?, ?, ?, ?, ?)";
+                "update " + POSTPROC_TABLE
+                + " set pp_juxta = ?, pp_retas = ?, pp_health = ?, pp_ecorr = ?, pp_stats = ?"
+                + " where pp_page_id = ? and pp_batch_id = ?";
             smt = this.connection.prepareStatement(sql);
-            smt.setLong(1, job.getPageId());
-            smt.setLong(2, job.getBatch().getId() );
 
             if (juxtaScore < 0) {
-                smt.setNull(3, Types.FLOAT);
+                smt.setNull(1, Types.FLOAT);
             } else {
-                smt.setFloat(3, juxtaScore);
+                smt.setFloat(1, juxtaScore);
             }
             if (retasScore < 0) {
-                smt.setNull(4, Types.FLOAT);
+                smt.setNull(2, Types.FLOAT);
             } else {
-                smt.setFloat(4, retasScore);
+                smt.setFloat(2, retasScore);
             }
             if (healthScore < 0) {
-                smt.setNull(5, Types.FLOAT);
+                smt.setNull(3, Types.FLOAT);
             } else {
-                smt.setFloat(5, healthScore);
+                smt.setFloat(3, healthScore);
             }
             if (ecorr < 0) {
-                smt.setNull(6, Types.FLOAT);
+                smt.setNull(4, Types.FLOAT);
             } else {
-                smt.setFloat(6, ecorr);
+                smt.setFloat(4, ecorr);
             }
             if (stats < 0) {
-                smt.setNull(7, Types.FLOAT);
+                smt.setNull(5, Types.FLOAT);
             } else {
-                smt.setFloat(7, stats);
+                smt.setFloat(5, stats);
             }
+            
+            smt.setLong(6, job.getPageId());
+            smt.setLong(7, job.getBatch().getId() );
 
             smt.executeUpdate();
             this.connection.commit();

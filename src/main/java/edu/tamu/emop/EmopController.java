@@ -407,13 +407,15 @@ public class EmopController {
         WorkInfo workInfo = this.db.getWorkInfo(pageInfo.getWorkId());
         String ocrXmlFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.XML, pageInfo.getPageNumber());
         String ocrTxtFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.TXT, pageInfo.getPageNumber());
+        float SEASReCorr = -1;
+        float SEASRstats = -1;
 
         // try to determine location of original TIF image
         String pathToImage = getPageImage(workInfo, pageInfo);
         if ( pathToImage.length() == 0 ) {
             LOG.error("Job Failed - couldn't find page image");
             this.db.updateJobStatus(job.getId(), Status.FAILED, "Couldn't find page image");
-            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
             return;
         }
 
@@ -431,48 +433,49 @@ public class EmopController {
         } catch (InterruptedException e) {
             LOG.error("Job timed out");
             this.db.updateJobStatus(job.getId(), Status.FAILED, "OCR Timed Out");
-            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
             return;
         } catch ( Exception e ) {
             LOG.error("Job Failed", e);
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
-            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
             return;
         }
-
-        // TODO: I don't understand the workflow of the code... how updateJobStatus should work with what status
-        // at what stage, so I don't feel comfortable messing with the code below. I've included a small code
-        // snippet that shows how to retrieve the correctability scores as an example.
-        // I've also added a method in Database.java called "addPostProcResult" that should probably be used
-        // to record the various scores in the postproc_pages table.
-
-        // Compute the page correctability score
-        // float[] corrScores = computeCorrectabilityScore(ocrXmlFile);
-        // float ecorr = corrScores[0];
-        // float stats = corrScores[1];
+        
+        // then, calculate SEASR's eCorr and stats
+        try {
+            float[] SEASRscores = computeCorrectabilityScore(ocrXmlFile);
+            SEASReCorr = SEASRscores[0];
+            SEASRstats = SEASRscores[1];
+        } catch(Exception e) {
+            LOG.error("Job Failed", e);
+            this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
+            return;
+        }
 
         // If that was successful, see if GT compare is possible
         try {
             // Can we do GT compare on this page?
             if ( pageInfo.hasGroundTruth() == false ) {
                 LOG.info("Ground truth does not exist for page "+job.getPageId());
-                this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
+                this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, SEASReCorr, SEASRstats);
                 this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "OCR Complete, no GT");
             } else {
                 float juxtaVal = juxtaCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
                 float retasVal = retasCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
-                this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, juxtaVal, retasVal);
+                this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, juxtaVal, retasVal, SEASReCorr, SEASRstats);
                 this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "JuxtaCL: "+juxtaVal+", RETAS: "+retasVal);
             }
 
         } catch (InterruptedException e) {
             LOG.error("Job timed out");
             this.db.updateJobStatus(job.getId(), Status.FAILED, "OCR GT Compare Timed Out");
-            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, SEASReCorr, SEASRstats);
         } catch ( Exception e ) {
             LOG.error("Job Failed", e);
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
-            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1);
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, SEASReCorr, SEASRstats);
         }
     }
 
@@ -628,7 +631,7 @@ public class EmopController {
 
             // log the results
             this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+juxtaVal+"\", \"RETAS\": \""+retasVal+"\"}");
-            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, juxtaVal, retasVal);
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, juxtaVal, retasVal, -1, -1);
 
         } catch (InterruptedException e) {
             LOG.error("Job timed out");
