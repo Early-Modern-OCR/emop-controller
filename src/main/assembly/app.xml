@@ -33,6 +33,10 @@
             <outputDirectory></outputDirectory>
         </file>
         <file>
+            <source>config/emop.conf.example</source>
+            <outputDirectory></outputDirectory>
+        </file>
+        <file>
             <source>config/tess_cfg.txt</source>
             <outputDirectory></outputDirectory>
         </file>
