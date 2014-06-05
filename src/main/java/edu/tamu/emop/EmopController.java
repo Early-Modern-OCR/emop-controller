@@ -449,14 +449,14 @@ public class EmopController {
             return;
         }
         // Code added by Anshul on 06/05/2014 : DeNoise 
-		String denoiseHome = System.getenv("DENOISE_HOME");
+		this.denoiseHome = System.getenv("DENOISE_HOME");
 		String[] splitOcrXmlFile= ocrXmlFile.split("/");
 		StringBuffer xmlPath = new StringBuffer();
 		for(int i=0;i<splitOcrXmlFile.length-1;i++){
 			xmlPath.append(splitOcrXmlFile[i]);
 			xmlPath.append("/");
 		}
-		String python_script_path =denoiseHome; // Path to python source code. 
+		String python_script_path =this.denoiseHome; // Path to python source code. 
 		ProcessBuilder pb = new ProcessBuilder("python","deNoise_Post.py","-p",xmlPath.toString(),"-n",splitOcrXmlFile[splitOcrXmlFile.length-1]);
 		pb.directory(new File(python_script_path));
 		Process process;
