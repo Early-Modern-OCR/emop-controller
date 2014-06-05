@@ -61,7 +61,7 @@ public class EmopController {
     private String juxtaHome;
     private String retasHome;
     private String seasrHome;
-	private String denoiseHome;
+	private String denoiseHome; // Code added by Anshul on 06/05/2014
     private String procID; // the process ID with which to reserve or OCR pages
 
     private String pathPrefix = "";
@@ -283,7 +283,7 @@ public class EmopController {
         if ( this.retasHome == null || this.retasHome.length() == 0) {
             throw new RuntimeException("Missing required RETAS_HOME environment variable");
         }
-
+		// Code added by Anshul on 06/05/2014
         this.seasrHome = System.getenv("SEASR_HOME");
         if (this.seasrHome == null || this.seasrHome.length() == 0) {
             throw new RuntimeException("Missing required SEASR_HOME environment variable");
