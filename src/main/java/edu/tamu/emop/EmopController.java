@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.* 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -60,6 +61,7 @@ public class EmopController {
     private String juxtaHome;
     private String retasHome;
     private String seasrHome;
+	private String denoiseHome;
     private String procID; // the process ID with which to reserve or OCR pages
 
     private String pathPrefix = "";
@@ -286,6 +288,11 @@ public class EmopController {
         if (this.seasrHome == null || this.seasrHome.length() == 0) {
             throw new RuntimeException("Missing required SEASR_HOME environment variable");
         }
+		
+		this.denoiseHome = System.getenv("DENOISE_HOME");
+        if (this.denoiseHome == null || this.denoiseHome.length() == 0) {
+            throw new RuntimeException("Missing required DENOISE_HOME environment variable");
+        }
     }
 
     private void initDatabase( Properties props ) throws IOException, SQLException {
@@ -441,7 +448,34 @@ public class EmopController {
             this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
             return;
         }
-        
+        // Code added by Anshul on 06/05/2014 : DeNoise 
+		String denoiseHome = System.getenv("DENOISE_HOME");
+		String[] splitOcrXmlFile= ocrXmlFile.split("/");
+		StringBuffer xmlPath = new StringBuffer();
+		for(int i=0;i<splitOcrXmlFile.length-1;i++){
+			xmlPath.append(splitOcrXmlFile[i]);
+			xmlPath.append("/");
+		}
+		String python_script_path =denoiseHome; // Path to python source code. 
+		ProcessBuilder pb = new ProcessBuilder("python","deNoise_Post.py","-p",xmlPath.toString(),"-n",splitOcrXmlFile[splitOcrXmlFile.length-1]);
+		pb.directory(new File(python_script_path));
+		Process process;
+		String seasrOcrXmlFile="";
+		String idhmcOcrXmlFile="";
+		try {
+			process = pb.start();
+			process.waitFor();
+			process.destroy();
+			seasrOcrXmlFile=ocrXmlFile.replace(splitOcrXmlFile[splitOcrXmlFile.length-1],splitOcrXmlFile[splitOcrXmlFile.length-1].replace(".xml", "_SEASR.xml"));
+			idhmcOcrXmlFile=ocrXmlFile.replace(splitOcrXmlFile[splitOcrXmlFile.length-1],splitOcrXmlFile[splitOcrXmlFile.length-1].replace(".xml", "_IDHMC.xml"));
+		
+		} catch (Exception e) {
+			LOG.error("Job Failed", e);
+            this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
+            return;
+		}
+				
         // then, calculate SEASR's eCorr and stats
         try {
             float[] SEASRscores = computeCorrectabilityScore(ocrXmlFile);
