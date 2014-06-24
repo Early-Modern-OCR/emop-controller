@@ -18,6 +18,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
@@ -448,26 +449,10 @@ public class EmopController {
             this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
             return;
         }
-        // DeNoise
-        this.denoiseHome = System.getenv("DENOISE_HOME");
-        String[] splitOcrXmlFile= ocrXmlFile.split("/");
-        StringBuffer xmlPath = new StringBuffer();
-        for(int i=0;i<splitOcrXmlFile.length-1;i++){
-            xmlPath.append(splitOcrXmlFile[i]);
-            xmlPath.append("/");
-        }
-        String python_script_path =this.denoiseHome;
-        ProcessBuilder pb = new ProcessBuilder("python","deNoise_Post.py","-p",xmlPath.toString(),"-n",splitOcrXmlFile[splitOcrXmlFile.length-1]);
-        pb.directory(new File(python_script_path));
-        Process process;
-        String seasrOcrXmlFile="";
-        String idhmcOcrXmlFile="";
+
+        //DeNoise
         try {
-            process = pb.start();
-            process.waitFor();
-            process.destroy();
-            seasrOcrXmlFile=ocrXmlFile.replace(splitOcrXmlFile[splitOcrXmlFile.length-1],splitOcrXmlFile[splitOcrXmlFile.length-1].replace(".xml", "_SEASR.xml"));
-            idhmcOcrXmlFile=ocrXmlFile.replace(splitOcrXmlFile[splitOcrXmlFile.length-1],splitOcrXmlFile[splitOcrXmlFile.length-1].replace(".xml", "_IDHMC.xml"));    
+            runDeNoise(addPrefix(ocrXmlFile));
         } catch (Exception e) {
             LOG.error("Job Failed", e);
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
@@ -510,6 +495,41 @@ public class EmopController {
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
             this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, SEASReCorr, SEASRstats);
         }
+    }
+
+    /**
+     * Executes DeNoise post processing script
+     *
+     * @param ocrXmlFile Path to the OCR XML output file
+     * @param priorVersionCnt number of pre-existing ocr'd versions of this page
+     * @param params (may be null) Parameters to pass along to tesseract
+     * @param trainingFont
+     * @throws InterruptedException
+     * @throws IOException
+     * @throws RuntimeException
+     */
+    private void runDeNoise(String ocrXmlFile) throws InterruptedException, IOException, RuntimeException {
+        LOG.debug("Running DeNoise for: " + ocrXmlFile);
+
+        // Gets the full directory path of the OCR XML file
+        String denoiseXmlPath = FilenameUtils.getFullPath(ocrXmlFile);
+        // Gets the filename of the OCR XML file
+        String denoiseXmlFile = FilenameUtils.getName(ocrXmlFile);
+
+        ProcessBuilder pb = new ProcessBuilder(
+            "python", "deNoise_Post.py",
+            "-p", denoiseXmlPath, "-n", denoiseXmlFile
+        );
+        LOG.info("Command"+pb.command());
+        pb.directory(new File(this.denoiseHome));
+        Process proc = pb.start();
+        awaitProcess(proc, JX_TIMEOUT_MS);
+        if (proc.exitValue() != 0) {
+            String err = IOUtils.toString(proc.getErrorStream());
+            proc.destroy();
+            throw new RuntimeException("DeNoise failed: "+err);
+        }
+        proc.destroy();
     }
 
     private float[] computeCorrectabilityScore(String ocrXmlFile) throws InterruptedException, IOException {
