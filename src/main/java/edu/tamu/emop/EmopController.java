@@ -50,6 +50,8 @@ import edu.tamu.emop.model.WorkInfo;
  *
  */
 public class EmopController {
+    private Package pkg;
+    private String version;
     public enum Algorithm {JUXTA, LEVENSHTEIN, JARO_WINKLER};
     public enum Mode {RUN, CHECK, RESERVE}
 
@@ -71,12 +73,18 @@ public class EmopController {
     private static Logger LOG = Logger.getLogger(EmopController.class);
     private static final long JX_TIMEOUT_MS = 1000*60*10;    //10 mins
 
+    EmopController() {
+      this.pkg = this.getClass().getPackage();
+      this.version = this.pkg.getImplementationVersion();
+    }
+
     /**
      * Main entry point for the controller
      * @param args
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
+        EmopController emop = new EmopController();
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
 
         Mode mode = Mode.RUN; // set the defailt operating mode
@@ -100,15 +108,30 @@ public class EmopController {
                                 .hasArg()
                                 .withArgName("NUMBER")
                                 .create("numpages") );
+        cliOptions.addOption( "version", false, "print the version information and exit" );
+        cliOptions.addOption( "debug", false, "print debugging information" );
+        cliOptions.addOption( "help", false, "print this message" );
 
         // set up the commandline parser
         CommandLineParser cliParser = new BasicParser();
         CommandLine cliCommand;
+        HelpFormatter cliFormatter = new HelpFormatter();
         boolean badCommand = true;
 
         //verify the commands passed in are valid, and determine appropriate mode
         try {
             cliCommand = cliParser.parse(cliOptions, args);
+            if(cliCommand.hasOption("help")) {
+              cliFormatter.printHelp("eMOP Controller", cliOptions, true);
+              System.exit(0);
+            }
+            if(cliCommand.hasOption("version")) {
+              System.out.println(emop.version);
+              System.exit(0);
+            }
+            if(cliCommand.hasOption("debug")) {
+              emop.printHeapStats();
+            }
             if(cliCommand.hasOption("mode")) {
                 String attemptedMode = cliCommand.getOptionValue("mode").trim();
                 if(attemptedMode.equals("check")) {
@@ -136,21 +159,18 @@ public class EmopController {
         } catch (Exception e) {
             System.out.println("Error parsing command line: "+e.getMessage());
             //assume bad parameters passed, and print command line help
-            HelpFormatter cliFormatter = new HelpFormatter();
-            cliFormatter.printHelp("eMOP Controller", cliOptions);
+            cliFormatter.printHelp("eMOP Controller", cliOptions, true);
             System.exit(-1);
         }
 
         //print help and exit if bad command line
         if(badCommand) {
-            HelpFormatter cliFormatter = new HelpFormatter();
-            cliFormatter.printHelp("eMOP Controller", cliOptions);
+            cliFormatter.printHelp("eMOP Controller", cliOptions, true);
             System.exit(-1);
         }
 
         //run the emop controller given the appropriate mode
         try {
-            EmopController emop = new EmopController();
             emop.init( mode, procID, numPages );
 
             if ( mode.equals(Mode.CHECK)) {
@@ -735,5 +755,24 @@ public class EmopController {
         if ( this.db != null ) {
             this.db.disconnect();
         }
+    }
+
+    /**
+     * Print Heap utilization statistics
+     */
+    public void printHeapStats() {
+        Runtime runtime = Runtime.getRuntime();
+
+        int mb = 1024*1024;
+        long usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / mb;
+        long freeMemory = runtime.freeMemory() / mb;
+        long totalMemory = runtime.totalMemory() / mb;
+        long maxMemory = runtime.maxMemory() / mb;
+
+        System.out.println("##### Heap utilization statistics [MB] #####");
+        System.out.println("Used Memory:" + usedMemory);
+        System.out.println("Free Memory:" + freeMemory);
+        System.out.println("Total Memory:" + totalMemory);
+        System.out.println("Max Memory:" + maxMemory);
     }
 }

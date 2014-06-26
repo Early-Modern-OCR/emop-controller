@@ -145,6 +145,8 @@
                             <addClasspath>true</addClasspath>
                             <packageName>edu.tamu.emop</packageName>
                             <mainClass>edu.tamu.emop.EmopController</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
