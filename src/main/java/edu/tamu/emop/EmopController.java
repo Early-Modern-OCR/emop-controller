@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -52,6 +51,7 @@ import edu.tamu.emop.model.WorkInfo;
 public class EmopController {
     private Package pkg;
     private String version;
+    private String commitIdAbbrev;
     public enum Algorithm {JUXTA, LEVENSHTEIN, JARO_WINKLER};
     public enum Mode {RUN, CHECK, RESERVE}
 
@@ -73,9 +73,12 @@ public class EmopController {
     private static Logger LOG = Logger.getLogger(EmopController.class);
     private static final long JX_TIMEOUT_MS = 1000*60*10;    //10 mins
 
-    EmopController() {
+    EmopController() throws IOException {
       this.pkg = this.getClass().getPackage();
       this.version = this.pkg.getImplementationVersion();
+      Properties properties = new Properties();
+      properties.load(getClass().getClassLoader().getResourceAsStream("git.properties"));
+      this.commitIdAbbrev = properties.get("git.commit.id.abbrev").toString();
     }
 
     /**
@@ -127,6 +130,7 @@ public class EmopController {
             }
             if(cliCommand.hasOption("version")) {
               System.out.println(emop.version);
+              System.out.println(emop.commitIdAbbrev);
               System.exit(0);
             }
             if(cliCommand.hasOption("debug")) {
