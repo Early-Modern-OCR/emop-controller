@@ -673,7 +673,7 @@ public class EmopController {
         ProcessBuilder pb = new ProcessBuilder(
                 "java", "-Xms128M", "-Xmx128M", "-jar",
                 this.seasrHome+"/PageEvaluator.jar",
-                "-q", idhmcOcrXmlFile
+                "-q", seasrOcrXmlFile
         );
 
         Process proc = null;
