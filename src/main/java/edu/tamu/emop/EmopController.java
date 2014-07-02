@@ -34,6 +34,25 @@ import edu.tamu.emop.model.PageInfo;
 import edu.tamu.emop.model.PageInfo.OutputFormat;
 import edu.tamu.emop.model.WorkInfo;
 
+//mjc (7/1/14): for new gt scoring code
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.*;
+
+
 /**
  * eMOP controller app. Responsible for pulling jobs from the work
  * queue in the emop database and servicing them. Updates job status
@@ -66,6 +85,11 @@ public class EmopController {
     private String seasrHome;
     private String denoiseHome;
     private String procID; // the process ID with which to reserve or OCR pages
+    
+    //mjc (7/1/14): variables for using denoising output
+    private String seasrOcrXmlFile = "";
+    private String idhmcOcrXmlFile = "";
+    private String idhmcOcrTxtFile = "";
 
     private String pathPrefix = "";
     private Algorithm algorithm = Algorithm.JARO_WINKLER;
@@ -483,10 +507,29 @@ public class EmopController {
             this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
             return;
         }
+        
+        //mjc (7/1/14): convert idhmcOcrXmlFile to idhmcOcrTxtFile
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(idhmcOcrXmlFile), "UTF-8"));
+            String text = getText(reader);
+            //System.out.println(text);
+            try {
+                File newTextFile = new File(idhmcOcrTxtFile);
+            
+                FileWriter fw = new FileWriter(newTextFile);
+                fw.write(text);
+                fw.close();
+            } catch (IOException e){
+                System.out.println(text);
+            }
+        }catch (Exception e) {
+            LOG.error("Converting XML to txt failed", e);
+        }
 
         // then, calculate SEASR's eCorr and stats
         try {
-            float[] SEASRscores = computeCorrectabilityScore(ocrXmlFile);
+            // mjc (6/19/14): change to use idhmcOcrXmlFile to computer eCORR score
+            float[] SEASRscores = computeCorrectabilityScore(seasrOcrXmlFile);
             SEASReCorr = SEASRscores[0];
             SEASRstats = SEASRscores[1];
         } catch(Exception e) {
@@ -504,8 +547,11 @@ public class EmopController {
                 this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, SEASReCorr, SEASRstats);
                 this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "OCR Complete, no GT");
             } else {
-                float juxtaVal = juxtaCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
-                float retasVal = retasCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
+                //mjc (7/1/14): change code to use idhmcOcrTxtFile for comparison
+                //LOG.info("Juxta compare for: " + idhmcOcrXmlFile);
+                float juxtaVal = juxtaCompare(pageInfo.getGroundTruthFile(), idhmcOcrTxtFile);
+                //LOG.info("RETAS compare for: " + idhmcOcrXmlFile);
+                float retasVal = retasCompare(pageInfo.getGroundTruthFile(), idhmcOcrTxtFile);
                 this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, juxtaVal, retasVal, SEASReCorr, SEASRstats);
                 this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "JuxtaCL: "+juxtaVal+", RETAS: "+retasVal);
             }
@@ -554,15 +600,80 @@ public class EmopController {
             throw new RuntimeException("DeNoise failed: "+err);
         }
         proc.destroy();
+        // mjc (7/1/14): populate vars with path&file names of new output files
+        seasrOcrXmlFile=denoiseXmlPath+denoiseXmlFile.replace(".xml", "_SEASR.xml");
+        idhmcOcrXmlFile=denoiseXmlPath+denoiseXmlFile.replace(".xml", "_IDHMC.xml");
+        idhmcOcrTxtFile=denoiseXmlPath+denoiseXmlFile.replace(".xml", "_IDHMC.txt");
+        LOG.info("Denoise completed and returned");
+    }
+    
+    //mjc (7/1/14): code to convert XML to text for GT scoring
+    private static String getText(Reader reader) throws Exception {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(false);
+        documentBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        InputSource inputSource = new InputSource(reader);
+        Document document = documentBuilder.parse(inputSource);
+        
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPath xpath = xpathFactory.newXPath();
+        
+        XPathExpression xpathOCRPar = xpath.compile("descendant::*[@class='ocr_par']");
+        XPathExpression xpathOCRLine = xpath.compile("descendant::*[@class='ocr_line']");
+        XPathExpression xpathOCRXWord = xpath.compile("descendant::*[@class='ocrx_word']");
+        
+        Node pageXml = (Node) xpath.evaluate("//*[@class='ocr_page']", document, XPathConstants.NODE);
+        NodeList parsXml = (NodeList) xpathOCRPar.evaluate(pageXml, XPathConstants.NODESET);
+        
+        StringBuilder textBuilder = new StringBuilder();
+        
+        for (int i = 0, iMax = parsXml.getLength(); i < iMax; i++) {
+            Element parXml = (Element) parsXml.item(i);
+            NodeList linesXml = (NodeList) xpathOCRLine.evaluate(parXml, XPathConstants.NODESET);
+            
+            StringBuilder parTextBuilder = new StringBuilder();
+            for (int j = 0, jMax = linesXml.getLength(); j < jMax; j++) {
+                Element lineXml = (Element) linesXml.item(j);
+                NodeList wordsXml = (NodeList) xpathOCRXWord.evaluate(lineXml, XPathConstants.NODESET);
+                
+                StringBuilder lineTextBuilder = new StringBuilder();
+                for (int k = 0, kMax = wordsXml.getLength(); k < kMax; k++) {
+                    Element wordXml = (Element) wordsXml.item(k);
+                    String word = wordXml.getTextContent();
+                    
+                    lineTextBuilder.append(" ").append(word);
+                }
+                
+                String lineText = lineTextBuilder.toString();
+                if (lineText.length() > 0)
+                    lineText = lineText.substring(1);
+                
+                parTextBuilder.append("\n").append(lineText);
+            }
+            
+            String parText = parTextBuilder.toString();
+            if (parText.length() > 0)
+                parText = parText.substring(1);
+            
+            textBuilder.append("\n\n").append(parText);
+        }
+        
+        String text = textBuilder.toString();
+        if (text.length() > 0)
+            text = text.substring(2);
+        
+        return text;
     }
 
-    private float[] computeCorrectabilityScore(String ocrXmlFile) throws InterruptedException, IOException {
-        LOG.debug("Computing the correctable score for: " + ocrXmlFile);
+    private float[] computeCorrectabilityScore(String seasrOcrXmlFile) throws InterruptedException, IOException {
+        LOG.debug("Computing the correctable score for: " + seasrOcrXmlFile);
 
         ProcessBuilder pb = new ProcessBuilder(
                 "java", "-Xms128M", "-Xmx128M", "-jar",
                 this.seasrHome+"/PageEvaluator.jar",
-                "-q", addPrefix( ocrXmlFile )
+                "-q", idhmcOcrXmlFile
         );
 
         Process proc = null;
@@ -594,7 +705,7 @@ public class EmopController {
         String out = "";
         String cmd = this.juxtaHome+"/juxta-cl.jar";
         String gt = addPrefix( gtFile );
-        String ocr = addPrefix(ocrTxtFile);
+        String ocr = ocrTxtFile;        //mjc (7/1/14)
         String alg = this.algorithm.toString().toLowerCase();
 
         ProcessBuilder pb = new ProcessBuilder(
@@ -622,7 +733,7 @@ public class EmopController {
         ProcessBuilder pb = new ProcessBuilder(
             "java",  "-Xms128M", "-Xmx128M", "-jar",
             this.retasHome+"/retas.jar",
-            addPrefix( gtFile ), addPrefix(ocrTxtFile),
+            addPrefix( gtFile ), ocrTxtFile,            //mjc (7/1/14)
             "-opt", this.retasHome+"/config.txt");
         pb.directory( new File(this.retasHome) );
         Process jxProc = pb.start();
@@ -700,11 +811,17 @@ public class EmopController {
         LOG.debug("pageID "+job.getPageId()+", engineID: "+job.getBatch().getOcrEngine());
         String ocrTxtFile = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), OutputFormat.TXT);
         String ocrXmlFile = this.db.getPageOcrResult(job.getPageId(), job.getBatch().getOcrEngine(), OutputFormat.XML);
+        //mjc (7/2/14): code change to use denoised XML for scoring
+        // Gets the full directory path of the OCR XML file
+        String denoiseXmlPath = FilenameUtils.getFullPath(ocrXmlFile);
+        // Gets the filename of the OCR XML file
+        String denoiseXmlFile = FilenameUtils.getName(ocrXmlFile);
+        idhmcOcrTxtFile=denoiseXmlPath+denoiseXmlFile.replace(".xml", "_IDHMC.txt");
 
         try {
             // do the GT compares
-            float juxtaVal = juxtaCompare( gtPath, ocrTxtFile );
-            float retasVal = retasCompare(pageInfo.getGroundTruthFile(), ocrTxtFile);
+            float juxtaVal = juxtaCompare( gtPath, idhmcOcrTxtFile );
+            float retasVal = retasCompare(pageInfo.getGroundTruthFile(), idhmcOcrTxtFile);
 
             // log the results
             this.db.updateJobStatus(job.getId(), Status.PENDING_POSTPROCESS, "{\"JuxtaCL\": \""+juxtaVal+"\", \"RETAS\": \""+retasVal+"\"}");
