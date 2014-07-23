@@ -86,7 +86,6 @@ public class EmopController {
     private String procID; // the process ID with which to reserve or OCR pages
     
     //mjc (7/1/14): variables for using denoising output
-    private String seasrOcrXmlFile = "";
     private String idhmcOcrXmlFile = "";
     private String idhmcOcrTxtFile = "";
 
@@ -527,8 +526,7 @@ public class EmopController {
 
         // then, calculate SEASR's eCorr and stats
         try {
-            // mjc (6/19/14): change to use idhmcOcrXmlFile to computer eCORR score
-            float[] SEASRscores = computeCorrectabilityScore(seasrOcrXmlFile);
+            float[] SEASRscores = computeCorrectabilityScore(addPrefix(ocrXmlFile));
             SEASReCorr = SEASRscores[0];
             SEASRstats = SEASRscores[1];
         } catch(Exception e) {
@@ -600,7 +598,6 @@ public class EmopController {
         }
         proc.destroy();
         // mjc (7/1/14): populate vars with path&file names of new output files
-        seasrOcrXmlFile=denoiseXmlPath+denoiseXmlFile.replace(".xml", "_SEASR.xml");
         idhmcOcrXmlFile=denoiseXmlPath+denoiseXmlFile.replace(".xml", "_IDHMC.xml");
         idhmcOcrTxtFile=denoiseXmlPath+denoiseXmlFile.replace(".xml", "_IDHMC.txt");
         LOG.info("Denoise completed and returned");
@@ -666,13 +663,13 @@ public class EmopController {
         return text;
     }
 
-    private float[] computeCorrectabilityScore(String seasrOcrXmlFile) throws InterruptedException, IOException {
-        LOG.debug("Computing the correctable score for: " + seasrOcrXmlFile);
+    private float[] computeCorrectabilityScore(String ocrXmlFile) throws InterruptedException, IOException {
+        LOG.debug("Computing the correctable score for: " + ocrXmlFile);
 
         ProcessBuilder pb = new ProcessBuilder(
                 "java", "-Xms128M", "-Xmx128M", "-jar",
                 this.seasrHome+"/PageEvaluator.jar",
-                "-q", seasrOcrXmlFile
+                "-q", ocrXmlFile
         );
 
         Process proc = null;
