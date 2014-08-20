@@ -53,10 +53,15 @@ public class WorkInfo {
         return (this.eccoDirectory != null && this.eccoDirectory.length() > 0);
     }
     
+    public String getOcrOutputDirForBatch(BatchJob batch) {
+        // /data/shared/text-xml/IDHMC-OCR/<org_unit>/<work_id>/<batch>
+        return OCR_ROOT+"/"+getOrganizationalUnit()+"/"+getId()+"/"+batch.getId();
+    }
+
     public String getOcrOutFile(BatchJob batch, OutputFormat fmt, int pageNum) {
         // Final directory structure is this:
         // /data/shared/text-xml/IDHMC-OCR/<org_unit>/<work_id>/<batch>/<image-file-name>.[txt | xml]
-        return OCR_ROOT+"/"+getOrganizationalUnit()+"/"+getId()+"/"+batch.getId()+"/"+pageNum+"."+fmt.toString().toLowerCase();
+        return getOcrOutputDirForBatch(batch)+"/"+pageNum+"."+fmt.toString().toLowerCase();
     }
     
     public String getOcrRootDirectory() {

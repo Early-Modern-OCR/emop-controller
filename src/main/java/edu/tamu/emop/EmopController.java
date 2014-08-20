@@ -5,12 +5,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.io.InputStreamReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -18,13 +28,20 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+//mjc (7/1/14): for new gt scoring code
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import edu.tamu.emop.model.BatchJob;
 import edu.tamu.emop.model.BatchJob.JobType;
@@ -34,22 +51,6 @@ import edu.tamu.emop.model.JobPage.Status;
 import edu.tamu.emop.model.PageInfo;
 import edu.tamu.emop.model.PageInfo.OutputFormat;
 import edu.tamu.emop.model.WorkInfo;
-
-//mjc (7/1/14): for new gt scoring code
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
 
 
 /**
@@ -73,6 +74,7 @@ public class EmopController {
     public enum Algorithm {JUXTA, LEVENSHTEIN, JARO_WINKLER};
     public enum Mode {RUN, CHECK, RESERVE}
 
+    private File emopConfigProperties;  // "pointer" to the emop.properties config file
     private Database db;
     private long timeLeftMs = -1;   // run til all jobs done
     private long wallTimeSec = -1;  // run til all jobs done
@@ -84,7 +86,11 @@ public class EmopController {
     private String seasrHome;
     private String denoiseHome;
     private String procID; // the process ID with which to reserve or OCR pages
-    
+
+    // variables for the SEASR correction routine
+    private File[] seasrCorrectionDicts;
+    private File seasrCorrectionRules;
+
     //mjc (7/1/14): variables for using denoising output
     private String idhmcOcrXmlFile = "";
     private String idhmcOcrTxtFile = "";
@@ -261,8 +267,21 @@ public class EmopController {
         procID = ProcessID;
         numPages = NumberPages;
 
+        // find the eMOP home directory
+        this.emopHome = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
+
+        // pinpoint the eMOP configuration file
+        emopConfigProperties = new File(this.emopHome, "emop.properties");
+
+        // Use them to read emop controller settings from local properties file
+        Properties props = new Properties();
+        FileInputStream fis = new FileInputStream(emopConfigProperties);
+        props.load(fis);
+
+        // required DB stuff:
+        initDatabase(props);
+
         if ( mode.equals(Mode.CHECK) || mode.equals(Mode.RESERVE)) {
-            initWorkCheckMode();
             return;
         }
 
@@ -274,13 +293,7 @@ public class EmopController {
         // get required env settings
         getEnvironmentConfig();
 
-        // Use them to read emop controller settings from local properties file
-        Properties props = new Properties();
-        FileInputStream fis = new FileInputStream(new File(this.emopHome,"emop.properties"));
-        props.load(fis);
-
-        // required DB stuff:
-        initDatabase(props);
+        initSEASR();
 
         // optional
         if ( props.containsKey("log_level")) {
@@ -307,20 +320,7 @@ public class EmopController {
         }
     }
 
-    private void initWorkCheckMode() throws IOException, SQLException {
-        this.emopHome =  new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
-
-        Properties props = new Properties();
-        FileInputStream fis = new FileInputStream(new File(this.emopHome,"emop.properties"));
-        props.load(fis);
-
-        // required DB stuff:
-        initDatabase(props);
-    }
-
     private void getEnvironmentConfig() {
-        this.emopHome =  new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
-
         this.juxtaHome =  System.getenv("JUXTA_HOME");
         if ( this.juxtaHome == null || this.juxtaHome.length() == 0) {
             throw new RuntimeException("Missing required JUXTA_HOME environment variable");
@@ -330,12 +330,12 @@ public class EmopController {
         if ( this.retasHome == null || this.retasHome.length() == 0) {
             throw new RuntimeException("Missing required RETAS_HOME environment variable");
         }
-    
+
         this.seasrHome = System.getenv("SEASR_HOME");
         if (this.seasrHome == null || this.seasrHome.length() == 0) {
             throw new RuntimeException("Missing required SEASR_HOME environment variable");
         }
-    
+
         this.denoiseHome = System.getenv("DENOISE_HOME");
         if (this.denoiseHome == null || this.denoiseHome.length() == 0) {
             throw new RuntimeException("Missing required DENOISE_HOME environment variable");
@@ -355,6 +355,47 @@ public class EmopController {
 
         this.db = new Database();
         this.db.connect(dbHost, dbName, dbUser, dbPass);
+    }
+
+    private void initSEASR() {
+        LOG.debug("SEASR_HOME set to " + seasrHome);
+
+        // Find dictionaries
+        File dictsDir = new File(seasrHome, "dictionaries");
+        seasrCorrectionDicts = dictsDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".dict");
+            }
+        });
+
+        if (seasrCorrectionDicts.length == 0) {
+            LOG.error("Could not find any dictionaries in " + dictsDir);
+            throw new RuntimeException("Could not find any dictionaries in " + dictsDir);
+        }
+
+        // Find transformation rules
+        File rulesDir = new File(seasrHome, "rules");
+        File[] rules = rulesDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".json");
+            }
+        });
+
+        if (rules.length != 1) {
+            LOG.error("A single rules file should exist in " + rulesDir);
+            throw new RuntimeException("A single rules file should exist in " + rulesDir);
+        }
+
+        seasrCorrectionRules = rules[0];
+
+        if (LOG.isDebugEnabled()) {
+            for (File dict : seasrCorrectionDicts)
+                LOG.debug("Using dictionary: " + dict);
+
+            LOG.debug("Using rules file: " + seasrCorrectionRules);
+        }
     }
 
     /**
@@ -459,6 +500,7 @@ public class EmopController {
         // get details about the page and work associated with this job
         PageInfo pageInfo = this.db.getPageInfo(job.getPageId());
         WorkInfo workInfo = this.db.getWorkInfo(pageInfo.getWorkId());
+        String ocrOutputDir = workInfo.getOcrOutputDirForBatch(job.getBatch());
         String ocrXmlFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.XML, pageInfo.getPageNumber());
         String ocrTxtFile = workInfo.getOcrOutFile(job.getBatch(), OutputFormat.TXT, pageInfo.getPageNumber());
         float SEASReCorr = -1;
@@ -505,7 +547,7 @@ public class EmopController {
             this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
             return;
         }
-        
+
         //mjc (7/1/14): convert idhmcOcrXmlFile to idhmcOcrTxtFile
         try {
             Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(idhmcOcrXmlFile), "UTF-8"));
@@ -513,7 +555,7 @@ public class EmopController {
             //System.out.println(text);
             try {
                 File newTextFile = new File(idhmcOcrTxtFile);
-            
+
                 FileWriter fw = new FileWriter(newTextFile);
                 fw.write(text);
                 fw.close();
@@ -530,6 +572,28 @@ public class EmopController {
             SEASReCorr = SEASRscores[0];
             SEASRstats = SEASRscores[1];
         } catch(Exception e) {
+            LOG.error("Job Failed", e);
+            this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
+            this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
+            return;
+        }
+
+        // Perform the OCR correction
+        try {
+            String jsonCorrectionStats = correctOcr(addPrefix(ocrXmlFile), ocrOutputDir);
+            String outAltoTxt = String.format("%s/%d_ALTO.txt", ocrOutputDir, pageInfo.getPageNumber());
+
+            float postProcJuxtaVal = -1;
+            float postProcRetasVal = -1;
+
+            // if successful, do the GT comparison, if possible
+            if (pageInfo.hasGroundTruth()) {
+            	postProcJuxtaVal = juxtaCompare(pageInfo.getGroundTruthFile(), outAltoTxt);
+            	postProcRetasVal = retasCompare(pageInfo.getGroundTruthFile(), outAltoTxt);
+            }
+
+            this.db.updatePostProcResult(job, postProcJuxtaVal, postProcRetasVal, jsonCorrectionStats, -1, -1);
+        } catch (Exception e) {
             LOG.error("Job Failed", e);
             this.db.updateJobStatus(job.getId(), Status.FAILED, e.getMessage());
             this.db.addPageResult(job, ocrTxtFile, ocrXmlFile, -1, -1, -1, -1);
@@ -602,74 +666,82 @@ public class EmopController {
         idhmcOcrTxtFile=denoiseXmlPath+denoiseXmlFile.replace(".xml", "_IDHMC.txt");
         LOG.info("Denoise completed and returned");
     }
-    
+
     //mjc (7/1/14): code to convert XML to text for GT scoring
     private static String getText(Reader reader) throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(false);
         documentBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-        
+
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         InputSource inputSource = new InputSource(reader);
         Document document = documentBuilder.parse(inputSource);
-        
+
         XPathFactory xpathFactory = XPathFactory.newInstance();
         XPath xpath = xpathFactory.newXPath();
-        
+
         XPathExpression xpathOCRPar = xpath.compile("descendant::*[@class='ocr_par']");
         XPathExpression xpathOCRLine = xpath.compile("descendant::*[@class='ocr_line']");
         XPathExpression xpathOCRXWord = xpath.compile("descendant::*[@class='ocrx_word']");
-        
+
         Node pageXml = (Node) xpath.evaluate("//*[@class='ocr_page']", document, XPathConstants.NODE);
         NodeList parsXml = (NodeList) xpathOCRPar.evaluate(pageXml, XPathConstants.NODESET);
-        
+
         StringBuilder textBuilder = new StringBuilder();
-        
+
         for (int i = 0, iMax = parsXml.getLength(); i < iMax; i++) {
             Element parXml = (Element) parsXml.item(i);
             NodeList linesXml = (NodeList) xpathOCRLine.evaluate(parXml, XPathConstants.NODESET);
-            
+
             StringBuilder parTextBuilder = new StringBuilder();
             for (int j = 0, jMax = linesXml.getLength(); j < jMax; j++) {
                 Element lineXml = (Element) linesXml.item(j);
                 NodeList wordsXml = (NodeList) xpathOCRXWord.evaluate(lineXml, XPathConstants.NODESET);
-                
+
                 StringBuilder lineTextBuilder = new StringBuilder();
                 for (int k = 0, kMax = wordsXml.getLength(); k < kMax; k++) {
                     Element wordXml = (Element) wordsXml.item(k);
                     String word = wordXml.getTextContent();
-                    
+
                     lineTextBuilder.append(" ").append(word);
                 }
-                
+
                 String lineText = lineTextBuilder.toString();
                 if (lineText.length() > 0)
                     lineText = lineText.substring(1);
-                
+
                 parTextBuilder.append("\n").append(lineText);
             }
-            
+
             String parText = parTextBuilder.toString();
             if (parText.length() > 0)
                 parText = parText.substring(1);
-            
+
             textBuilder.append("\n\n").append(parText);
         }
-        
+
         String text = textBuilder.toString();
         if (text.length() > 0)
             text = text.substring(2);
-        
+
         return text;
     }
 
-    private float[] computeCorrectabilityScore(String ocrXmlFile) throws InterruptedException, IOException {
-        LOG.debug("Computing the correctable score for: " + ocrXmlFile);
+    /**
+     * Computes correctability scores for an hOCR file
+     *
+     * @param ocrXmlFile The hOCR file
+     * @return The correctability scores
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    private float[] computeCorrectabilityScore(String seasrOcrXmlFile) throws InterruptedException, IOException {
+        LOG.debug("Computing the correctable score for: " + seasrOcrXmlFile);
 
         ProcessBuilder pb = new ProcessBuilder(
                 "java", "-Xms128M", "-Xmx128M", "-jar",
                 this.seasrHome+"/PageEvaluator.jar",
-                "-q", ocrXmlFile
+                "-q", seasrOcrXmlFile
         );
 
         Process proc = null;
@@ -684,6 +756,59 @@ public class EmopController {
                     throw new IOException("Unexpected response format: " + out);
 
                 return new float[] { Float.parseFloat(scores[0]), Float.parseFloat(scores[1]) };
+            } else {
+                String err = IOUtils.toString(proc.getErrorStream());
+                throw new IOException(err);
+            }
+        }
+        finally {
+            if (proc != null)
+                proc.destroy();
+        }
+    }
+
+    /**
+     * Attempts to correct OCR errors in an hOCR file
+     *
+     * @param ocrXmlFile The hOCR file
+     * @param outputDir The output directory where the corrected hOCR is written (in ALTO XML format)
+     * @return A JSON object containing statistics about the correction results
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    private String correctOcr(String ocrXmlFile, String outputDir) throws InterruptedException, IOException {
+        LOG.debug("Correcting: " + ocrXmlFile);
+
+        final String CORRECTOR_JAR = seasrHome + "/PageCorrector.jar";
+        final String CORRECTOR_DB_CONF = emopConfigProperties.getAbsolutePath();
+
+        // build the command line for running the OCR correction tool
+        List<String> cmdline = new ArrayList<String>();
+        cmdline.add("java"); cmdline.add("-Xms128M"); cmdline.add("-Xmx512M");
+        cmdline.add("-jar"); cmdline.add(CORRECTOR_JAR);
+        cmdline.add("--dbconf"); cmdline.add(CORRECTOR_DB_CONF);
+        cmdline.add("--dict");
+        for (File dictionary : seasrCorrectionDicts) {
+            cmdline.add(dictionary.getAbsolutePath());
+        }
+        cmdline.add("-t"); cmdline.add(seasrCorrectionRules.getAbsolutePath());
+        cmdline.add("-o"); cmdline.add(outputDir);
+        // cmdline.add("-n"); cmdline.add("0.5");
+        cmdline.add("--stats");
+        cmdline.add("--");
+        cmdline.add(ocrXmlFile);
+
+        // start the process
+        ProcessBuilder pb = new ProcessBuilder(cmdline);
+
+        Process proc = null;
+        try {
+            proc = pb.start();
+            awaitProcess(proc, JX_TIMEOUT_MS);
+
+            if (proc.exitValue() == 0) {
+                String out = IOUtils.toString(proc.getInputStream()).trim();
+                return out;
             } else {
                 String err = IOUtils.toString(proc.getErrorStream());
                 throw new IOException(err);
