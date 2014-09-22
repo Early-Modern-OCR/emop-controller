@@ -35,7 +35,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-//mjc (7/1/14): for new gt scoring code
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -51,7 +50,6 @@ import edu.tamu.emop.model.JobPage.Status;
 import edu.tamu.emop.model.PageInfo;
 import edu.tamu.emop.model.PageInfo.OutputFormat;
 import edu.tamu.emop.model.WorkInfo;
-
 
 /**
  * eMOP controller app. Responsible for pulling jobs from the work
@@ -264,6 +262,8 @@ public class EmopController {
      * @throws FileNotFoundException
      */
     public void init( Mode mode, String ProcessID, int NumberPages ) throws IOException, SQLException {
+        LOG.info("Initialize eMOP controller");
+
         procID = ProcessID;
         numPages = NumberPages;
 
@@ -287,8 +287,7 @@ public class EmopController {
 
         // setup console logger. this will be re-routed when running
         // on brazos to a log file named with the job id
-        initLogging() ;
-        LOG.info("Initialize eMOP controller");
+        // initLogging() ;  // TODO remove this -- now configuring log4j from log4j.properties rather than through code
 
         // get required env settings
         getEnvironmentConfig();
@@ -784,7 +783,7 @@ public class EmopController {
 
         // build the command line for running the OCR correction tool
         List<String> cmdline = new ArrayList<String>();
-        cmdline.add("java"); cmdline.add("-Xms128M"); cmdline.add("-Xmx512M");
+        cmdline.add("java"); cmdline.add("-showversion"); cmdline.add("-Xms128M"); cmdline.add("-Xmx512M");
         cmdline.add("-jar"); cmdline.add(CORRECTOR_JAR);
         cmdline.add("--dbconf"); cmdline.add(CORRECTOR_DB_CONF);
         cmdline.add("--dict");
@@ -797,6 +796,11 @@ public class EmopController {
         cmdline.add("--stats");
         cmdline.add("--");
         cmdline.add(ocrXmlFile);
+
+        StringBuilder sb = new StringBuilder();
+        for (String s : cmdline)
+        	sb.append(s).append(" ");
+        LOG.debug("Running command: " + sb.toString());
 
         // start the process
         ProcessBuilder pb = new ProcessBuilder(cmdline);
@@ -811,6 +815,7 @@ public class EmopController {
                 return out;
             } else {
                 String err = IOUtils.toString(proc.getErrorStream());
+                LOG.error("correctOcr ERROR: " + err);
                 throw new IOException(err);
             }
         }
