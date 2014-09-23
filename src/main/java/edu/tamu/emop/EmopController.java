@@ -262,7 +262,7 @@ public class EmopController {
      * @throws FileNotFoundException
      */
     public void init( Mode mode, String ProcessID, int NumberPages ) throws IOException, SQLException {
-        LOG.info("Initialize eMOP controller");
+        LOG.debug("Initializing eMOP controller");
 
         procID = ProcessID;
         numPages = NumberPages;
@@ -294,17 +294,18 @@ public class EmopController {
 
         initSEASR();
 
-        // optional
-        if ( props.containsKey("log_level")) {
-            String level = props.getProperty("log_level");
-            if ( level.equals("DEBUG")) {
-                LOG.setLevel(Level.DEBUG);
-            } else if ( level.equals("INFO")) {
-                LOG.setLevel(Level.INFO);
-            } else if ( level.equals("ERROR")) {
-                LOG.setLevel(Level.ERROR);
-            }
-        }
+        // optional // TODO remove this also - logging level set in log4j.properties
+//        if ( props.containsKey("log_level")) {
+//            String level = props.getProperty("log_level");
+//            if ( level.equals("DEBUG")) {
+//                LOG.setLevel(Level.DEBUG);
+//            } else if ( level.equals("INFO")) {
+//                LOG.setLevel(Level.INFO);
+//            } else if ( level.equals("ERROR")) {
+//                LOG.setLevel(Level.ERROR);
+//            }
+//        }
+
         if ( props.containsKey("path_prefix")) {
             this.pathPrefix = props.getProperty("path_prefix");
         }

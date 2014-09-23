@@ -34,10 +34,10 @@ umask 002
 PROC_ID="$(echo $PBS_JOBID | cut -d'.' -f1)"
 
 # launch instance of the controller which runs until killed or no jobs remain
-java -Xms${HEAP_SIZE} -Xmx${HEAP_SIZE} -jar $EMOP_HOME/emop-controller.jar -mode run -procid ${PROC_ID} &> ${LOGDIR}/emop-controller-${PROC_ID}.out
+java -Xms${HEAP_SIZE} -Xmx${HEAP_SIZE} -Dlogfile=${LOGDIR}/emop-controller-${PROC_ID}.out -jar $EMOP_HOME/emop-controller.jar -mode run -procid ${PROC_ID}
 
 # Done; print the end time and host.
 echo "-=-"
 echo "$PBS_JOBID ended on $(hostname) at $(date)"
- 
+
 exit 0

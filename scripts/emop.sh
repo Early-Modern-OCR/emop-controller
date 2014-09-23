@@ -90,8 +90,8 @@ done
 export PATH=$PATH:/usr/local/bin
 
 # this script lives in the root directory of the emop controller
-# be sure to cd to this directory no matter how the script was 
-# launched 
+# be sure to cd to this directory no matter how the script was
+# launched
 cd $(dirname $0)
 EMOP_HOME=$(pwd)
 
@@ -143,7 +143,7 @@ ensure_environment() {
 
 # ensure that there is work to do before scheduling
 check_page_cnt() {
-  PAGE_CNT=$(env EMOP_HOME=$EMOP_HOME java -Xms128M -Xmx128M -jar emop-controller.jar -mode check)
+  PAGE_CNT=$(env EMOP_HOME=$EMOP_HOME java -Xms128M -Xmx128M -Dlogfile=${LOGDIR}/emop-controller.log -jar emop-controller.jar -mode check)
   if [ $? -ne 0 ];then
     # do not submit a new controller if there were  errors checking count
     echo "Unable to determine job count. Not launching eMOP controller"
@@ -193,7 +193,7 @@ qsub_job() {
     return
   fi
 
-  JOB_RESERVED_CNT=$(env EMOP_HOME=$EMOP_HOME java -Xms128M -Xmx128M -jar emop-controller.jar -mode reserve -procid $jobID -numpages $numpages)
+  JOB_RESERVED_CNT=$(env EMOP_HOME=$EMOP_HOME java -Xms128M -Xmx128M -Dlogfile=${LOGDIR}/emop-controller.log -jar emop-controller.jar -mode reserve -procid $jobID -numpages $numpages)
   # If the reservation fails, delete the job that was just submitted
   if [ $? -ne 0 ]; then
     echo "Failed to reserve ${numpages} pages for jobID: ${jobID}"
@@ -247,7 +247,7 @@ local_test() {
       Q_AVAIL=$qavail
       echo "## TEST Q_AVAIL ${Q_AVAIL} | PAGE_CNT ${PAGE_CNT} ##"
       optimize
-      
+
       if [ $NUM_JOBS -eq 0 ] || [ $NUM_JOBS -gt $Q_LIMIT ]; then
         echo "## TEST FAILED | NUM_JOBS ${NUM_JOBS} | PAGES_PER_JOB ${PAGES_PER_JOB} ##"
         exit 1
