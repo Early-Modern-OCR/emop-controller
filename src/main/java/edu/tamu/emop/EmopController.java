@@ -640,7 +640,7 @@ public class EmopController {
      * @throws RuntimeException
      */
     private void runDeNoise(String ocrXmlFile) throws InterruptedException, IOException, RuntimeException {
-        LOG.debug("Running DeNoise for: " + ocrXmlFile);
+        LOG.info("Running DeNoise for: " + ocrXmlFile);
 
         // Gets the full directory path of the OCR XML file
         String denoiseXmlPath = FilenameUtils.getFullPath(ocrXmlFile);
@@ -651,14 +651,15 @@ public class EmopController {
             "python", "deNoise_Post.py",
             "-p", denoiseXmlPath, "-n", denoiseXmlFile
         );
-        LOG.info("Command"+pb.command());
+        LOG.debug("Command: "+pb.command());
         pb.directory(new File(this.denoiseHome));
         Process proc = pb.start();
         awaitProcess(proc, JX_TIMEOUT_MS);
+        LOG.debug("Command completed, retCode=" + proc.exitValue());
         if (proc.exitValue() != 0) {
             String err = IOUtils.toString(proc.getErrorStream());
             proc.destroy();
-            throw new RuntimeException("DeNoise failed: "+err);
+            throw new RuntimeException("runDeNoise failed: "+err);
         }
         proc.destroy();
         // mjc (7/1/14): populate vars with path&file names of new output files
@@ -735,8 +736,8 @@ public class EmopController {
      * @throws InterruptedException
      * @throws IOException
      */
-    private float[] computeCorrectabilityScore(String seasrOcrXmlFile) throws InterruptedException, IOException {
-        LOG.debug("Computing the correctable score for: " + seasrOcrXmlFile);
+    private float[] computeCorrectabilityScore(String seasrOcrXmlFile) throws InterruptedException, IOException, RuntimeException {
+        LOG.info("Computing the correctable score for: " + seasrOcrXmlFile);
 
         ProcessBuilder pb = new ProcessBuilder(
                 "java", "-Xms128M", "-Xmx128M", "-jar",
@@ -744,21 +745,25 @@ public class EmopController {
                 "-q", seasrOcrXmlFile
         );
 
+        LOG.debug("Command: " + pb.command());
+
         Process proc = null;
         try {
             proc = pb.start();
             awaitProcess(proc, JX_TIMEOUT_MS);
 
+            LOG.debug("Command completed, retCode=" + proc.exitValue());
+
             if (proc.exitValue() == 0) {
                 String out = IOUtils.toString(proc.getInputStream()).trim();
                 String[] scores = out.split(",");
                 if (scores.length != 2)
-                    throw new IOException("Unexpected response format: " + out);
+                    throw new RuntimeException("computeCorrectabilityScore: Unexpected response format: " + out);
 
                 return new float[] { Float.parseFloat(scores[0]), Float.parseFloat(scores[1]) };
             } else {
                 String err = IOUtils.toString(proc.getErrorStream());
-                throw new IOException(err);
+				throw new RuntimeException("computeCorrectabilityScore failed: " + err);
             }
         }
         finally {
@@ -776,8 +781,8 @@ public class EmopController {
      * @throws InterruptedException
      * @throws IOException
      */
-    private String correctOcr(String ocrXmlFile, String outputDir) throws InterruptedException, IOException {
-        LOG.debug("Correcting: " + ocrXmlFile);
+    private String correctOcr(String ocrXmlFile, String outputDir) throws InterruptedException, IOException, RuntimeException {
+        LOG.info("Correcting: " + ocrXmlFile);
 
         final String CORRECTOR_JAR = seasrHome + "/PageCorrector.jar";
         final String CORRECTOR_DB_CONF = emopConfigProperties.getAbsolutePath();
@@ -798,26 +803,25 @@ public class EmopController {
         cmdline.add("--");
         cmdline.add(ocrXmlFile);
 
-        StringBuilder sb = new StringBuilder();
-        for (String s : cmdline)
-        	sb.append(s).append(" ");
-        LOG.debug("Running command: " + sb.toString());
-
         // start the process
         ProcessBuilder pb = new ProcessBuilder(cmdline);
+        LOG.debug("Command: " + pb.command());
 
         Process proc = null;
         try {
             proc = pb.start();
             awaitProcess(proc, JX_TIMEOUT_MS);
 
+            LOG.debug("Command completed, retCode=" + proc.exitValue());
+            String out = IOUtils.toString(proc.getInputStream()).trim();
+            String err = IOUtils.toString(proc.getErrorStream());
+            LOG.debug("Out: " + out);
+            LOG.debug("Err: " + err);
+
             if (proc.exitValue() == 0) {
-                String out = IOUtils.toString(proc.getInputStream()).trim();
-                return out;
+				return out;
             } else {
-                String err = IOUtils.toString(proc.getErrorStream());
-                LOG.error("correctOcr ERROR: " + err);
-                throw new IOException(err);
+				throw new RuntimeException("correctOcr failed: " + err);
             }
         }
         finally {
@@ -826,8 +830,8 @@ public class EmopController {
         }
     }
 
-    private float juxtaCompare(String gtFile, String ocrTxtFile) throws InterruptedException, IOException, SQLException {
-        LOG.debug("Compare OCR results with ground truth using JuxtaCL");
+    private float juxtaCompare(String gtFile, String ocrTxtFile) throws InterruptedException, IOException, RuntimeException, SQLException {
+        LOG.info("Compare OCR results with ground truth using JuxtaCL");
 
         String out = "";
         String cmd = this.juxtaHome+"/juxta-cl.jar";
@@ -839,32 +843,40 @@ public class EmopController {
             "java", "-Xms128M", "-Xmx128M", "-jar",
             cmd, "-diff", gt, ocr,
             "-algorithm", alg, "-hyphen", "none");
+
+        LOG.debug("Command: " + pb.command());
         pb.directory( new File(this.juxtaHome) );
         Process jxProc = pb.start();
         awaitProcess(jxProc, JX_TIMEOUT_MS);
+
+        LOG.debug("Command completed, retCode=" + jxProc.exitValue());
+
         out = IOUtils.toString(jxProc.getInputStream());
 
         if (jxProc.exitValue() == 0) {
             jxProc.destroy();
             return Float.parseFloat(out.trim());
         } else {
-            LOG.error(out);
             jxProc.destroy();
-            throw new IOException( out);
+            throw new RuntimeException("juxtaCompare failed: " + out);
         }
     }
 
-    private float retasCompare(String gtFile, String ocrTxtFile) throws InterruptedException, IOException, SQLException {
-        LOG.debug("Compare OCR results with ground truth using RETAS");
+    private float retasCompare(String gtFile, String ocrTxtFile) throws InterruptedException, IOException, RuntimeException, SQLException {
+        LOG.info("Compare OCR results with ground truth using RETAS");
         String out = "";
         ProcessBuilder pb = new ProcessBuilder(
             "java",  "-Xms128M", "-Xmx128M", "-jar",
             this.retasHome+"/retas.jar",
             addPrefix( gtFile ), ocrTxtFile,            //mjc (7/1/14)
             "-opt", this.retasHome+"/config.txt");
+        LOG.debug("Command: " + pb.command());
         pb.directory( new File(this.retasHome) );
         Process jxProc = pb.start();
         awaitProcess(jxProc, JX_TIMEOUT_MS);
+
+        LOG.debug("Command completed, retCode=" + jxProc.exitValue());
+
         out = IOUtils.toString(jxProc.getInputStream());
 
         if (jxProc.exitValue() == 0) {
@@ -873,9 +885,8 @@ public class EmopController {
             jxProc.destroy();
             return Float.parseFloat(out.trim().split("\t")[2]);
         } else {
-            LOG.error(out);
             jxProc.destroy();
-            throw new IOException( out);
+            throw new RuntimeException("retasCompare failed: " + out);
         }
     }
 
@@ -910,7 +921,7 @@ public class EmopController {
         if (jxProc.exitValue() != 0) {
             String err = IOUtils.toString(jxProc.getErrorStream());
             jxProc.destroy();
-            throw new RuntimeException("OCR failed: "+err);
+            throw new RuntimeException("doTesseractOcr failed: "+err);
         }
         jxProc.destroy();
 
