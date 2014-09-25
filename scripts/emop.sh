@@ -1,10 +1,14 @@
 #!/bin/bash
 
+export _JAVA_OPTIONS="-Xmx32m -Xms16m"
+
 DEBUG=0
 VERBOSE=0
 QUIET=0
 NOOP=0
 TEST=0
+PAGES_PER_JOB=0
+NUM_JOBS=0
 
 SCRIPT_NAME=$(basename $0)
 
@@ -20,13 +24,15 @@ ARGUMENTS:
 
 OPTIONS:
 
-  -h, --help      Show this message.
-  -d, --debug     Show debug output.
-  -v, --verbose   Show progress messages.
-  -q, --quiet     Supress all output.
-  -n, --noop      Script runs without submitting jobs to Torque.
-  -t, --test      Run script in noop mode and test various scenarios
-                  testing 'division of labor'.
+  -h, --help          Show this message.
+  -d, --debug         Show debug output.
+  -v, --verbose       Show progress messages.
+  -q, --quiet         Supress all output.
+  -n, --noop          Script runs without submitting jobs to Torque.
+  -t, --test          Run script in noop mode and test various scenarios
+                      testing 'division of labor'.
+  --pages-per-job=N   Defaults to 0 which lets the script determine the optimal number
+  --num-jobs=N        Defaults to 0 which lets the script determine the optimal number
 
 EXAMPLE:
 
@@ -41,7 +47,7 @@ Run script without submitting a job and viewing verbose output
 EOF
 }
 
-ARGS=`getopt -o hdvqnt -l help,debug,verbose,quiet,noop,test -n "$0" -- "$@"`
+ARGS=`getopt -o hdvqnt -l help,debug,verbose,quiet,noop,test,pages-per-job:,num-jobs: -n "$0" -- "$@"`
 
 [ $? -ne 0 ] && { usage; exit 1; }
 
@@ -49,38 +55,16 @@ eval set -- "${ARGS}"
 
 while true; do
   case "$1" in
-    -h|--help)
-      usage
-      exit 0
-      ;;
-    -d|--debug)
-      DEBUG=1
-      shift
-      ;;
-    -v|--verbose)
-      VERBOSE=1
-      shift
-      ;;
-    -q|--quiet)
-      QUIET=1
-      shift
-      ;;
-    -n|--noop)
-      NOOP=1
-      shift
-      ;;
-    -t|--test)
-      NOOP=1
-      TEST=1
-      shift
-      ;;
-    --)
-      shift
-      break
-      ;;
-    *)
-      break
-      ;;
+    -h|--help) usage ; exit 0 ;;
+    -d|--debug) DEBUG=1 ; shift ;;
+    -v|--verbose) VERBOSE=1 ; shift ;;
+    -q|--quiet) QUIET=1 ; shift ;;
+    -n|--noop) NOOP=1 ; shift ;;
+    -t|--test) NOOP=1 ; TEST=1 ; shift ;;
+    --pages-per-job) PAGES_PER_JOB=$2 ; shift 2 ;;
+    --num-jobs) NUM_JOBS=$2 ; shift 2 ;;
+    --) shift ; break ;;
+    *) break ;;
   esac
 done
 
@@ -90,8 +74,8 @@ done
 export PATH=$PATH:/usr/local/bin
 
 # this script lives in the root directory of the emop controller
-# be sure to cd to this directory no matter how the script was
-# launched
+# be sure to cd to this directory no matter how the script was 
+# launched 
 cd $(dirname $0)
 EMOP_HOME=$(pwd)
 
@@ -101,13 +85,11 @@ LOGDIR=${LOGDIR-${EMOP_HOME}/logs}
 
 MODULES_SRC_DIR="${EMOP_HOME}/emop-modules/emop"
 MODULES_DIR="${HOME}/privatemodules/emop"
-HEAP_SIZE="128M"
 APP_NAME="emop_controller"
+HEAP_SIZE="128M"
 
 Q="idhmc"
 Q_LIMIT=128
-NUM_JOBS=0
-PAGES_PER_JOB=0
 TOTAL_PAGES_TO_RUN=0
 AVG_PAGE_RUNTIME=20
 MIN_JOB_RUNTIME=300
@@ -149,6 +131,7 @@ check_page_cnt() {
     echo "Unable to determine job count. Not launching eMOP controller"
     exit 1
   fi
+echo $PAGE_CNT
 
   if [ $PAGE_CNT -eq 0 ]; then
     echo "No work to be done"
@@ -247,7 +230,7 @@ local_test() {
       Q_AVAIL=$qavail
       echo "## TEST Q_AVAIL ${Q_AVAIL} | PAGE_CNT ${PAGE_CNT} ##"
       optimize
-
+      
       if [ $NUM_JOBS -eq 0 ] || [ $NUM_JOBS -gt $Q_LIMIT ]; then
         echo "## TEST FAILED | NUM_JOBS ${NUM_JOBS} | PAGES_PER_JOB ${PAGES_PER_JOB} ##"
         exit 1
@@ -278,7 +261,9 @@ check_page_cnt
 echo_verbose "Page count: ${PAGE_CNT}"
 
 # Run optimization function
-optimize
+if [ $PAGES_PER_JOB -eq 0 -a $NUM_JOBS -eq 0 ]; then
+  optimize
+fi
 
 echo "${NOOP_PREFIX}Executing ${NUM_JOBS} jobs with ${PAGES_PER_JOB} pages per job"
 if [ $NOOP -eq 0 ]; then
@@ -287,10 +272,12 @@ if [ $NOOP -eq 0 ]; then
   done
 fi
 
-if [ $PAGE_CNT -gt $TOTAL_PAGES_TO_RUN ] && [ $NUM_JOBS -lt $Q_AVAIL ]; then
-  PAGES_REMAINDER=`echo "$PAGE_CNT - $TOTAL_PAGES_TO_RUN"|bc`
-  echo "${NOOP_PREFIX}Executing 1 job with ${PAGES_REMAINDER} pages"
-  [ $NOOP -eq 0 ] && qsub_job $PAGES_REMAINDER
+if [ $PAGES_PER_JOB -eq 0 -a $NUM_JOBS -eq 0 ]; then
+  if [ $PAGE_CNT -gt $TOTAL_PAGES_TO_RUN ] && [ $NUM_JOBS -lt $Q_AVAIL ]; then
+    PAGES_REMAINDER=`echo "$PAGE_CNT - $TOTAL_PAGES_TO_RUN"|bc`
+    echo "${NOOP_PREFIX}Executing 1 job with ${PAGES_REMAINDER} pages"
+    [ $NOOP -eq 0 ] && qsub_job $PAGES_REMAINDER
+  fi
 fi
 
 exit 0

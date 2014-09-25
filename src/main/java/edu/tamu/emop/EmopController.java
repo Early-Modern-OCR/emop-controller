@@ -580,7 +580,7 @@ public class EmopController {
 
         // Perform the OCR correction
         try {
-            String jsonCorrectionStats = correctOcr(addPrefix(ocrXmlFile), ocrOutputDir);
+            String jsonCorrectionStats = correctOcr(addPrefix(ocrXmlFile), addPrefix(ocrOutputDir));
             String outAltoTxt = String.format("%s/%d_ALTO.txt", ocrOutputDir, pageInfo.getPageNumber());
 
             float postProcJuxtaVal = -1;
