@@ -6,10 +6,9 @@ The Brazos Cluster controller process for the eMOP workflow.
 
 Step #1 is specific to the Brazos cluster and can be skipped if you have maven available.
 
-1. Load maven module.  These can be found in the emop-modules repository
+1. Load maven module.
 
-        module load use.own
-        module load emop/maven
+        module load gcc java maven
 
 2. Build the package by running the command `mvn package`.  This generates a tar.gz file under the 'target' directory.
 
@@ -33,9 +32,7 @@ Add the following to your login scripts such as ~/.bashrc
 
 Only the following versions of each dependency have been tested.
 
-* maven
-  * apache-maven-3.1.1
-* java
-  * sun-jdk-1.7.0-45
+* gcc/4.8.2
+* maven/3.2.1
+* java/1.7.0_67
 * tesseract
-  * tesseract SVN revision 889+
