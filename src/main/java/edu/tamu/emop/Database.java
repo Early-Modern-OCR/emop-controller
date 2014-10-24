@@ -478,10 +478,9 @@ public class Database {
      * @param stats
      * @throws SQLException
      */
-    public void updatePostProcResult(JobPage job, float juxtaScore, float retasScore, float healthScore, float ecorr, float stats) throws SQLException {
+    public void updatePostProcResult(JobPage job, float juxtaScore, float retasScore, String jsonOcrStats, float ecorr, float stats) throws SQLException {
         if (Float.isNaN(juxtaScore)) juxtaScore = 0.0f;
         if (Float.isNaN(retasScore)) retasScore = 0.0f;
-        if (Float.isNaN(healthScore)) healthScore = 0.0f;
         if (Float.isNaN(ecorr)) ecorr = 0.0f;
         if (Float.isNaN(stats)) stats = 0.0f;
 
@@ -503,10 +502,10 @@ public class Database {
             } else {
                 smt.setFloat(2, retasScore);
             }
-            if (healthScore < 0) {
-                smt.setNull(3, Types.FLOAT);
+            if (jsonOcrStats == null || jsonOcrStats.length() == 0) {
+                smt.setNull(3, Types.VARCHAR);
             } else {
-                smt.setFloat(3, healthScore);
+                smt.setString(3, jsonOcrStats);
             }
             if (ecorr < 0) {
                 smt.setNull(4, Types.FLOAT);
