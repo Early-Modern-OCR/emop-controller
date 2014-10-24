@@ -21,14 +21,6 @@
             <outputDirectory></outputDirectory>
         </file>
         <file>
-            <source>scripts/emop.sh</source>
-            <outputDirectory></outputDirectory>
-        </file>
-        <file>
-            <source>scripts/emop.pbs</source>
-            <outputDirectory></outputDirectory>
-        </file>
-        <file>
             <source>config/emop.example.properties</source>
             <outputDirectory></outputDirectory>
         </file>
