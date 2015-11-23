@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/idhmc-tamu/emop-controller.svg?branch=master)](https://travis-ci.org/idhmc-tamu/emop-controller)
 [![Coverage Status](https://coveralls.io/repos/idhmc-tamu/emop-controller/badge.svg?branch=master)](https://coveralls.io/r/idhmc-tamu/emop-controller?branch=master)
 
-The Brazos Cluster controller process for the eMOP workflow.
+The Brazos Cluster controller process for the eMOP workflow. For more information on the eMOP workflow, please see the [eMOP Workflow Design Description](http://emop.tamu.edu/workflows/eMOP-DD)
 
 #### Table of Contents
 
