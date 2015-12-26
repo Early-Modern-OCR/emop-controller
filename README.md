@@ -15,6 +15,10 @@ The Brazos Cluster controller process for the eMOP workflow. For more informatio
   * [Query](#query)
   * [Submitting](#submitting)
   * [Uploading](#uploading)
+  * [Transfer Status](#transfer-status)
+  * [Transfer In](#transfer-in)
+  * [Transfer Out](#transfer-out)
+  * [Transfer Test](#transfer-test)
   * [Test Run](#test-run)
   * [Cron](#cron)
 5. [Support](#support)
@@ -78,6 +82,10 @@ All interaction with the emop-controller is done through `emop.py`.  This script
 * submit - submit jobs to the cluster
 * run - run a job
 * upload - upload completed job results
+* transfer status - check status of ability to transfer or of specific task
+* transfer in - transfer files from remote location to cluster
+* transfer out - transfer files from cluster to remote location
+* transfer test - transfer test file from cluster to remote location
 * testrun - Reserve, run and upload results.  Intended for testing.
 
 For full list of options execute `emop.py --help` and `emop.py <subcommand> --help`.
@@ -86,6 +94,8 @@ Be sure the emop module is loaded before executing emop.py
 
     module use ./modulefiles
     module load emop
+
+**NOTE**: The first time a the controller communicates with Globus Online a prompt will ask for your Globus Online username/password.  This will generate a GOAuth token to authenticate with Globus.  The token is good for one year.
 
 ### Query
 
@@ -129,6 +139,39 @@ This is an example of uploading a single file
 This is an example of uploading an entire directory
 
     ./emop.py upload --upload-dir payload/output/completed
+
+### Transfer Status
+
+To verify you are able to communicate with Globus and endpoints are currently activated for your account
+
+    ./emop.py transfer status
+
+To check on the status of an individual transfer
+
+    ./emop.py transfer status --task-id=<some task ID>
+
+### Transfer In
+
+To transfer files from a remote location to the local cluster
+
+    ./emop.py transfer in --filter '{"batch_id": 16}'
+
+The Globus Online task ID will be printed once transfer is successful received by Globus.
+
+### Transfer Out
+
+To transfer files from the local cluster to a remote location
+
+    ./emop.py transfer out --proc-id 20141220211214811
+
+The Globus Online task ID will be printed once transfer is successful received by Globus.
+
+### Transfer Test
+
+This subcommand will send a test file from the local cluster to a remote endpoint to verify transfers are working and will wait
+for success or failure.
+
+    ./emop.py transfer test --wait
 
 ### Test Run
 
