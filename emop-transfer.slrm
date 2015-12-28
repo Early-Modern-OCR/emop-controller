@@ -43,8 +43,8 @@ umask 002
 waitTime=$((60*60*24*3-60*5))
 
 # launch instance of the controller which runs until killed or no jobs remain
-#TRANSFER_CMD="srun --unbuffered stdbuf -o0 python ${EMOP_HOME}/emop.py -c ${EMOP_CONFIG_PATH} transfer status --task-id ${TASK_ID} --wait"
-TRANSFER_CMD="srun python ${EMOP_HOME}/emop.py -c ${EMOP_CONFIG_PATH} transfer status --task-id ${TASK_ID} --wait=${waitTime}"
+#TRANSFER_CMD="srun --unbuffered stdbuf -o0 python ${EMOP_HOME}/emopcmd.py -c ${EMOP_CONFIG_PATH} transfer status --task-id ${TASK_ID} --wait"
+TRANSFER_CMD="srun python ${EMOP_HOME}/emopcmd.py -c ${EMOP_CONFIG_PATH} transfer status --task-id ${TASK_ID} --wait=${waitTime}"
 echo "Executing: ${TRANSFER_CMD}"
 eval ${TRANSFER_CMD}
 

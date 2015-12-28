@@ -1,6 +1,8 @@
 load("gcc/4.8.2")
 load("python/2.7.10")
 load("beautifulsoup4") --local
+load("numpy/1.8.2") --local
+load("scipy/0.14.0") --local
 load("leptonica/1.71")
 load("icu/52.1")
 --load("tesseract/3.03-rc1")

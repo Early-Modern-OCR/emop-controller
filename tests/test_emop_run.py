@@ -16,6 +16,8 @@ from emop.lib.processes.page_corrector import PageCorrector
 from emop.lib.processes.juxta_compare import JuxtaCompare
 from emop.lib.processes.retas_compare import RetasCompare
 
+skipif = pytest.mark.skipif
+
 
 class TestEmopRun(TestCase):
     def setUp(self):
@@ -204,6 +206,7 @@ class TestEmopRun(TestCase):
     # This test doesn't correctly validate should_run is not called.
     # When self.run.settings.controller_skip_existing is not set to False
     # the test still passes
+    #@skipif(True, reason="Does not work")
     def test_do_ocr_tesseract_not_skipped(self):
         settings = default_settings()
         self.run.settings.controller_skip_existing = False

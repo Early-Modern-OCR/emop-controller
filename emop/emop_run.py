@@ -270,7 +270,7 @@ class EmopRun(EmopBase):
         """Run the EmopJob
 
         This function is intended to be what's called by external scripts
-        like emop.py to start all work.
+        like emopcmd.py to start all work.
 
         Based on the payload's data, all pages are iterated over from here.
 
