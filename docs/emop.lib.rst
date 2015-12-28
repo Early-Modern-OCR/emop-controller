@@ -9,6 +9,7 @@ Subpackages
     emop.lib.models
     emop.lib.processes
     emop.lib.schedulers
+    emop.lib.transfer
 
 Submodules
 ----------
