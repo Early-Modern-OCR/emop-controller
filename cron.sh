@@ -21,7 +21,7 @@ fi
     cd $EMOP_HOME
     module use ${EMOP_HOME}/modulefiles
     module load emop
-    python ${EMOP_HOME}/emop.py ${CONFIG_ARG} submit
+    python ${EMOP_HOME}/emopcmd.py ${CONFIG_ARG} submit
 
 } 200>${LOCK_FILE}
 

@@ -15,6 +15,10 @@ The Brazos Cluster controller process for the eMOP workflow. For more informatio
   * [Query](#query)
   * [Submitting](#submitting)
   * [Uploading](#uploading)
+  * [Transfer Status](#transfer-status)
+  * [Transfer In](#transfer-in)
+  * [Transfer Out](#transfer-out)
+  * [Transfer Test](#transfer-test)
   * [Test Run](#test-run)
   * [Cron](#cron)
 5. [Support](#support)
@@ -72,63 +76,102 @@ The file `config.ini` contains all the configuration options used by the emop-co
 
 ## Usage
 
-All interaction with the emop-controller is done through `emop.py`.  This script has a set of subcommands that determine the operations performed.
+All interaction with the emop-controller is done through `emopcmd.py`.  This script has a set of subcommands that determine the operations performed.
 
 * query - form various queries against API and local files
 * submit - submit jobs to the cluster
 * run - run a job
 * upload - upload completed job results
+* transfer status - check status of ability to transfer or of specific task
+* transfer in - transfer files from remote location to cluster
+* transfer out - transfer files from cluster to remote location
+* transfer test - transfer test file from cluster to remote location
 * testrun - Reserve, run and upload results.  Intended for testing.
 
-For full list of options execute `emop.py --help` and `emop.py <subcommand> --help`.
+For full list of options execute `emopcmd.py --help` and `emopcmd.py <subcommand> --help`.
 
-Be sure the emop module is loaded before executing emop.py
+Be sure the emop module is loaded before executing emopcmd.py
 
     module use ./modulefiles
     module load emop
+
+**NOTE**: The first time a the controller communicates with Globus Online a prompt will ask for your Globus Online username/password.  This will generate a GOAuth token to authenticate with Globus.  The token is good for one year.
 
 ### Query
 
 The following is an example of querying the dashboard API for count of pending pages (job_queues)
 
-    ./emop.py query --pending-pages
+    ./emopcmd.py query --pending-pages
 
 This example will count pending pages (job_queues) that are part with batch_id 16
 
-    ./emop.py query --filter '{"batch_id": 16}' --pending-pages
+    ./emopcmd.py query --filter '{"batch_id": 16}' --pending-pages
 
 The log files can be queried for statistics of application runtimes.
 
-    ./emop.py query --avg-runtimes
+    ./emopcmd.py query --avg-runtimes
 
 ### Submitting
 
 This is an example of submitting a single page to run in a single job:
 
-    ./emop.py submit --num-jobs 1 --pages-per-job 1
+    ./emopcmd.py submit --num-jobs 1 --pages-per-job 1
 
 This is an example of submitting and letting the emop-controller determine the optimal
 number of jobs and pages-per-job to submit:
 
-    ./emop.py submit
+    ./emopcmd.py submit
 
 The `submit` subcommand can filter the jobs that get reserved via API by using the `--filter` argument.  The following example would reserve job_queues via API that match batch_id 16.
 
-    ./emop.py submit --filter '{"batch_id": 16}'
+    ./emopcmd.py submit --filter '{"batch_id": 16}'
 
 ### Uploading
 
 This example is what is used to upload data from a SLURM job
 
-    ./emop.py upload --proc-id 20141220211214811
+    ./emopcmd.py upload --proc-id 20141220211214811
 
 This is an example of uploading a single file
 
-    ./emop.py upload --upload-file payload/output/completed/20141220211214811.json
+    ./emopcmd.py upload --upload-file payload/output/completed/20141220211214811.json
 
 This is an example of uploading an entire directory
 
-    ./emop.py upload --upload-dir payload/output/completed
+    ./emopcmd.py upload --upload-dir payload/output/completed
+
+### Transfer Status
+
+To verify you are able to communicate with Globus and endpoints are currently activated for your account
+
+    ./emopcmd.py transfer status
+
+To check on the status of an individual transfer
+
+    ./emopcmd.py transfer status --task-id=<some task ID>
+
+### Transfer In
+
+To transfer files from a remote location to the local cluster
+
+    ./emopcmd.py transfer in --filter '{"batch_id": 16}'
+
+The Globus Online task ID will be printed once transfer is successful received by Globus.
+
+### Transfer Out
+
+To transfer files from the local cluster to a remote location
+
+    ./emopcmd.py transfer out --proc-id 20141220211214811
+
+The Globus Online task ID will be printed once transfer is successful received by Globus.
+
+### Transfer Test
+
+This subcommand will send a test file from the local cluster to a remote endpoint to verify transfers are working and will wait
+for success or failure.
+
+    ./emopcmd.py transfer test --wait
 
 ### Test Run
 
@@ -150,11 +193,11 @@ specific to Brazos using Lmod.
 
 The following example will reserve 2 pages, process them and upload the results.
 
-    ./emop.py testrun --num-pages 2
+    ./emopcmd.py testrun --num-pages 2
 
 You can also run `testrun` with uploading of results disabled.
 
-    ./emop.py testrun --num-pages 2 --no-upload
+    ./emopcmd.py testrun --num-pages 2 --no-upload
 
 The same page can be reprocessed with a little bit of work.
 
@@ -164,7 +207,7 @@ First set the PROC_ID to the value that was output during the testrun:
 
 Then use subcommand `run` with the PROC_ID of the previous run and `--force-run` to overwrite previous output.  This will read the input JSON file and allow the same page(s) to be processed
 
-    ./emop.py run --force-run --proc-id ${PROC_ID}
+    ./emopcmd.py run --force-run --proc-id ${PROC_ID}
 
 ### Cron
 
@@ -175,7 +218,7 @@ Edit cron by using `crontab -e` and add something like the following:
     EMOP_HOME=/path/to/emop-controller
     0 * * * * $EMOP_HOME/cron.sh config-cron.ini ; $EMOP_HOME/cron.sh config-cron-background.ini
 
-The above example will execute two commands every hour.  The first launches `emop.py -c config-cron.ini submit` and the second launches `emop.py -c config-cron-background.ini submit`.
+The above example will execute two commands every hour.  The first launches `emopcmd.py -c config-cron.ini submit` and the second launches `emopcmd.py -c config-cron-background.ini submit`.
 
 ## Support
 
@@ -220,8 +263,13 @@ Build documentation using Sphinx
 
 ### System tests
 
+Verify transfers can be initiated and possibly update config to appropriate values
+
+    ./emopcmd.py -c tests/system/config-idhmc-test.ini transfer status
+
 To run the test using background-4g partition:
 
-    sbatch -p background-4g tests/system/emop-ecco-test.slrm
+    sbatch -p idhmc tests/system/emop-ecco-test.slrm
+    sbatch -p idhmc tests/system/emop-eebo-test.slrm
 
-Check the output of `logs/emop-controller-test-JOBID.out` where JOBID is the value output when sbatch was executed.
+Check the output of `logs/test/emop-controller-test-JOBID.out` where JOBID is the value output when sbatch was executed.

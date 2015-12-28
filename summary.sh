@@ -20,7 +20,7 @@ for i in $(grep "START MARIADB TIME:" logs/*.out | awk '{ print $4; }'); do
 done
 START_MARIADB_AVG=$(echo "scale=2; $start_mariadb_total / $start_mariadb_count" | bc)
 
-./emop.py query --avg-runtimes
+./emopcmd.py query --avg-runtimes
 
 echo "ERROR COUNT: ${ERROR_COUNT}"
 echo "HIT WALLTIME LIMIT COUNT: ${WALLTIME_ERROR_COUNT}"

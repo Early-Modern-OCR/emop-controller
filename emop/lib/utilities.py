@@ -50,6 +50,7 @@ def mkdirs_exists_ok(path):
         if exception.errno != errno.EEXIST:
             raise
 
+
 def exec_cmd(cmd, log_level="info", timeout=-1):
     """Executes a command
 
@@ -62,10 +63,8 @@ def exec_cmd(cmd, log_level="info", timeout=-1):
 
     Args:
         cmd (str or list): Command to execute
-        log_level (str, optional): log level when printing information
-            about the command being executed.
-        timeout (int, optional): The time in seconds the command should
-            be allowed to run before timing out.
+        log_level (str, optional): log level when printing information about the command being executed.
+        timeout (int, optional): The time in seconds the command should be allowed to run before timing out.
 
     Returns:
         tuple: (stdout, stderr, exitcode)

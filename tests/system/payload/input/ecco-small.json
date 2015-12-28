@@ -30,7 +30,7 @@
             "id": 2179368, 
             "pg_gale_ocr_file": "/data/shared/text-xml/ECCO-Gale-page-OCR/0356200106/00010.txt", 
             "pg_ground_truth_file": "/data/shared/text-xml/ECCO-TCP-pages-text/ECCO_2of2/LitAndLang_2/0356200106/1.txt", 
-            "pg_image_path": null, 
+            "pg_image_path": "/data/ecco/ECCO_2of2/LitAndLang_2/0356200106/images/035620010600010.TIF", 
             "pg_ref_number": 1, 
             "work": {
                 "id": 152141, 
@@ -124,7 +124,7 @@
             "id": 2179369, 
             "pg_gale_ocr_file": "/data/shared/text-xml/ECCO-Gale-page-OCR/0356200106/00020.txt", 
             "pg_ground_truth_file": "/data/shared/text-xml/ECCO-TCP-pages-text/ECCO_2of2/LitAndLang_2/0356200106/2.txt", 
-            "pg_image_path": null, 
+            "pg_image_path": "/data/ecco/ECCO_2of2/LitAndLang_2/0356200106/images/035620010600020.TIF", 
             "pg_ref_number": 2, 
             "work": {
                 "id": 152141, 
@@ -218,7 +218,7 @@
             "id": 2179370, 
             "pg_gale_ocr_file": "/data/shared/text-xml/ECCO-Gale-page-OCR/0356200106/00030.txt", 
             "pg_ground_truth_file": "/data/shared/text-xml/ECCO-TCP-pages-text/ECCO_2of2/LitAndLang_2/0356200106/3.txt", 
-            "pg_image_path": null, 
+            "pg_image_path": "/data/ecco/ECCO_2of2/LitAndLang_2/0356200106/images/035620010600030.TIF", 
             "pg_ref_number": 3, 
             "work": {
                 "id": 152141, 
@@ -312,7 +312,7 @@
             "id": 2179371, 
             "pg_gale_ocr_file": "/data/shared/text-xml/ECCO-Gale-page-OCR/0356200106/00040.txt", 
             "pg_ground_truth_file": "/data/shared/text-xml/ECCO-TCP-pages-text/ECCO_2of2/LitAndLang_2/0356200106/4.txt", 
-            "pg_image_path": null, 
+            "pg_image_path": "/data/ecco/ECCO_2of2/LitAndLang_2/0356200106/images/035620010600040.TIF", 
             "pg_ref_number": 4, 
             "work": {
                 "id": 152141, 
@@ -406,7 +406,7 @@
             "id": 2179372, 
             "pg_gale_ocr_file": "/data/shared/text-xml/ECCO-Gale-page-OCR/0356200106/00050.txt", 
             "pg_ground_truth_file": "/data/shared/text-xml/ECCO-TCP-pages-text/ECCO_2of2/LitAndLang_2/0356200106/5.txt", 
-            "pg_image_path": null, 
+            "pg_image_path": "/data/ecco/ECCO_2of2/LitAndLang_2/0356200106/images/035620010600050.TIF", 
             "pg_ref_number": 5, 
             "work": {
                 "id": 152141, 
@@ -500,7 +500,7 @@
             "id": 2179373, 
             "pg_gale_ocr_file": "/data/shared/text-xml/ECCO-Gale-page-OCR/0356200106/00060.txt", 
             "pg_ground_truth_file": "/data/shared/text-xml/ECCO-TCP-pages-text/ECCO_2of2/LitAndLang_2/0356200106/6.txt", 
-            "pg_image_path": null, 
+            "pg_image_path": "/data/ecco/ECCO_2of2/LitAndLang_2/0356200106/images/035620010600060.TIF", 
             "pg_ref_number": 6, 
             "work": {
                 "id": 152141, 
@@ -594,7 +594,7 @@
             "id": 2179374, 
             "pg_gale_ocr_file": "/data/shared/text-xml/ECCO-Gale-page-OCR/0356200106/00070.txt", 
             "pg_ground_truth_file": "/data/shared/text-xml/ECCO-TCP-pages-text/ECCO_2of2/LitAndLang_2/0356200106/7.txt", 
-            "pg_image_path": null, 
+            "pg_image_path": "/data/ecco/ECCO_2of2/LitAndLang_2/0356200106/images/035620010600070.TIF", 
             "pg_ref_number": 7, 
             "work": {
                 "id": 152141, 
@@ -688,7 +688,7 @@
             "id": 2179375, 
             "pg_gale_ocr_file": "/data/shared/text-xml/ECCO-Gale-page-OCR/0356200106/00080.txt", 
             "pg_ground_truth_file": "/data/shared/text-xml/ECCO-TCP-pages-text/ECCO_2of2/LitAndLang_2/0356200106/8.txt", 
-            "pg_image_path": null, 
+            "pg_image_path": "/data/ecco/ECCO_2of2/LitAndLang_2/0356200106/images/035620010600080.TIF", 
             "pg_ref_number": 8, 
             "work": {
                 "id": 152141, 
@@ -782,7 +782,7 @@
             "id": 2179376, 
             "pg_gale_ocr_file": "/data/shared/text-xml/ECCO-Gale-page-OCR/0356200106/00090.txt", 
             "pg_ground_truth_file": "/data/shared/text-xml/ECCO-TCP-pages-text/ECCO_2of2/LitAndLang_2/0356200106/9.txt", 
-            "pg_image_path": null, 
+            "pg_image_path": "/data/ecco/ECCO_2of2/LitAndLang_2/0356200106/images/035620010600090.TIF", 
             "pg_ref_number": 9, 
             "work": {
                 "id": 152141, 
@@ -876,7 +876,7 @@
             "id": 2179377, 
             "pg_gale_ocr_file": "/data/shared/text-xml/ECCO-Gale-page-OCR/0356200106/00100.txt", 
             "pg_ground_truth_file": "/data/shared/text-xml/ECCO-TCP-pages-text/ECCO_2of2/LitAndLang_2/0356200106/10.txt", 
-            "pg_image_path": null, 
+            "pg_image_path": "/data/ecco/ECCO_2of2/LitAndLang_2/0356200106/images/035620010600100.TIF", 
             "pg_ref_number": 10, 
             "work": {
                 "id": 152141, 
