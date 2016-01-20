@@ -39,12 +39,12 @@ umask 002
 # timeLimitHMS=$(echo $timeLimitHMS | awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 }')
 # timeLimit=$((timeLimitD+timeLimitHMS))
 # waitTime=$((timeLimit-60*5))
+
 # Set wait time to 3 days minus 5 minutes
 waitTime=$((60*60*24*3-60*5))
 
 # launch instance of the controller which runs until killed or no jobs remain
-#TRANSFER_CMD="srun --unbuffered stdbuf -o0 python ${EMOP_HOME}/emopcmd.py -c ${EMOP_CONFIG_PATH} transfer status --task-id ${TASK_ID} --wait"
-TRANSFER_CMD="srun python ${EMOP_HOME}/emopcmd.py -c ${EMOP_CONFIG_PATH} transfer status --task-id ${TASK_ID} --wait=${waitTime}"
+TRANSFER_CMD="python ${EMOP_HOME}/emopcmd.py -c ${EMOP_CONFIG_PATH} transfer status --task-id ${TASK_ID} --wait=${waitTime}"
 echo "Executing: ${TRANSFER_CMD}"
 eval ${TRANSFER_CMD}
 
