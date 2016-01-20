@@ -1,6 +1,7 @@
 #!/bin/bash
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+DIR=$(dirname ${SCRIPT_DIR})
 NAME="emop-controller-cron"
 EMOP_HOME=${EMOP_HOME:=$DIR}
 LOCK_FILE="${EMOP_HOME}/.${NAME}.lock"

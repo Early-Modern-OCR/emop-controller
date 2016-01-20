@@ -59,7 +59,7 @@ class TestEmopSLURM(TestCase):
             "-o", "/dne/emop-controller-%j.out",
             "--mem-per-cpu", "4000",
             "--cpus-per-task", "1",
-            "emop.slrm"
+            os.path.join(self.settings.emop_home, "batch_scripts/emop.slrm")
         ]
         self.mock_rv.communicate.return_value[0] = "1"
         retval = scheduler.submit_job('0001', '1')
@@ -88,7 +88,7 @@ class TestEmopSLURM(TestCase):
             "-o", "/dne/emop-controller-%j.out",
             "--mem-per-cpu", "4000",
             "--cpus-per-task", "1",
-            "emop.slrm"
+            os.path.join(self.settings.emop_home, "batch_scripts/emop.slrm")
         ]
         actual_cmd = scheduler.get_submit_cmd('1')
         self.assertEqual(expected_cmd, actual_cmd)
@@ -104,7 +104,7 @@ class TestEmopSLURM(TestCase):
             "--mem-per-cpu", "4000",
             "--cpus-per-task", "1",
             "--time", "4",
-            "emop.slrm"
+            os.path.join(self.settings.emop_home, "batch_scripts/emop.slrm")
         ]
         actual_cmd = scheduler.get_submit_cmd('1')
         self.assertEqual(expected_cmd, actual_cmd)
@@ -120,7 +120,7 @@ class TestEmopSLURM(TestCase):
             "--mem-per-cpu", "4000",
             "--cpus-per-task", "1",
             ["--account", "foo"],
-            "emop.slrm"
+            os.path.join(self.settings.emop_home, "batch_scripts/emop.slrm")
         ]
         actual_cmd = scheduler.get_submit_cmd('1')
         self.assertEqual(expected_cmd, actual_cmd)

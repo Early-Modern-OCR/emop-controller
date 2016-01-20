@@ -216,7 +216,7 @@ To submit jobs via cron a special wrapper script is provided
 Edit cron by using `crontab -e` and add something like the following:
 
     EMOP_HOME=/path/to/emop-controller
-    0 * * * * $EMOP_HOME/cron.sh config-cron.ini ; $EMOP_HOME/cron.sh config-cron-background.ini
+    0 * * * * $EMOP_HOME/scripts/cron.sh config-cron.ini ; $EMOP_HOME/scripts/cron.sh config-cron-background.ini
 
 The above example will execute two commands every hour.  The first launches `emopcmd.py -c config-cron.ini submit` and the second launches `emopcmd.py -c config-cron-background.ini submit`.
 

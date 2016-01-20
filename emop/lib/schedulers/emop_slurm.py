@@ -79,9 +79,9 @@ class EmopSLURM(EmopScheduler):
         if job_type == 'job':
             if dependency:
                 cmd.append("--dependency=afterany:%s" % dependency)
-            cmd.append("emop.slrm")
+            cmd.append(os.path.join(self.settings.emop_home, "batch_scripts/emop.slrm"))
         elif job_type == 'transfer':
-            cmd.append("emop-transfer.slrm")
+            cmd.append(os.path.join(self.settings.emop_home, "batch_scripts/emop-transfer.slrm"))
         return cmd
 
     def submit_job(self, proc_id, num_pages, dependency=None):
