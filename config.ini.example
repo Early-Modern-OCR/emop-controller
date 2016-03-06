@@ -51,6 +51,11 @@ cpus_per_task = 1
 set_walltime = False
 extra_args = []
 
+[tesseract]
+# Location of tessdata on cluster system
+# Last part in path must be tessdata
+tessdata_dir = /fdata/idhmc/tessdata
+
 [juxta-cl]
 jx_algorithm = jaro_winkler
 

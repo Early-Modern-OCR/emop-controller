@@ -53,7 +53,6 @@ Step #1 is specific to the Brazos cluster and can be skipped if you have maven a
 
 Depends on several environment variables as well. They are:
 
-* TESSDATA_PREFIX - Path to the Tesseract training data
 * JUXTA_HOME - Root directory for JuxtaCL
 * RETAS_HOME - Root directory for RETAS
 * SEASR_HOME - Root directory for SEASR post-processing tools

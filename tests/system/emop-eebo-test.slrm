@@ -35,7 +35,7 @@ umask 002
 
 # Bootstrap and start local MariaDB instance
 bootstrap_begin=$(date +"%s")
-${EMOP_HOME}/bootstrap_mariadb.sh
+${EMOP_HOME}/scripts/bootstrap_mariadb.sh
 if [ $? -ne 0 ]; then
     echo "Error bootstrapping MariaDB"
     exit 1
@@ -45,7 +45,7 @@ bootstrap_duration=$(($bootstrap_end-$bootstrap_begin))
 echo "BOOTSTRAP TIME: ${bootstrap_duration}"
 
 start_mariadb_begin=$(date +"%s")
-${EMOP_HOME}/start_mariadb.sh
+${EMOP_HOME}/scripts/start_mariadb.sh
 if [ $? -ne 0 ]; then
     echo "Error starting MariaDB"
     exit 1
@@ -59,7 +59,7 @@ echo "Executing: ${TRANSFER_CMD}"
 eval ${TRANSFER_CMD}
 
 # launch instance of the controller which runs until killed or no jobs remain
-RUN_CMD="srun python ${EMOP_HOME}/emopcmd.py -c ${EMOP_CONFIG_PATH} run --force-run --proc-id ${PROC_ID}"
+RUN_CMD="srun --export=ALL python ${EMOP_HOME}/emopcmd.py -c ${EMOP_CONFIG_PATH} run --force-run --proc-id ${PROC_ID}"
 echo "Executing: ${RUN_CMD}"
 eval ${RUN_CMD}
 

@@ -10,6 +10,8 @@ class Tesseract(ProcessesBase):
 
     def __init__(self, job):
         super(self.__class__, self).__init__(job)
+        self.tessdata_prefix = os.path.dirname(self.job.settings.tesseract_tessdata_dir)
+        os.environ["TESSDATA_PREFIX"] = self.tessdata_prefix
         self.cfg = os.path.join(self.job.settings.emop_home, "tess_cfg.txt")
         # Strip file extension, tesseract auto-appends it
         output_filename, output_extension = os.path.splitext(self.job.xml_file)

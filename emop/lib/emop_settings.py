@@ -114,6 +114,9 @@ class EmopSettings(object):
         _default_globus_min_activation_time = self.max_job_runtime + 60*60*24
         self.globus_min_activation_time = self.get_value("globus", "min_activation_time", default=_default_globus_min_activation_time)
 
+        # Settings used by Tesseract
+        self.tesseract_tessdata_dir = self.get_value("tesseract", "tessdata_dir")
+
         # Settings used by MultiColumnSkew
         self.multi_column_skew_enabled = self.get_bool_value('multi-column-skew', 'enabled')
 
