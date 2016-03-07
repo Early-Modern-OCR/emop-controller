@@ -32,6 +32,10 @@ Clone this repository and merge in the submodules
     cd emop-controller
     git submodule update --init
 
+Copy the modulefiles.example directory to modulefiles and modify the provided module files as needed.
+
+    cp -r modulefiles.example modulefiles
+
 ## Build
 
 Step #1 is specific to the Brazos cluster and can be skipped if you have maven available.

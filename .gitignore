@@ -6,6 +6,7 @@ logs/*
 logs/test/*
 !logs/test/.gitkeep
 
+modulefiles/
 
 *.pyc
 config.ini
