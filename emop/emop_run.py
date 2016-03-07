@@ -199,35 +199,39 @@ class EmopRun(EmopBase):
             bool: True if successful, False otherwise.
         """
         # DeNoise #
-        denoise = Denoise(job=job)
-        denoise_proc = self.do_process(obj=denoise, job=job)
-        if not denoise_proc:
-            return False
+        if self.settings.denoise_enabled:
+            denoise = Denoise(job=job)
+            denoise_proc = self.do_process(obj=denoise, job=job)
+            if not denoise_proc:
+                return False
 
         # MultiColumnSkew #
-        if self.settings.multi_column_skew_enabled:
+        if self.settings.denoise_enabled and self.settings.multi_column_skew_enabled:
             multi_column_skew = MultiColumnSkew(job=job)
             multi_column_skew_proc = self.do_process(obj=multi_column_skew, job=job)
             if not multi_column_skew_proc:
                 return False
 
         # _IDHMC.xml to _IDHMC.txt #
-        xml_to_text = XML_To_Text(job=job)
-        xml_to_text_proc = self.do_process(obj=xml_to_text, job=job)
-        if not xml_to_text_proc:
-            return False
+        if self.settings.denoise_enabled:
+            xml_to_text = XML_To_Text(job=job)
+            xml_to_text_proc = self.do_process(obj=xml_to_text, job=job)
+            if not xml_to_text_proc:
+                return False
 
         # PageEvaluator #
-        page_evaluator = PageEvaluator(job=job)
-        page_evaluator_proc = self.do_process(obj=page_evaluator, job=job)
-        if not page_evaluator_proc:
-            return False
+        if self.settings.page_evaluator_enabled:
+            page_evaluator = PageEvaluator(job=job)
+            page_evaluator_proc = self.do_process(obj=page_evaluator, job=job)
+            if not page_evaluator_proc:
+                return False
 
         # PageCorrector #
-        page_corrector = PageCorrector(job=job)
-        page_corrector_proc = self.do_process(obj=page_corrector, job=job)
-        if not page_corrector_proc:
-            return False
+        if self.settings.page_corrector_enabled:
+            page_corrector = PageCorrector(job=job)
+            page_corrector_proc = self.do_process(obj=page_corrector, job=job)
+            if not page_corrector_proc:
+                return False
 
         # JuxtaCompare postprocess and OCR output #
         juxta_compare = JuxtaCompare(job=job)

@@ -19,10 +19,14 @@ defaults = {
         "set_walltime": False,
         "extra_args": '[]',
     },
+    "denoise": {
+        "enabled": True,
+    },
     "multi-column-skew": {
         "enabled": True,
     },
     "page-corrector": {
+        "enabled": True,
         "java_args": '["-Xms128M", "-Xmx512M"]',
         "alt_arg": "2",
         "max_transforms": "20",
@@ -34,6 +38,7 @@ defaults = {
         "timeout": -1,
     },
     "page-evaluator": {
+        "enabled": True,
         "java_args": '["-Xms128M", "-Xmx128M"]',
     },
 }
@@ -117,11 +122,17 @@ class EmopSettings(object):
         # Settings used by Tesseract
         self.tesseract_tessdata_dir = self.get_value("tesseract", "tessdata_dir")
 
+        self.denoise_enabled = self.get_bool_value('denoise', 'enabled')
+
         # Settings used by MultiColumnSkew
         self.multi_column_skew_enabled = self.get_bool_value('multi-column-skew', 'enabled')
 
         # Settings used by PageCorrector
+        self.page_corrector_enabled = self.get_bool_value('page-corrector', 'enabled')
         self.page_corrector_timeout = int(self.get_value('page-corrector', 'timeout'))
+
+        # Settings used by PageEvaluator
+        self.page_evaluator_enabled = self.get_bool_value('page-evaluator', 'enabled')
 
         # Settings used by Juxta-cl
         self.juxta_cl_jx_algorithm = self.get_value('juxta-cl', 'jx_algorithm')

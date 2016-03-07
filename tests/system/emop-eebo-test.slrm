@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task 1
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --time=00:30:00
+#SBATCH --time=01:00:00
 #SBATCH --export=EMOP_HOME,EMOP_CONFIG_PATH
 
 if [ -z $EMOP_HOME ]; then

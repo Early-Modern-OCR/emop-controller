@@ -6,6 +6,7 @@ import argparse
 import os
 import sys
 
+from emop.lib.emop_settings import EmopSettings
 from emop.emop_query import EmopQuery
 from emop.emop_submit import EmopSubmit
 from emop.emop_run import EmopRun
@@ -23,6 +24,9 @@ if os.environ.get("_JAVA_OPTIONS"):
 # if os.environ.get("https_proxy"):
 #     del os.environ["https_proxy"]
 
+def configprint(args, parser):
+    settings = EmopSettings(args.config_path)
+    print(settings.get_value(args.section, args.item))
 
 def query(args, parser):
     """ query command
@@ -355,6 +359,7 @@ def setup_parser():
     # Define command line options
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     subparsers = parser.add_subparsers(dest='mode')
+    parser_configprint = subparsers.add_parser('configprint')
     parser_query = subparsers.add_parser('query')
     parser_submit = subparsers.add_parser('submit')
     parser_run = subparsers.add_parser('run')
@@ -398,6 +403,17 @@ def setup_parser():
                         action="store",
                         default=default_config_path,
                         type=str)
+
+    # configprint args
+    parser_configprint.add_argument('--section',
+                                    help="config section",
+                                    dest="section",
+                                    required=True)
+    parser_configprint.add_argument('--item',
+                                    help="config item",
+                                    dest="item",
+                                    required=True)
+    parser_configprint.set_defaults(func=configprint)
 
     # query args
     parser_query.add_argument(*filter_args, **filter_kwargs)
