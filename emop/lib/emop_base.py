@@ -50,6 +50,10 @@ class EmopBase(object):
             elif func_name == "do_ocr":
                 name = "OCR"
                 item = kwargs.get('job').id
+            # Condition for EmopRun.do_training
+            elif func_name == "do_training":
+                name = "Train"
+                item = kwargs.get('job').id
             # Condition for EmopRun.run
             elif klass == "EmopRun" and func_name == "run":
                 name = "Total"

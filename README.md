@@ -28,7 +28,7 @@ The Brazos Cluster controller process for the eMOP workflow. For more informatio
 
 Clone this repository and merge in the submodules
 
-    git clone git@github.tamu.edu:emop/emop-controller.git
+    git clone https://github.com/Early-Modern-OCR/emop-controller.git
     cd emop-controller
     git submodule update --init
 
@@ -270,9 +270,9 @@ Verify transfers can be initiated and possibly update config to appropriate valu
 
     ./emopcmd.py -c tests/system/config-idhmc-test.ini transfer status
 
-To run the test using background-4g partition:
+To run the test using stakeholder or stakeholder-4g partition:
 
-    sbatch -p idhmc tests/system/emop-ecco-test.slrm
-    sbatch -p idhmc tests/system/emop-eebo-test.slrm
+    sbatch -p stakeholder,stakeholder-4g tests/system/emop-ecco-test.slrm
+    sbatch -p stakeholder,stakeholder-4g tests/system/emop-eebo-test.slrm
 
 Check the output of `logs/test/emop-controller-test-JOBID.out` where JOBID is the value output when sbatch was executed.

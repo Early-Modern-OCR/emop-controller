@@ -43,6 +43,8 @@ class EmopQuery(EmopBase):
         else:
             job_queue_params = {}
         job_queue_params["job_status_id"] = str(job_status_id)
+        if self.settings.operate_on == 'works':
+            job_queue_params["works"] = 1
         job_queue_request = self.emop_api.get_request("/api/job_queues/count", job_queue_params)
         if not job_queue_request:
             return None

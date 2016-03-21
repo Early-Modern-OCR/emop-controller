@@ -15,6 +15,8 @@ class EmopUpload(EmopBase):
 
     def upload(self, data):
         # TODO Validate data?
+        # Remove extra_transfers since that is not valid API data
+        data.pop("extra_transfers", None)
         logger.debug("Payload: \n%s" % json.dumps(data, sort_keys=True, indent=4))
         upload_request = self.emop_api.put_request("/api/batch_jobs/upload_results", data)
         if not upload_request:

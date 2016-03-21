@@ -2,12 +2,19 @@ import collections
 import errno
 import logging
 import os
+import resource
 import shlex
+import shutil
 import signal
 import subprocess32
 
 logger = logging.getLogger('emop')
 
+def get_max_rss():
+    """ Returns max RSS soft ulimit in bytes
+    """
+    _soft, _hard = resource.getrlimit(resource.RLIMIT_RSS)
+    return _soft
 
 def get_temp_dir():
     """Gets the temp directory based on environment variables
@@ -49,6 +56,25 @@ def mkdirs_exists_ok(path):
     except OSError as exception:
         if exception.errno != errno.EEXIST:
             raise
+
+def recursive_copy(src, dest, ignore=None, exclude=[]):
+    """Recursive file copy
+
+    This method is currently not used, but left incase would be needed in the future.
+
+    """
+    if os.path.isdir(src):
+        if not os.path.isdir(dest):
+            mkdirs_exists_ok(dest)
+        files = os.listdir(src)
+        for f in files:
+            _src = os.path.join(src, f)
+            _dest = os.path.join(dest, f)
+            if f not in exclude and _src not in exclude:
+                recursive_copy(src=_src, dest=_dest, exclude=exclude)
+    else:
+        logger.debug("Copy %s -> %s", src, dest)
+        shutil.copyfile(src, dest)
 
 
 def exec_cmd(cmd, log_level="info", timeout=-1):

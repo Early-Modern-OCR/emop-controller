@@ -2,10 +2,9 @@ from emop.lib.emop_base import EmopBase
 from emop.lib.models.emop_model import EmopModel
 
 
-class EmopFont(EmopModel):
+class EmopGlyphSubstitutionModel(EmopModel):
 
     transfer_attributes = [
-        'font_library_path',
         'path',
     ]
 
@@ -14,13 +13,8 @@ class EmopFont(EmopModel):
         self._path = None
 
     def setattrs(self, dictionary):
-        self.name = dictionary.get("font_name")
-        if dictionary.get("font_library_path"):
-            self.path = dictionary.get("font_library_path")
-        else:
-            self.path = dictionary.get("path")
-        self.batch_job_id = dictionary.get("batch_job_id")
-        self.work_id = dictionary.get("work_id")
+        self.name = dictionary.get("name")
+        self.path = dictionary.get("path")
 
     @property
     def path(self):

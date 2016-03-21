@@ -1,0 +1,1572 @@
+[
+    {
+        "batch_job": {
+            "font": {
+                "font_bold": null,
+                "font_fixed": null,
+                "font_fraktur": null,
+                "font_id": 1,
+                "font_italic": null,
+                "font_library_path": null,
+                "font_line_height": null,
+                "font_name": "allFonts",
+                "font_serif": null,
+                "path": "/data/primeros_libros/fonts/allFonts.fontser"
+            },
+            "glyph_substitution_model": {
+                "created_at": "2016-03-16T19:20:42.000Z",
+                "id": 1,
+                "name": "uniform",
+                "path": "/data/primeros_libros/gsm/uniform.gsmser",
+                "updated_at": "2016-03-16T19:20:42.000Z"
+            },
+            "id": 5,
+            "job_type": {
+                "id": 4,
+                "name": "Font Training"
+            },
+            "language_model": {
+                "created_at": "2016-03-08T18:43:37.000Z",
+                "id": 1,
+                "language_id": 7,
+                "name": "Spanish-2-29",
+                "path": "/data/primeros_libros/language_models/spanish_2-29.lmser",
+                "updated_at": "2016-03-08T18:43:37.000Z"
+            },
+            "name": "TrainFont-Spanish-Test-2",
+            "notes": "Selecting  pages that aren't blank.",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "font_bold": null,
+            "font_fixed": null,
+            "font_fraktur": null,
+            "font_italic": null,
+            "font_library_path": null,
+            "font_line_height": null,
+            "font_name": "allFonts",
+            "font_serif": null,
+            "id": 1,
+            "path": "/data/primeros_libros/fonts/allFonts.fontser"
+        },
+        "font_training_result": {
+            "batch_job_id": 5,
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/trained-font.fontser",
+            "glyph_substitution_model_path": null,
+            "id": 3,
+            "language_model_path": null,
+            "work_id": 224
+        },
+        "glyph_substitution_model": {
+            "id": 1,
+            "name": "uniform",
+            "path": "/data/primeros_libros/gsm/uniform.gsmser"
+        },
+        "id": 280,
+        "language_model": {
+            "id": 1,
+            "language_id": 7,
+            "name": "Spanish-2-29",
+            "path": "/data/primeros_libros/language_models/spanish_2-29.lmser"
+        },
+        "page": {
+            "id": 3646,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00002.jpg",
+            "pg_ref_number": 2,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": null,
+        "postproc_result": null,
+        "proc_id": "20160316145118336",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": {
+                "font_bold": null,
+                "font_fixed": null,
+                "font_fraktur": null,
+                "font_id": 1,
+                "font_italic": null,
+                "font_library_path": null,
+                "font_line_height": null,
+                "font_name": "allFonts",
+                "font_serif": null,
+                "path": "/data/primeros_libros/fonts/allFonts.fontser"
+            },
+            "glyph_substitution_model": {
+                "created_at": "2016-03-16T19:20:42.000Z",
+                "id": 1,
+                "name": "uniform",
+                "path": "/data/primeros_libros/gsm/uniform.gsmser",
+                "updated_at": "2016-03-16T19:20:42.000Z"
+            },
+            "id": 5,
+            "job_type": {
+                "id": 4,
+                "name": "Font Training"
+            },
+            "language_model": {
+                "created_at": "2016-03-08T18:43:37.000Z",
+                "id": 1,
+                "language_id": 7,
+                "name": "Spanish-2-29",
+                "path": "/data/primeros_libros/language_models/spanish_2-29.lmser",
+                "updated_at": "2016-03-08T18:43:37.000Z"
+            },
+            "name": "TrainFont-Spanish-Test-2",
+            "notes": "Selecting  pages that aren't blank.",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "font_bold": null,
+            "font_fixed": null,
+            "font_fraktur": null,
+            "font_italic": null,
+            "font_library_path": null,
+            "font_line_height": null,
+            "font_name": "allFonts",
+            "font_serif": null,
+            "id": 1,
+            "path": "/data/primeros_libros/fonts/allFonts.fontser"
+        },
+        "font_training_result": {
+            "batch_job_id": 5,
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/trained-font.fontser",
+            "glyph_substitution_model_path": null,
+            "id": 3,
+            "language_model_path": null,
+            "work_id": 224
+        },
+        "glyph_substitution_model": {
+            "id": 1,
+            "name": "uniform",
+            "path": "/data/primeros_libros/gsm/uniform.gsmser"
+        },
+        "id": 281,
+        "language_model": {
+            "id": 1,
+            "language_id": 7,
+            "name": "Spanish-2-29",
+            "path": "/data/primeros_libros/language_models/spanish_2-29.lmser"
+        },
+        "page": {
+            "id": 3647,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00003.jpg",
+            "pg_ref_number": 3,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": null,
+        "postproc_result": null,
+        "proc_id": "20160316145118336",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": {
+                "font_bold": null,
+                "font_fixed": null,
+                "font_fraktur": null,
+                "font_id": 1,
+                "font_italic": null,
+                "font_library_path": null,
+                "font_line_height": null,
+                "font_name": "allFonts",
+                "font_serif": null,
+                "path": "/data/primeros_libros/fonts/allFonts.fontser"
+            },
+            "glyph_substitution_model": {
+                "created_at": "2016-03-16T19:20:42.000Z",
+                "id": 1,
+                "name": "uniform",
+                "path": "/data/primeros_libros/gsm/uniform.gsmser",
+                "updated_at": "2016-03-16T19:20:42.000Z"
+            },
+            "id": 5,
+            "job_type": {
+                "id": 4,
+                "name": "Font Training"
+            },
+            "language_model": {
+                "created_at": "2016-03-08T18:43:37.000Z",
+                "id": 1,
+                "language_id": 7,
+                "name": "Spanish-2-29",
+                "path": "/data/primeros_libros/language_models/spanish_2-29.lmser",
+                "updated_at": "2016-03-08T18:43:37.000Z"
+            },
+            "name": "TrainFont-Spanish-Test-2",
+            "notes": "Selecting  pages that aren't blank.",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "font_bold": null,
+            "font_fixed": null,
+            "font_fraktur": null,
+            "font_italic": null,
+            "font_library_path": null,
+            "font_line_height": null,
+            "font_name": "allFonts",
+            "font_serif": null,
+            "id": 1,
+            "path": "/data/primeros_libros/fonts/allFonts.fontser"
+        },
+        "font_training_result": {
+            "batch_job_id": 5,
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/trained-font.fontser",
+            "glyph_substitution_model_path": null,
+            "id": 3,
+            "language_model_path": null,
+            "work_id": 224
+        },
+        "glyph_substitution_model": {
+            "id": 1,
+            "name": "uniform",
+            "path": "/data/primeros_libros/gsm/uniform.gsmser"
+        },
+        "id": 282,
+        "language_model": {
+            "id": 1,
+            "language_id": 7,
+            "name": "Spanish-2-29",
+            "path": "/data/primeros_libros/language_models/spanish_2-29.lmser"
+        },
+        "page": {
+            "id": 3648,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00004.jpg",
+            "pg_ref_number": 4,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": null,
+        "postproc_result": null,
+        "proc_id": "20160316145118336",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": {
+                "font_bold": null,
+                "font_fixed": null,
+                "font_fraktur": null,
+                "font_id": 1,
+                "font_italic": null,
+                "font_library_path": null,
+                "font_line_height": null,
+                "font_name": "allFonts",
+                "font_serif": null,
+                "path": "/data/primeros_libros/fonts/allFonts.fontser"
+            },
+            "glyph_substitution_model": {
+                "created_at": "2016-03-16T19:20:42.000Z",
+                "id": 1,
+                "name": "uniform",
+                "path": "/data/primeros_libros/gsm/uniform.gsmser",
+                "updated_at": "2016-03-16T19:20:42.000Z"
+            },
+            "id": 5,
+            "job_type": {
+                "id": 4,
+                "name": "Font Training"
+            },
+            "language_model": {
+                "created_at": "2016-03-08T18:43:37.000Z",
+                "id": 1,
+                "language_id": 7,
+                "name": "Spanish-2-29",
+                "path": "/data/primeros_libros/language_models/spanish_2-29.lmser",
+                "updated_at": "2016-03-08T18:43:37.000Z"
+            },
+            "name": "TrainFont-Spanish-Test-2",
+            "notes": "Selecting  pages that aren't blank.",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "font_bold": null,
+            "font_fixed": null,
+            "font_fraktur": null,
+            "font_italic": null,
+            "font_library_path": null,
+            "font_line_height": null,
+            "font_name": "allFonts",
+            "font_serif": null,
+            "id": 1,
+            "path": "/data/primeros_libros/fonts/allFonts.fontser"
+        },
+        "font_training_result": {
+            "batch_job_id": 5,
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/trained-font.fontser",
+            "glyph_substitution_model_path": null,
+            "id": 3,
+            "language_model_path": null,
+            "work_id": 224
+        },
+        "glyph_substitution_model": {
+            "id": 1,
+            "name": "uniform",
+            "path": "/data/primeros_libros/gsm/uniform.gsmser"
+        },
+        "id": 283,
+        "language_model": {
+            "id": 1,
+            "language_id": 7,
+            "name": "Spanish-2-29",
+            "path": "/data/primeros_libros/language_models/spanish_2-29.lmser"
+        },
+        "page": {
+            "id": 3649,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00005.jpg",
+            "pg_ref_number": 5,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": null,
+        "postproc_result": null,
+        "proc_id": "20160316145118336",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": {
+                "font_bold": null,
+                "font_fixed": null,
+                "font_fraktur": null,
+                "font_id": 1,
+                "font_italic": null,
+                "font_library_path": null,
+                "font_line_height": null,
+                "font_name": "allFonts",
+                "font_serif": null,
+                "path": "/data/primeros_libros/fonts/allFonts.fontser"
+            },
+            "glyph_substitution_model": {
+                "created_at": "2016-03-16T19:20:42.000Z",
+                "id": 1,
+                "name": "uniform",
+                "path": "/data/primeros_libros/gsm/uniform.gsmser",
+                "updated_at": "2016-03-16T19:20:42.000Z"
+            },
+            "id": 5,
+            "job_type": {
+                "id": 4,
+                "name": "Font Training"
+            },
+            "language_model": {
+                "created_at": "2016-03-08T18:43:37.000Z",
+                "id": 1,
+                "language_id": 7,
+                "name": "Spanish-2-29",
+                "path": "/data/primeros_libros/language_models/spanish_2-29.lmser",
+                "updated_at": "2016-03-08T18:43:37.000Z"
+            },
+            "name": "TrainFont-Spanish-Test-2",
+            "notes": "Selecting  pages that aren't blank.",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "font_bold": null,
+            "font_fixed": null,
+            "font_fraktur": null,
+            "font_italic": null,
+            "font_library_path": null,
+            "font_line_height": null,
+            "font_name": "allFonts",
+            "font_serif": null,
+            "id": 1,
+            "path": "/data/primeros_libros/fonts/allFonts.fontser"
+        },
+        "font_training_result": {
+            "batch_job_id": 5,
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/trained-font.fontser",
+            "glyph_substitution_model_path": null,
+            "id": 3,
+            "language_model_path": null,
+            "work_id": 224
+        },
+        "glyph_substitution_model": {
+            "id": 1,
+            "name": "uniform",
+            "path": "/data/primeros_libros/gsm/uniform.gsmser"
+        },
+        "id": 284,
+        "language_model": {
+            "id": 1,
+            "language_id": 7,
+            "name": "Spanish-2-29",
+            "path": "/data/primeros_libros/language_models/spanish_2-29.lmser"
+        },
+        "page": {
+            "id": 3650,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00006.jpg",
+            "pg_ref_number": 6,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": null,
+        "postproc_result": null,
+        "proc_id": "20160316145118336",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": {
+                "font_bold": null,
+                "font_fixed": null,
+                "font_fraktur": null,
+                "font_id": 1,
+                "font_italic": null,
+                "font_library_path": null,
+                "font_line_height": null,
+                "font_name": "allFonts",
+                "font_serif": null,
+                "path": "/data/primeros_libros/fonts/allFonts.fontser"
+            },
+            "glyph_substitution_model": {
+                "created_at": "2016-03-16T19:20:42.000Z",
+                "id": 1,
+                "name": "uniform",
+                "path": "/data/primeros_libros/gsm/uniform.gsmser",
+                "updated_at": "2016-03-16T19:20:42.000Z"
+            },
+            "id": 5,
+            "job_type": {
+                "id": 4,
+                "name": "Font Training"
+            },
+            "language_model": {
+                "created_at": "2016-03-08T18:43:37.000Z",
+                "id": 1,
+                "language_id": 7,
+                "name": "Spanish-2-29",
+                "path": "/data/primeros_libros/language_models/spanish_2-29.lmser",
+                "updated_at": "2016-03-08T18:43:37.000Z"
+            },
+            "name": "TrainFont-Spanish-Test-2",
+            "notes": "Selecting  pages that aren't blank.",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "font_bold": null,
+            "font_fixed": null,
+            "font_fraktur": null,
+            "font_italic": null,
+            "font_library_path": null,
+            "font_line_height": null,
+            "font_name": "allFonts",
+            "font_serif": null,
+            "id": 1,
+            "path": "/data/primeros_libros/fonts/allFonts.fontser"
+        },
+        "font_training_result": {
+            "batch_job_id": 5,
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/trained-font.fontser",
+            "glyph_substitution_model_path": null,
+            "id": 3,
+            "language_model_path": null,
+            "work_id": 224
+        },
+        "glyph_substitution_model": {
+            "id": 1,
+            "name": "uniform",
+            "path": "/data/primeros_libros/gsm/uniform.gsmser"
+        },
+        "id": 285,
+        "language_model": {
+            "id": 1,
+            "language_id": 7,
+            "name": "Spanish-2-29",
+            "path": "/data/primeros_libros/language_models/spanish_2-29.lmser"
+        },
+        "page": {
+            "id": 3651,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00007.jpg",
+            "pg_ref_number": 7,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": null,
+        "postproc_result": null,
+        "proc_id": "20160316145118336",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": {
+                "font_bold": null,
+                "font_fixed": null,
+                "font_fraktur": null,
+                "font_id": 1,
+                "font_italic": null,
+                "font_library_path": null,
+                "font_line_height": null,
+                "font_name": "allFonts",
+                "font_serif": null,
+                "path": "/data/primeros_libros/fonts/allFonts.fontser"
+            },
+            "glyph_substitution_model": {
+                "created_at": "2016-03-16T19:20:42.000Z",
+                "id": 1,
+                "name": "uniform",
+                "path": "/data/primeros_libros/gsm/uniform.gsmser",
+                "updated_at": "2016-03-16T19:20:42.000Z"
+            },
+            "id": 5,
+            "job_type": {
+                "id": 4,
+                "name": "Font Training"
+            },
+            "language_model": {
+                "created_at": "2016-03-08T18:43:37.000Z",
+                "id": 1,
+                "language_id": 7,
+                "name": "Spanish-2-29",
+                "path": "/data/primeros_libros/language_models/spanish_2-29.lmser",
+                "updated_at": "2016-03-08T18:43:37.000Z"
+            },
+            "name": "TrainFont-Spanish-Test-2",
+            "notes": "Selecting  pages that aren't blank.",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "font_bold": null,
+            "font_fixed": null,
+            "font_fraktur": null,
+            "font_italic": null,
+            "font_library_path": null,
+            "font_line_height": null,
+            "font_name": "allFonts",
+            "font_serif": null,
+            "id": 1,
+            "path": "/data/primeros_libros/fonts/allFonts.fontser"
+        },
+        "font_training_result": {
+            "batch_job_id": 5,
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/trained-font.fontser",
+            "glyph_substitution_model_path": null,
+            "id": 3,
+            "language_model_path": null,
+            "work_id": 224
+        },
+        "glyph_substitution_model": {
+            "id": 1,
+            "name": "uniform",
+            "path": "/data/primeros_libros/gsm/uniform.gsmser"
+        },
+        "id": 286,
+        "language_model": {
+            "id": 1,
+            "language_id": 7,
+            "name": "Spanish-2-29",
+            "path": "/data/primeros_libros/language_models/spanish_2-29.lmser"
+        },
+        "page": {
+            "id": 3652,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00008.jpg",
+            "pg_ref_number": 8,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": null,
+        "postproc_result": null,
+        "proc_id": "20160316145118336",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": {
+                "font_bold": null,
+                "font_fixed": null,
+                "font_fraktur": null,
+                "font_id": 1,
+                "font_italic": null,
+                "font_library_path": null,
+                "font_line_height": null,
+                "font_name": "allFonts",
+                "font_serif": null,
+                "path": "/data/primeros_libros/fonts/allFonts.fontser"
+            },
+            "glyph_substitution_model": {
+                "created_at": "2016-03-16T19:20:42.000Z",
+                "id": 1,
+                "name": "uniform",
+                "path": "/data/primeros_libros/gsm/uniform.gsmser",
+                "updated_at": "2016-03-16T19:20:42.000Z"
+            },
+            "id": 5,
+            "job_type": {
+                "id": 4,
+                "name": "Font Training"
+            },
+            "language_model": {
+                "created_at": "2016-03-08T18:43:37.000Z",
+                "id": 1,
+                "language_id": 7,
+                "name": "Spanish-2-29",
+                "path": "/data/primeros_libros/language_models/spanish_2-29.lmser",
+                "updated_at": "2016-03-08T18:43:37.000Z"
+            },
+            "name": "TrainFont-Spanish-Test-2",
+            "notes": "Selecting  pages that aren't blank.",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "font_bold": null,
+            "font_fixed": null,
+            "font_fraktur": null,
+            "font_italic": null,
+            "font_library_path": null,
+            "font_line_height": null,
+            "font_name": "allFonts",
+            "font_serif": null,
+            "id": 1,
+            "path": "/data/primeros_libros/fonts/allFonts.fontser"
+        },
+        "font_training_result": {
+            "batch_job_id": 5,
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/trained-font.fontser",
+            "glyph_substitution_model_path": null,
+            "id": 3,
+            "language_model_path": null,
+            "work_id": 224
+        },
+        "glyph_substitution_model": {
+            "id": 1,
+            "name": "uniform",
+            "path": "/data/primeros_libros/gsm/uniform.gsmser"
+        },
+        "id": 287,
+        "language_model": {
+            "id": 1,
+            "language_id": 7,
+            "name": "Spanish-2-29",
+            "path": "/data/primeros_libros/language_models/spanish_2-29.lmser"
+        },
+        "page": {
+            "id": 3653,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00009.jpg",
+            "pg_ref_number": 9,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": null,
+        "postproc_result": null,
+        "proc_id": "20160316145118336",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": {
+                "font_bold": null,
+                "font_fixed": null,
+                "font_fraktur": null,
+                "font_id": 1,
+                "font_italic": null,
+                "font_library_path": null,
+                "font_line_height": null,
+                "font_name": "allFonts",
+                "font_serif": null,
+                "path": "/data/primeros_libros/fonts/allFonts.fontser"
+            },
+            "glyph_substitution_model": {
+                "created_at": "2016-03-16T19:20:42.000Z",
+                "id": 1,
+                "name": "uniform",
+                "path": "/data/primeros_libros/gsm/uniform.gsmser",
+                "updated_at": "2016-03-16T19:20:42.000Z"
+            },
+            "id": 5,
+            "job_type": {
+                "id": 4,
+                "name": "Font Training"
+            },
+            "language_model": {
+                "created_at": "2016-03-08T18:43:37.000Z",
+                "id": 1,
+                "language_id": 7,
+                "name": "Spanish-2-29",
+                "path": "/data/primeros_libros/language_models/spanish_2-29.lmser",
+                "updated_at": "2016-03-08T18:43:37.000Z"
+            },
+            "name": "TrainFont-Spanish-Test-2",
+            "notes": "Selecting  pages that aren't blank.",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "font_bold": null,
+            "font_fixed": null,
+            "font_fraktur": null,
+            "font_italic": null,
+            "font_library_path": null,
+            "font_line_height": null,
+            "font_name": "allFonts",
+            "font_serif": null,
+            "id": 1,
+            "path": "/data/primeros_libros/fonts/allFonts.fontser"
+        },
+        "font_training_result": {
+            "batch_job_id": 5,
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/trained-font.fontser",
+            "glyph_substitution_model_path": null,
+            "id": 3,
+            "language_model_path": null,
+            "work_id": 224
+        },
+        "glyph_substitution_model": {
+            "id": 1,
+            "name": "uniform",
+            "path": "/data/primeros_libros/gsm/uniform.gsmser"
+        },
+        "id": 288,
+        "language_model": {
+            "id": 1,
+            "language_id": 7,
+            "name": "Spanish-2-29",
+            "path": "/data/primeros_libros/language_models/spanish_2-29.lmser"
+        },
+        "page": {
+            "id": 3654,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00010.jpg",
+            "pg_ref_number": 10,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": null,
+        "postproc_result": null,
+        "proc_id": "20160316145118336",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": {
+                "font_bold": null,
+                "font_fixed": null,
+                "font_fraktur": null,
+                "font_id": 1,
+                "font_italic": null,
+                "font_library_path": null,
+                "font_line_height": null,
+                "font_name": "allFonts",
+                "font_serif": null,
+                "path": "/data/primeros_libros/fonts/allFonts.fontser"
+            },
+            "glyph_substitution_model": {
+                "created_at": "2016-03-16T19:20:42.000Z",
+                "id": 1,
+                "name": "uniform",
+                "path": "/data/primeros_libros/gsm/uniform.gsmser",
+                "updated_at": "2016-03-16T19:20:42.000Z"
+            },
+            "id": 5,
+            "job_type": {
+                "id": 4,
+                "name": "Font Training"
+            },
+            "language_model": {
+                "created_at": "2016-03-08T18:43:37.000Z",
+                "id": 1,
+                "language_id": 7,
+                "name": "Spanish-2-29",
+                "path": "/data/primeros_libros/language_models/spanish_2-29.lmser",
+                "updated_at": "2016-03-08T18:43:37.000Z"
+            },
+            "name": "TrainFont-Spanish-Test-2",
+            "notes": "Selecting  pages that aren't blank.",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "font_bold": null,
+            "font_fixed": null,
+            "font_fraktur": null,
+            "font_italic": null,
+            "font_library_path": null,
+            "font_line_height": null,
+            "font_name": "allFonts",
+            "font_serif": null,
+            "id": 1,
+            "path": "/data/primeros_libros/fonts/allFonts.fontser"
+        },
+        "font_training_result": {
+            "batch_job_id": 5,
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/trained-font.fontser",
+            "glyph_substitution_model_path": null,
+            "id": 3,
+            "language_model_path": null,
+            "work_id": 224
+        },
+        "glyph_substitution_model": {
+            "id": 1,
+            "name": "uniform",
+            "path": "/data/primeros_libros/gsm/uniform.gsmser"
+        },
+        "id": 289,
+        "language_model": {
+            "id": 1,
+            "language_id": 7,
+            "name": "Spanish-2-29",
+            "path": "/data/primeros_libros/language_models/spanish_2-29.lmser"
+        },
+        "page": {
+            "id": 3655,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00011.jpg",
+            "pg_ref_number": 11,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": null,
+        "postproc_result": null,
+        "proc_id": "20160316145118336",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    }
+]

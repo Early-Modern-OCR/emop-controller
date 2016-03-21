@@ -7,6 +7,8 @@ from emop.lib.emop_payload import EmopPayload
 from emop.lib.emop_job import EmopJob
 from emop.lib.emop_scheduler import EmopScheduler
 from emop.lib.processes.tesseract import Tesseract
+from emop.lib.processes.ocular_font_training import OcularFontTraining
+from emop.lib.processes.ocular_transcribe import OcularTranscribe
 from emop.lib.processes.xml_to_text import XML_To_Text
 from emop.lib.processes.denoise import Denoise
 from emop.lib.processes.multi_column_skew import MultiColumnSkew
@@ -55,6 +57,8 @@ class EmopRun(EmopBase):
         self.jobs_failed = []
         self.page_results = []
         self.postproc_results = []
+        self.font_training_results = []
+        self.extra_transfers = []
 
     def append_result(self, job, results, failed=False):
         """Append a page's results to job's results payload
@@ -70,15 +74,34 @@ class EmopRun(EmopBase):
         if failed:
             results_ext = "%s JOB %s: %s" % (self.scheduler.name, self.scheduler.job_id, results)
             logger.error(results_ext)
-            self.jobs_failed.append({"id": job.id, "results": results_ext})
+            if self.settings.operate_on == 'works':
+                for j in job.jobs:
+                    self.jobs_failed.append({"id": j.id, "results": results_ext})
+            else:
+                self.jobs_failed.append({"id": job.id, "results": results_ext})
         else:
-            self.jobs_completed.append(job.id)
+            if self.settings.operate_on == 'works':
+                for j in job.jobs:
+                    self.jobs_completed.append(j.id)
+            else:
+                self.jobs_completed.append(job.id)
 
         # TODO: Do we need to handle adding page_results and postproc_results differently??
-        if job.page_result.has_data():
-            self.page_results.append(job.page_result.to_dict())
-        if job.postproc_result.has_data():
-            self.postproc_results.append(job.postproc_result.to_dict())
+        _jobs = []
+        if self.settings.operate_on == 'works':
+            for j in job.jobs:
+                _jobs.append(j)
+        else:
+            _jobs = [job]
+        for j in _jobs:
+            if j.page_result.has_data():
+                self.page_results.append(j.page_result.to_dict())
+            if j.postproc_result.has_data():
+                self.postproc_results.append(j.postproc_result.to_dict())
+            if j.font_training_result.has_data():
+                self.font_training_results.append(j.font_training_result.to_dict())
+            if j.extra_transfers:
+                self.extra_transfers = self.extra_transfers + j.extra_transfers
 
         current_results = self.get_results()
         self.payload.save_output(data=current_results, overwrite=True)
@@ -97,6 +120,8 @@ class EmopRun(EmopBase):
             "job_queues": job_queues_data,
             "page_results": self.page_results,
             "postproc_results": self.postproc_results,
+            "font_training_results": self.font_training_results,
+            "extra_transfers": self.extra_transfers
         }
 
         return data
@@ -157,6 +182,8 @@ class EmopRun(EmopBase):
         ocr_engine = job.batch_job.ocr_engine
         if ocr_engine == "tesseract":
             ocr = Tesseract(job=job)
+        elif ocr_engine == "ocular":
+            ocr = OcularTranscribe(job=job)
         else:
             ocr_engine_err = "OCR with %s not yet supported" % ocr_engine
             self.append_result(job=job, results=ocr_engine_err, failed=True)
@@ -270,6 +297,35 @@ class EmopRun(EmopBase):
         return True
 
     @EmopBase.run_timing
+    def do_training(self, job):
+        """Execute Training"""
+        logger.info(
+            "Got job [%s] - Batch: %s JobType: %s OCR Engine: %s" %
+            (job.id, job.batch_job.name, job.batch_job.job_type, job.batch_job.ocr_engine)
+        )
+
+        # OCR #
+        training_engine = job.batch_job.ocr_engine
+        if training_engine == "ocular":
+            training = OcularFontTraining(job=job)
+        else:
+            training_engine_err = "Training with %s not yet supported" % training_engine
+            self.append_result(job=job, results=training_engine_err, failed=True)
+            return False
+
+        #if self.settings.controller_skip_existing and not ocr.should_run():
+        #    logger.info("Skipping OCR job [%s]" % job.id)
+        #    return True
+        training_result = training.run()
+
+        if training_result.exitcode != 0:
+            training_err = "%s Training Failed: %s" % (training_engine, training_result.stderr)
+            self.append_result(job=job, results=training_err, failed=True)
+            return False
+        else:
+            return True
+
+    @EmopBase.run_timing
     def run(self, force=False):
         """Run the EmopJob
 
@@ -309,17 +365,37 @@ class EmopRun(EmopBase):
         instance = self
         signal.signal(signal.SIGUSR1, signal_exit)
 
-        # Loop over jobs to perform actual work
+        # Loop over data to create EmopJob records
+        emop_jobs = {}
         for job in data:
             emop_job = EmopJob(job_data=job, settings=self.settings, scheduler=self.scheduler)
+            if self.settings.operate_on == 'works':
+                work_id = emop_job.work.id
+                if work_id in emop_jobs:
+                    _emop_job = emop_jobs[work_id]
+                    _emop_job.jobs.append(emop_job)
+                    continue
+                else:
+                    emop_job.jobs = [emop_job]
+                    emop_jobs[work_id] = emop_job
+            else:
+                page_id = emop_job.page.id
+                emop_jobs[page_id] = emop_job
+
+        # Loop over jobs to perform actual work
+        for emop_job_id, emop_job in emop_jobs.iteritems():
             if emop_job.batch_job.job_type == "ocr":
                 job_succcessful = self.do_job(job=emop_job)
                 if not job_succcessful:
                     continue
                 # Append successful completion of page #
                 self.append_result(job=emop_job, results=None, failed=False)
-            # TODO
-            # elif batch_job.job_type == "ground truth compare":
+            elif emop_job.batch_job.job_type == 'font training':
+                job_successful = self.do_training(job=emop_job)
+                if not job_successful:
+                    continue
+                # Append successful completion #
+                self.append_result(job=emop_job, results=None, failed=False)
             else:
                 logger.error("JobType of %s is not yet supported." % emop_job.batch_job.job_type)
                 return False

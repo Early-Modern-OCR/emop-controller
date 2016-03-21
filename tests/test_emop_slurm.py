@@ -39,7 +39,7 @@ class TestEmopSLURM(TestCase):
     def test_current_job_count(self):
         scheduler = EmopSLURM(self.settings)
         expected_cmd = [
-            "squeue", "-r", "--noheader", "-p", "idhmc", "-n", "emop-controller"
+            "squeue", "-r", "--noheader", "-p", "stakeholder,stakeholder-4g", "-n", "emop-controller"
         ]
         mock_stdout = ("       0001                 idhmc emop-controller treydock  R    0:01:00      1 c0101\n"
                        "       0002                 idhmc emop-controller treydock  R    0:01:00      1 c0102\n")
@@ -54,7 +54,7 @@ class TestEmopSLURM(TestCase):
         scheduler = EmopSLURM(self.settings)
         expected_cmd = [
             "sbatch", "--parsable",
-            "-p", "idhmc",
+            "-p", "stakeholder,stakeholder-4g",
             "-J", "emop-controller",
             "-o", "/dne/emop-controller-%j.out",
             "--mem-per-cpu", "4000",
@@ -83,7 +83,7 @@ class TestEmopSLURM(TestCase):
         scheduler = EmopSLURM(self.settings)
         expected_cmd = [
             "sbatch", "--parsable",
-            "-p", "idhmc",
+            "-p", "stakeholder,stakeholder-4g",
             "-J", "emop-controller",
             "-o", "/dne/emop-controller-%j.out",
             "--mem-per-cpu", "4000",
@@ -98,7 +98,7 @@ class TestEmopSLURM(TestCase):
         scheduler = EmopSLURM(self.settings)
         expected_cmd = [
             "sbatch", "--parsable",
-            "-p", "idhmc",
+            "-p", "stakeholder,stakeholder-4g",
             "-J", "emop-controller",
             "-o", "/dne/emop-controller-%j.out",
             "--mem-per-cpu", "4000",
@@ -114,7 +114,7 @@ class TestEmopSLURM(TestCase):
         scheduler = EmopSLURM(self.settings)
         expected_cmd = [
             "sbatch", "--parsable",
-            "-p", "idhmc",
+            "-p", "stakeholder,stakeholder-4g",
             "-J", "emop-controller",
             "-o", "/dne/emop-controller-%j.out",
             "--mem-per-cpu", "4000",

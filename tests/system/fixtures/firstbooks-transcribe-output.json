@@ -1,0 +1,193 @@
+{
+    "font_training_results": [], 
+    "job_queues": {
+        "completed": [
+            845, 
+            846, 
+            847, 
+            848, 
+            849, 
+            850, 
+            851, 
+            852, 
+            853, 
+            854, 
+            855, 
+            856, 
+            857, 
+            858, 
+            859, 
+            860, 
+            861, 
+            862, 
+            863, 
+            864, 
+            865, 
+            866, 
+            867, 
+            868, 
+            869, 
+            870
+        ], 
+        "failed": []
+    }, 
+    "page_results": [
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00001_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00001.alto.xml", 
+            "page_id": 3645
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00002_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00002.alto.xml", 
+            "page_id": 3646
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00003_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00003.alto.xml", 
+            "page_id": 3647
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00004_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00004.alto.xml", 
+            "page_id": 3648
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00005_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00005.alto.xml", 
+            "page_id": 3649
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00006_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00006.alto.xml", 
+            "page_id": 3650
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00007_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00007.alto.xml", 
+            "page_id": 3651
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00008_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00008.alto.xml", 
+            "page_id": 3652
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00009_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00009.alto.xml", 
+            "page_id": 3653
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00010_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00010.alto.xml", 
+            "page_id": 3654
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00011_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00011.alto.xml", 
+            "page_id": 3655
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00012_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00012.alto.xml", 
+            "page_id": 3656
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00013_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00013.alto.xml", 
+            "page_id": 3657
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00014_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00014.alto.xml", 
+            "page_id": 3658
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00015_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00015.alto.xml", 
+            "page_id": 3659
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00016_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00016.alto.xml", 
+            "page_id": 3660
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00017_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00017.alto.xml", 
+            "page_id": 3661
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00018_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00018.alto.xml", 
+            "page_id": 3662
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00019_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00019.alto.xml", 
+            "page_id": 3663
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00020_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00020.alto.xml", 
+            "page_id": 3664
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00021_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00021.alto.xml", 
+            "page_id": 3665
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00022_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00022.alto.xml", 
+            "page_id": 3666
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00023_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00023.alto.xml", 
+            "page_id": 3667
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00024_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00024.alto.xml", 
+            "page_id": 3668
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00025_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00025.alto.xml", 
+            "page_id": 3669
+        }, 
+        {
+            "batch_id": 8, 
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00026_transcription.txt", 
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-test/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00026.alto.xml", 
+            "page_id": 3670
+        }
+    ], 
+    "postproc_results": []
+}

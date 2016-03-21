@@ -7,6 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --time=01:00:00
 #SBATCH --export=EMOP_HOME,EMOP_CONFIG_PATH
+#SBATCH --signal=USR1@300
 
 if [ -z $EMOP_HOME ]; then
     EMOP_HOME=${SLURM_SUBMIT_DIR}

@@ -1,0 +1,28 @@
+{
+    "font_training_results": [
+        {
+            "batch_job_id": 5, 
+            "font_path": "/data/shared/text-xml/FirstBooks-OCR-test/5/224/work-224-batch-5.fontser",
+            "glyph_substitution_model_path": "/data/shared/text-xml/FirstBooks-OCR-test/5/224/work-224-batch-5.gsmser",
+            "language_model_path": "/data/shared/text-xml/FirstBooks-OCR-test/5/224/work-224-batch-5.lmser",
+            "work_id": 224
+        }
+    ], 
+    "job_queues": {
+        "completed": [
+            280, 
+            281, 
+            282, 
+            283, 
+            284, 
+            285, 
+            286, 
+            287, 
+            288, 
+            289
+        ], 
+        "failed": []
+    }, 
+    "page_results": [], 
+    "postproc_results": []
+}

@@ -5,6 +5,9 @@ import os
 from emop.lib.emop_base import EmopBase
 from emop.lib.emop_payload import EmopPayload
 from emop.lib.models.emop_page import EmopPage
+from emop.lib.models.emop_font import EmopFont
+from emop.lib.models.emop_language_model import EmopLanguageModel
+from emop.lib.models.emop_glyph_substitution_model import EmopGlyphSubstitutionModel
 from emop.lib.transfer.globus import GlobusAPIClient
 
 logger = logging.getLogger('emop')
@@ -70,6 +73,7 @@ class EmopTransfer(EmopBase):
         Returns:
             str: Globus Task ID
         """
+        stage_in_files = []
         stage_in_data = []
         src = self.remote_endpoint
         dest = self.cluster_endpoint
@@ -81,8 +85,10 @@ class EmopTransfer(EmopBase):
                 continue
             data = payload.load_input()
             _files = self._get_stage_in_files_from_data(data)
-            _stage_in_data = self._get_stage_in_data(_files)
-            stage_in_data = stage_in_data + _stage_in_data
+            stage_in_files = stage_in_files + _files
+
+        _stage_in_files = list(set(stage_in_files))
+        stage_in_data = self._get_stage_in_data(_stage_in_files)
 
         task_id = self.start(src=src, dest=dest, data=stage_in_data, label=label, wait=wait)
         return task_id
@@ -140,6 +146,9 @@ class EmopTransfer(EmopBase):
         _valid = True
         for endpoint in [self.cluster_endpoint, self.remote_endpoint]:
             _activated = self._check_activation(endpoint=endpoint, fail_on_warn=fail_on_warn)
+            if not _activated:
+                self.globus.autoactivate(endpoint=endpoint)
+                _activated = self._check_activation(endpoint=endpoint, fail_on_warn=fail_on_warn)
             if not _activated:
                 _valid = False
                 logger.error("Endpoint %s is not activated!", endpoint)
@@ -287,16 +296,22 @@ class EmopTransfer(EmopBase):
             list: Files to tranfer
         """
         files = []
-        page_keys = EmopPage.transfer_attributes
-        for p in data:
-            _page = p.get('page')
-            if _page is None:
-                continue
-            for key in page_keys:
-                _file = _page.get(key)
-                if _file is not None:
-                    files.append(_file)
-        return files
+        transfer_keys = {
+            "page": EmopPage.transfer_attributes,
+            "font": EmopFont.transfer_attributes,
+            "language_model": EmopLanguageModel.transfer_attributes,
+            "glyph_substitution_model": EmopGlyphSubstitutionModel.transfer_attributes,
+        }
+        for key, values in transfer_keys.iteritems():
+            for p in data:
+                _obj = p.get(key)
+                if _obj is None:
+                    continue
+                for value in values:
+                    _file = _obj.get(value)
+                    if _file is not None:
+                        files.append(_file)
+        return list(set(files))
 
     def _get_stage_in_data(self, files):
         """ Private function - convert stage in files to transfer data
@@ -332,17 +347,33 @@ class EmopTransfer(EmopBase):
             list: List of dicts that contain necessary src/dest key/value pairs
         """
         _data = []
+        _paths = set()
         _page_results = data.get("page_results", [])
-        for _result in _page_results:
+        _font_training_results = data.get("font_training_results", [])
+        _extra_tranfers = data.get("extra_transfers", [])
+        _results = _page_results + _font_training_results
+        for _result in _results:
             for _value in _result.values():
                 if not isinstance(_value, basestring):
                     continue
                 if os.path.isabs(_value):
-                    _paths = {}
-                    _paths['dest'] = _value
                     _local_path = EmopBase.add_prefix(prefix=self.settings.output_path_prefix, path=_value)
-                    _paths['src'] = _local_path
-                    _data.append(_paths)
+                    _paths.add(_local_path)
+
+        for _extra in _extra_tranfers:
+            for _path in _paths.copy():
+                if os.path.isdir(_extra):
+                    if _extra in _path:
+                        _paths.discard(_path)
+            _paths.add(_extra)
+
+        for _path in _paths:
+            _d = {}
+            _remote_path = EmopBase.remove_prefix(prefix=self.settings.output_path_prefix, path=_path)
+            _d['dest'] = _remote_path
+            _d['src'] = _path
+            _data.append(_d)
+
         return _data
 
     # def _get_local_path(self, prefix, path):

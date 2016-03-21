@@ -142,8 +142,11 @@ def submit(args, parser):
         proc_ids.append(proc_id)
 
     if proc_ids:
-        task_id = emop_transfer.stage_in_proc_ids(proc_ids=proc_ids, wait=False)
-        transfer_job_id = emop_submit.scheduler.submit_transfer_job(task_id=task_id)
+        if args.transfer:
+            task_id = emop_transfer.stage_in_proc_ids(proc_ids=proc_ids, wait=False)
+            transfer_job_id = emop_submit.scheduler.submit_transfer_job(task_id=task_id)
+        else:
+            transfer_job_id = None
         for proc_id in proc_ids:
             emop_submit.scheduler.submit_job(proc_id=proc_id, num_pages=pages_per_job, dependency=transfer_job_id)
     sys.exit(0)
@@ -208,7 +211,7 @@ def transfer_in(args, parser):
     if args.proc_id:
         task_id = emop_transfer.stage_in_proc_ids(proc_ids=[args.proc_id], wait=args.wait)
         if task_id:
-            print("Transfer submitted: %s", task_id)
+            print("Transfer submitted: %s" % task_id)
         else:
             print("Error: Failed to submit transfer")
     elif args.filter:
@@ -216,7 +219,7 @@ def transfer_in(args, parser):
         pending_pages = emop_query.pending_pages(q_filter=args.filter)#, r_filter='page.pg_image_path,pg_ground_truth_file')
         task_id = emop_transfer.stage_in_data(data=pending_pages, wait=args.wait)
         if task_id:
-            print("Transfer submitted: %s", task_id)
+            print("Transfer submitted: %s" % task_id)
         else:
             print("ERROR: Failed to submit transfer")
     if task_id:
@@ -445,6 +448,11 @@ def setup_parser():
     parser_submit.add_argument('--no-schedule',
                                help='disable submitting to scheduler',
                                dest='schedule',
+                               action='store_false',
+                               default=True)
+    parser_submit.add_argument('--no-transfer',
+                               help='disable initiating transfer',
+                               dest='transfer',
                                action='store_false',
                                default=True)
     parser_submit.set_defaults(func=submit)

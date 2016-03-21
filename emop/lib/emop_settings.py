@@ -7,7 +7,8 @@ import os
 defaults = {
     "controller": {
         "scheduler": "slurm",
-        "skip_existing": True
+        "skip_existing": True,
+        "operate_on": "pages"
     },
     "globus": {
         "username": None,
@@ -94,6 +95,7 @@ class EmopSettings(object):
         self.log_level = self.get_value('controller', 'log_level')
         self.scheduler = self.get_value('controller', 'scheduler')
         self.controller_skip_existing = self.get_bool_value('controller', 'skip_existing')
+        self.operate_on = self.get_value('controller', 'operate_on')
 
         # Settings used to interact with the cluster scheduler
         self.max_jobs = int(self.get_value('scheduler', 'max_jobs'))
@@ -122,6 +124,10 @@ class EmopSettings(object):
         # Settings used by Tesseract
         self.tesseract_tessdata_dir = self.get_value("tesseract", "tessdata_dir")
 
+        # Settings used by Ocular
+        self.ocular_emission_engine = self.get_value("ocular", "emission_engine")
+
+        # Settings used by DeNoise
         self.denoise_enabled = self.get_bool_value('denoise', 'enabled')
 
         # Settings used by MultiColumnSkew

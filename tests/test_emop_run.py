@@ -76,6 +76,8 @@ class TestEmopRun(TestCase):
         self.run.page_results.append({"batch_id": 1, "page_id": 2})
         self.run.postproc_results.append({"batch_job_id": 1, "page_id": 2})
         expected_value = {
+            "extra_transfers": [],
+            "font_training_results": [],
             "job_queues": {
                 "completed": [1],
                 "failed": [{"id": 2, "results": "test"}]

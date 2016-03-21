@@ -1,0 +1,3200 @@
+[
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 845,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3645,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00001.jpg",
+            "pg_ref_number": 1,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 1,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:41.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00001_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00001.alto.xml",
+            "page_id": 3645
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 846,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3646,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00002.jpg",
+            "pg_ref_number": 2,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 2,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:41.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00002_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00002.alto.xml",
+            "page_id": 3646
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 847,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3647,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00003.jpg",
+            "pg_ref_number": 3,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 3,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:41.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00003_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00003.alto.xml",
+            "page_id": 3647
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 848,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3648,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00004.jpg",
+            "pg_ref_number": 4,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 4,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:41.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00004_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00004.alto.xml",
+            "page_id": 3648
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 849,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3649,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00005.jpg",
+            "pg_ref_number": 5,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 5,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:41.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00005_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00005.alto.xml",
+            "page_id": 3649
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 850,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3650,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00006.jpg",
+            "pg_ref_number": 6,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 6,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:41.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00006_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00006.alto.xml",
+            "page_id": 3650
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 851,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3651,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00007.jpg",
+            "pg_ref_number": 7,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 7,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:41.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00007_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00007.alto.xml",
+            "page_id": 3651
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 852,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3652,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00008.jpg",
+            "pg_ref_number": 8,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 8,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:41.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00008_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00008.alto.xml",
+            "page_id": 3652
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 853,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3653,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00009.jpg",
+            "pg_ref_number": 9,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 9,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:41.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00009_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00009.alto.xml",
+            "page_id": 3653
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 854,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3654,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00010.jpg",
+            "pg_ref_number": 10,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 10,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00010_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00010.alto.xml",
+            "page_id": 3654
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 855,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3655,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00011.jpg",
+            "pg_ref_number": 11,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 11,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00011_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00011.alto.xml",
+            "page_id": 3655
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 856,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3656,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00012.jpg",
+            "pg_ref_number": 12,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 12,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00012_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00012.alto.xml",
+            "page_id": 3656
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 857,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3657,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00013.jpg",
+            "pg_ref_number": 13,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 13,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00013_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00013.alto.xml",
+            "page_id": 3657
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 858,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3658,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00014.jpg",
+            "pg_ref_number": 14,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 14,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00014_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00014.alto.xml",
+            "page_id": 3658
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 859,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3659,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00015.jpg",
+            "pg_ref_number": 15,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 15,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00015_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00015.alto.xml",
+            "page_id": 3659
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 860,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3660,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00016.jpg",
+            "pg_ref_number": 16,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 16,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00016_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00016.alto.xml",
+            "page_id": 3660
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 861,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3661,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00017.jpg",
+            "pg_ref_number": 17,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 17,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00017_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00017.alto.xml",
+            "page_id": 3661
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 862,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3662,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00018.jpg",
+            "pg_ref_number": 18,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 18,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00018_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00018.alto.xml",
+            "page_id": 3662
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 863,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3663,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00019.jpg",
+            "pg_ref_number": 19,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 19,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00019_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00019.alto.xml",
+            "page_id": 3663
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 864,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3664,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00020.jpg",
+            "pg_ref_number": 20,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 20,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00020_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00020.alto.xml",
+            "page_id": 3664
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 865,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3665,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00021.jpg",
+            "pg_ref_number": 21,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 21,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00021_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00021.alto.xml",
+            "page_id": 3665
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 866,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3666,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00022.jpg",
+            "pg_ref_number": 22,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 22,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00022_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00022.alto.xml",
+            "page_id": 3666
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 867,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3667,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00023.jpg",
+            "pg_ref_number": 23,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 23,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00023_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00023.alto.xml",
+            "page_id": 3667
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 868,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3668,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00024.jpg",
+            "pg_ref_number": 24,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 24,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00024_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00024.alto.xml",
+            "page_id": 3668
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 869,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3669,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00025.jpg",
+            "pg_ref_number": 25,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 25,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00025_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00025.alto.xml",
+            "page_id": 3669
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    },
+    {
+        "batch_job": {
+            "font": null,
+            "glyph_substitution_model": null,
+            "id": 8,
+            "job_type": {
+                "id": 2,
+                "name": "OCR"
+            },
+            "language_model": null,
+            "name": "Transcribe-Spanish-Test-2",
+            "notes": "",
+            "ocr_engine": {
+                "id": 6,
+                "name": "Ocular"
+            },
+            "parameters": ""
+        },
+        "font": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.fontser"
+        },
+        "font_training_result": null,
+        "glyph_substitution_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.gsmser"
+        },
+        "id": 870,
+        "language_model": {
+            "path": "/data/shared/text-xml/FirstBooks-OCR-dev/5/224/work-224-batch-5.lmser"
+        },
+        "page": {
+            "id": 3670,
+            "pg_gale_ocr_file": null,
+            "pg_ground_truth_file": null,
+            "pg_image_path": "/data/primeros_libros/NEH-Ocular/BLAC_Benson/Phase_1/1544_Cromberger_Este/4a_Delivery_JPGs/pl_blac_003_00026.jpg",
+            "pg_ref_number": 26,
+            "work": {
+                "collection_id": 1,
+                "language_id": 7,
+                "wks_author": null,
+                "wks_book_id": "pl_blac_003",
+                "wks_coll_name": null,
+                "wks_corrected_text_path": null,
+                "wks_corrected_xml_path": null,
+                "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+                "wks_ecco_directory": null,
+                "wks_ecco_gale_ocr_xml_path": null,
+                "wks_ecco_number": null,
+                "wks_ecco_uncorrected_gale_ocr_path": null,
+                "wks_eebo_citation_id": null,
+                "wks_eebo_image_id": null,
+                "wks_eebo_url": null,
+                "wks_estc_number": null,
+                "wks_gt_number": null,
+                "wks_last_trawled": null,
+                "wks_marc_record": null,
+                "wks_organizational_unit": null,
+                "wks_primary_print_font": null,
+                "wks_printer": "J. Cromberger",
+                "wks_pub_date": "1544",
+                "wks_tcp_bibno": null,
+                "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+                "wks_word_count": null,
+                "wks_work_id": 224
+            }
+        },
+        "page_result": {
+            "alt_change_index": null,
+            "batch_id": 8,
+            "corr_ocr_text_path": null,
+            "corr_ocr_xml_path": null,
+            "id": 26,
+            "juxta_change_index": null,
+            "ocr_completed": "2016-03-21T14:51:42.000Z",
+            "ocr_text_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00026_transcription.txt",
+            "ocr_xml_path": "/data/shared/text-xml/FirstBooks-OCR-dev/8/224/all_transcriptions/4a_Delivery_JPGs/pl_blac_003_00026.alto.xml",
+            "page_id": 3670
+        },
+        "postproc_result": null,
+        "proc_id": "20160321095710714",
+        "results": null,
+        "status": {
+            "id": 2,
+            "name": "Processing"
+        },
+        "tries": 0,
+        "work": {
+            "collection": {
+                "id": 1,
+                "name": "FirstBooks"
+            },
+            "id": 224,
+            "language": {
+                "created_at": "2016-03-08T17:58:08.000Z",
+                "id": 7,
+                "name": "spanish",
+                "updated_at": "2016-03-08T17:58:08.000Z"
+            },
+            "wks_author": null,
+            "wks_book_id": "pl_blac_003",
+            "wks_coll_name": null,
+            "wks_corrected_text_path": null,
+            "wks_corrected_xml_path": null,
+            "wks_doc_directory": "/data/primeros_libros/NEH-Occular/BLAC_Benson/Phase_1/1544_Cromberger_Este",
+            "wks_ecco_directory": null,
+            "wks_ecco_gale_ocr_xml_path": null,
+            "wks_ecco_number": null,
+            "wks_ecco_uncorrected_gale_ocr_path": null,
+            "wks_eebo_citation_id": null,
+            "wks_eebo_image_id": null,
+            "wks_eebo_url": null,
+            "wks_estc_number": null,
+            "wks_gt_number": null,
+            "wks_last_trawled": null,
+            "wks_marc_record": null,
+            "wks_organizational_unit": null,
+            "wks_primary_print_font": null,
+            "wks_printer": "J. Cromberger",
+            "wks_pub_date": "1544",
+            "wks_tcp_bibno": null,
+            "wks_title": "Este es un compendio breve que trata de la manera de c\u00f3mo se han de hacer las processiones",
+            "wks_word_count": null
+        }
+    }
+]

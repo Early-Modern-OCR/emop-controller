@@ -72,6 +72,15 @@ class EmopSubmit(EmopBase):
         if not pages_per_job:
             pages_per_job = 1
 
+        # Case where num_jobs > page_count
+        if num_jobs > page_count or (num_jobs*pages_per_job) > page_count:
+            if page_count > job_slots_available:
+                num_jobs = job_slots_available
+                pages_per_job = int(page_count/num_jobs)
+            else:
+                num_jobs = page_count
+                pages_per_job = 1
+
         expected_runtime = pages_per_job * self.settings.avg_page_runtime
         expected_runtime_msg = "Expected job runtime: %s seconds" % expected_runtime
         if sim:
@@ -103,6 +112,8 @@ class EmopSubmit(EmopBase):
         else:
             job_queue = {}
         job_queue["num_pages"] = num_pages
+        if self.settings.operate_on == 'works':
+            job_queue["works"] = '1'
         reserve_data["job_queue"] = job_queue
         reserve_request = self.emop_api.put_request("/api/job_queues/reserve", reserve_data)
         if not reserve_request:

@@ -96,6 +96,7 @@ class GlobusAPIClient(object):
         Returns:
             int: Seconds left in endpoint activation
         """
+        _autoactivate = False
         endpoint_data = self.get_endpoint_data(endpoint=endpoint, fields="activated,expires_in")
         if not endpoint_data:
             return 0
@@ -103,7 +104,11 @@ class GlobusAPIClient(object):
 
         if _endpoint_activated:
             _expires_in = int(endpoint_data["expires_in"])
+            if _expires_in < self.settings.globus_min_activation_time:
+                _autoactivate = True
         else:
+            _autoactivate = True
+        if _autoactivate:
             logger.info("Endpoint %s not activated, attempting autoactivate" % endpoint)
             _autoactivate_data = self.autoactivate(endpoint=endpoint)
             _expires_in = int(_autoactivate_data["expires_in"])

@@ -16,6 +16,7 @@ skipif = pytest.mark.skipif
 class TestEmopTransfer(TestCase):
     @pytest.fixture(autouse=True)
     def setup(self, tmpdir):
+        self.tmpout = str(tmpdir.mkdir("out"))
         globus_dir = tmpdir.mkdir('globus')
         auth_file = globus_dir.join('globus-auth')
         expiry = int(time.time()) + (60*60*24*365)
@@ -46,10 +47,10 @@ class TestEmopTransfer(TestCase):
     def test_stage_in_data_1(self):
         data = load_fixture_file('job_queues_1.json')
         expected_files = [
-            "/data/eebo/e0006/40099/00001.000.001.tif",
-            "/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/1.txt",
-            "/data/eebo/e0006/40099/00002.000.001.tif",
             "/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/2.txt",
+            "/data/eebo/e0006/40099/00001.000.001.tif",
+            "/data/eebo/e0006/40099/00002.000.001.tif",
+            "/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/1.txt",
         ]
         self.transfer.stage_in_files = MagicMock()
         self.transfer.stage_in_data(data['results'])
@@ -59,20 +60,20 @@ class TestEmopTransfer(TestCase):
         self.transfer.settings.payload_input_path = os.path.dirname(fixture_file('input_payload_2.json'))
         expected_data = [
             {
-                'src': '/data/eebo/e0006/40099/00001.000.001.tif',
-                'dest': '/fdata/idhmc/emop-input/data/eebo/e0006/40099/00001.000.001.tif',
+                'src': '/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/2.txt',
+                'dest': '/fdata/idhmc/emop-input/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/2.txt',
             },
             {
-                'src': '/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/1.txt',
-                'dest': '/fdata/idhmc/emop-input/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/1.txt',
+                'src': '/data/eebo/e0006/40099/00001.000.001.tif',
+                'dest': '/fdata/idhmc/emop-input/data/eebo/e0006/40099/00001.000.001.tif',
             },
             {
                 'src': '/data/eebo/e0006/40099/00002.000.001.tif',
                 'dest': '/fdata/idhmc/emop-input/data/eebo/e0006/40099/00002.000.001.tif',
             },
             {
-                'src': '/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/2.txt',
-                'dest': '/fdata/idhmc/emop-input/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/2.txt',
+                'src': '/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/1.txt',
+                'dest': '/fdata/idhmc/emop-input/data/shared/text-xml/EEBO-TCP-pages-text/e0006/40099/1.txt',
             },
         ]
 
@@ -86,12 +87,12 @@ class TestEmopTransfer(TestCase):
         payload = EmopPayload(self.transfer.settings, 'output_payload_1')
         expected_data = [
             {
-                'src': '/fdata/idhmc/emop-output/data/shared/text-xml/IDHMC-ocr/17/152141/1.txt',
-                'dest': '/data/shared/text-xml/IDHMC-ocr/17/152141/1.txt',
-            },
-            {
                 'src': '/fdata/idhmc/emop-output/data/shared/text-xml/IDHMC-ocr/17/152141/1_ALTO.txt',
                 'dest': '/data/shared/text-xml/IDHMC-ocr/17/152141/1_ALTO.txt',
+            },
+            {
+                'src': '/fdata/idhmc/emop-output/data/shared/text-xml/IDHMC-ocr/17/152141/1.txt',
+                'dest': '/data/shared/text-xml/IDHMC-ocr/17/152141/1.txt',
             },
             {
                 'src': '/fdata/idhmc/emop-output/data/shared/text-xml/IDHMC-ocr/17/152141/1_ALTO.xml',
@@ -112,12 +113,12 @@ class TestEmopTransfer(TestCase):
         payload = EmopPayload(self.transfer.settings, 'output_payload_1')
         expected_data = [
             {
-                'src': '/fdata/idhmc/emop-output/data/shared/text-xml/IDHMC-ocr/17/152141/1.txt',
-                'dest': '/data/shared/text-xml/IDHMC-ocr/17/152141/1.txt',
-            },
-            {
                 'src': '/fdata/idhmc/emop-output/data/shared/text-xml/IDHMC-ocr/17/152141/1_ALTO.txt',
                 'dest': '/data/shared/text-xml/IDHMC-ocr/17/152141/1_ALTO.txt',
+            },
+            {
+                'src': '/fdata/idhmc/emop-output/data/shared/text-xml/IDHMC-ocr/17/152141/1.txt',
+                'dest': '/data/shared/text-xml/IDHMC-ocr/17/152141/1.txt',
             },
             {
                 'src': '/fdata/idhmc/emop-output/data/shared/text-xml/IDHMC-ocr/17/152141/1_ALTO.xml',
@@ -150,7 +151,8 @@ class TestEmopTransfer(TestCase):
 
     def test_check_endpoints_1(self):
         self.transfer._check_activation = MagicMock()
-        self.transfer._check_activation.side_effect = [False, False]
+        self.transfer._check_activation.side_effect = [False, False, False, False]
+        self.transfer.globus.autoactivate = MagicMock()
         self.transfer.globus.get_activate_url = MagicMock(return_value="https://globus.org/activate?ep=go%23ep1&ep_ids=foobar")
         retval = self.transfer.check_endpoints()
         self.assertEqual(False, retval)
@@ -207,8 +209,8 @@ class TestEmopTransfer(TestCase):
         expected = [
             '/dne/page1.txt',
             '/dne/gt1.txt',
-            '/dne/page2.txt',
             '/dne/gt2.txt',
+            '/dne/page2.txt',
         ]
         retval = self.transfer._get_stage_in_files_from_data(data=data)
         self.assertEqual(expected, retval)
@@ -243,6 +245,49 @@ class TestEmopTransfer(TestCase):
         ]
         retval = self.transfer._get_stage_in_files_from_data(data=data)
         self.assertEqual(expected, retval)
+
+    def test__get_stage_out_data_1(self):
+        data = {
+            "job_queues": {"completed": [1,2,3], "failed": []},
+            "page_results": [
+                {"page_id": 1, "batch_id": 2, "ocr_text_path": "/dne/1.txt", "ocr_xml_path": "/dne/1.xml"}
+            ],
+            "font_training_results": [
+                {"work_id": 1, "batch_job_id": 2, "font_path": "/dne/font", "language_model_path": "/dne/lm", "glyph_substitution_model_path": "/dne/gsm"}
+            ]
+        }
+        expected = [
+            {'dest': '/dne/1.txt', 'src': '/fdata/idhmc/emop-output/dne/1.txt'},
+            {'dest': '/dne/1.xml', 'src': '/fdata/idhmc/emop-output/dne/1.xml'},
+            {'dest': '/dne/font', 'src': '/fdata/idhmc/emop-output/dne/font'},
+            {'dest': '/dne/lm', 'src': '/fdata/idhmc/emop-output/dne/lm'},
+            {'dest': '/dne/gsm', 'src': '/fdata/idhmc/emop-output/dne/gsm'},
+        ]
+        retval = self.transfer._get_stage_out_data(data=data)
+        self.maxDiff = None
+        self.assertEqual(len(expected), len(retval))
+        self.assertEqual(sorted(expected), sorted(retval))
+
+    def test__get_stage_out_data_2(self):
+        data = {
+            "job_queues": {"completed": [1], "failed": []},
+            "page_results": [
+                {"page_id": 1, "batch_id": 2, "ocr_text_path": os.path.join(self.tmpout, "1.txt"), "ocr_xml_path": os.path.join(self.tmpout, "1.xml")}
+            ],
+            "font_training_results": [
+                {"work_id": 1, "batch_job_id": 2,
+                "font_path": os.path.join(self.tmpout, "font"),
+                "language_model_path": os.path.join(self.tmpout, "lm"),
+                "glyph_substitution_model_path": os.path.join(self.tmpout, "gsm")}
+            ],
+            "extra_transfers": [self.tmpout]
+        }
+        expected = [
+            {'dest': self.tmpout, 'src': os.path.join('/fdata/idhmc/emop-output', self.tmpout)},
+        ]
+        retval = self.transfer._get_stage_out_data(data=data)
+        self.assertEqual(expected, retval)
+
 
 def suite():
     return TestLoader().loadTestsFromTestCase(TestEmopTransfer)
