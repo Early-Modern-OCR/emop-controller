@@ -268,20 +268,20 @@ def transfer_test(args, parser):
     if not status:
         sys.exit(1)
 
-    ls_test_path = '/~/'
-    print("Testing ls ability of %s:%s" % (emop_transfer.cluster_endpoint, ls_test_path))
-    cluster_ls_data = emop_transfer.ls(emop_transfer.cluster_endpoint, ls_test_path)
-    if not cluster_ls_data:
-        print("ERROR: ls of %s:%s" % (emop_transfer.cluster_endpoint, ls_test_path))
-        _fail = True
-    print("Testing ls ability of %s:%s" % (emop_transfer.remote_endpoint, ls_test_path))
-    remote_ls_data = emop_transfer.ls(emop_transfer.remote_endpoint, ls_test_path)
-    if not remote_ls_data:
-        print("ERROR: ls of %s:%s" % (emop_transfer.remote_endpoint, ls_test_path))
-        _fail = True
-
-    if _fail:
-        sys.exit(1)
+    # ls_test_path = '/~/'
+    # print("Testing ls ability of %s:%s" % (emop_transfer.cluster_endpoint, ls_test_path))
+    # cluster_ls_data = emop_transfer.ls(emop_transfer.cluster_endpoint, ls_test_path)
+    # if not cluster_ls_data:
+    #     print("ERROR: ls of %s:%s" % (emop_transfer.cluster_endpoint, ls_test_path))
+    #     _fail = True
+    # print("Testing ls ability of %s:%s" % (emop_transfer.remote_endpoint, ls_test_path))
+    # remote_ls_data = emop_transfer.ls(emop_transfer.remote_endpoint, ls_test_path)
+    # if not remote_ls_data:
+    #     print("ERROR: ls of %s:%s" % (emop_transfer.remote_endpoint, ls_test_path))
+    #     _fail = True
+    #
+    # if _fail:
+    #     sys.exit(1)
 
     print("Generating test files")
     test_input = "~/test-in.txt"
