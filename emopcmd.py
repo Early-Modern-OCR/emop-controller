@@ -148,7 +148,8 @@ def submit(args, parser):
         else:
             transfer_job_id = None
         for proc_id in proc_ids:
-            emop_submit.scheduler.submit_job(proc_id=proc_id, num_pages=pages_per_job, dependency=transfer_job_id)
+            job_id = emop_submit.scheduler.submit_job(proc_id=proc_id, num_pages=pages_per_job, dependency=transfer_job_id)
+            emop_submit.set_job_id(proc_id=proc_id, job_id=job_id)
     sys.exit(0)
 
 

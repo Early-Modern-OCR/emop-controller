@@ -133,3 +133,15 @@ class EmopSubmit(EmopBase):
         self.payload.save_input(results)
 
         return proc_id
+
+    def set_job_id(self, proc_id, job_id):
+        """Sends JobID back to dashboard
+        """
+        data = {
+            "job_queue": {
+                "proc_id": proc_id,
+                "job_id": job_id,
+            }
+        }
+        set_job_id_request = self.emop_api.put_request('/api/job_queues/set_job_id', data)
+        return True

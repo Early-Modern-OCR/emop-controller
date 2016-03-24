@@ -98,7 +98,7 @@ class EmopSLURM(EmopScheduler):
             num_pages (int): Number of pages being scheduled
 
         Returns:
-            bool: True if successful, False otherwise.
+            str: SLURM Job ID (false returned if failed)
         """
         if not proc_id:
             logger.error("EmopSLURM#submit_job(): Must provide valid proc_id.")
@@ -113,7 +113,7 @@ class EmopSLURM(EmopScheduler):
             return False
         slurm_job_id = proc.stdout.rstrip()
         logger.info("SLURM job %s submitted for PROC_ID %s" % (slurm_job_id, proc_id))
-        return True
+        return slurm_job_id
 
     def submit_transfer_job(self, task_id):
         """Submit a transfer job to SLURM
