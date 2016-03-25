@@ -23,7 +23,14 @@ Copy the modulefiles.example directory to modulefiles and set the firstbooks mod
 
 ## Build
 
-If modules are not already built for things like Ocular, they must be built.  See the module Lua files for steps on how these programs can be built.
+1. Load emop module.
+
+        module use ./modulefiles
+        module load emop
+
+2. Build and install Ocular.
+
+        make ocular
 
 ## Setup
 
