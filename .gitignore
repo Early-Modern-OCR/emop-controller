@@ -19,6 +19,8 @@ payload/**/**/*.json
 *.jar
 lib/juxta-cl/*.sh
 lib/retas/config.txt
+src/ocular/*
+lib/ocular/*
 
 docs/_build/*
 

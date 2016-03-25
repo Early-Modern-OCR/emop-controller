@@ -13,14 +13,17 @@ help:
 	@echo "Please use 'make <target>' where <target> is one of"
 	@echo "  all                to run 'build' and 'install' targets"
 	@echo "  docs               to build documentation"
+	@echo "  ocular				to build and install Ocular"
 	@echo "  build              to build all dependencies"
 	@echo "  build_seasr        to build SEASR"
 	@echo "  build_juxta_cl     to build Juxta-CL"
 	@echo "  build_retas        to build RETAS"
+	@echo "  build_ocular		to build Ocular"
 	@echo "  install            to install all dependencies"
 	@echo "  install_seasr      to build SEASR"
 	@echo "  install_juxta_cl   to build Juxta-CL"
 	@echo "  install_retas      to build RETAS"
+	@echo "  install_ocular		to install Ocular"
 	@echo "  clean              to clean the build of all dependencies"
 	@echo "  clean_seasr        to clean the build of SEASR"
 	@echo "  clean_juxta_cl     to clean the build of Juxta-CL"
@@ -37,6 +40,8 @@ all: build install
 docs:
 	cd docs && make clean && make html
 
+ocular: build_ocular install_ocular
+
 build: build_seasr build_juxta_cl build_retas
 
 build_seasr:
@@ -48,6 +53,14 @@ build_juxta_cl:
 
 build_retas:
 	cd $(SRC_DIR)/RETAS && javac *.java
+
+build_ocular:
+ifneq ($(wildcard src/ocular/.*),)
+	cd $(SRC_DIR)/ocular && git pull origin emop
+else
+	git clone -b emop https://github.com/Early-Modern-OCR/ocular.git $(SRC_DIR)/ocular
+endif
+	cd $(SRC_DIR)/ocular && _JAVA_OPTIONS="-Xmx512m" ./make_jar.sh
 
 install: build install_seasr install_juxta_cl install_retas
 
@@ -67,6 +80,15 @@ install_retas:
 	install -d $(RETAS_HOME)
 	cd $(SRC_DIR)/RETAS && jar cfe $(RETAS_HOME)/retas.jar RecursiveAlignmentTool *.class
 	install -m 0664 $(SRC_DIR)/RETAS/config.txt $(RETAS_HOME)/config.txt
+
+install_ocular:
+	install -d $(LIB_DIR)/ocular
+	install -d $(LIB_DIR)/ocular/conf
+	install $(SRC_DIR)/ocular/ocular-*-SNAPSHOT-with_dependencies.jar $(LIB_DIR)/ocular/ocular.jar
+	install -m 0644 $(SRC_DIR)/ocular/conf/* $(LIB_DIR)/ocular/conf/
+	install -m 0644 $(SRC_DIR)/ocular/LICENSE.txt $(LIB_DIR)/ocular/
+	install -m 0644 $(SRC_DIR)/ocular/README.md $(LIB_DIR)/ocular/
+	install -m 0644 $(SRC_DIR)/ocular/README.txt $(LIB_DIR)/ocular/
 
 clean: clean_seasr clean_juxta_cl clean_retas
 

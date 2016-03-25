@@ -16,7 +16,8 @@ cp -a LICENSE.txt README.md README.txt /home/idhmc/apps/ocular/0.3-snapshot/
 
 ]]
 
-local prefix = "/home/idhmc/apps/ocular/0.3-snapshot"
+local emop_home = os.getenv("EMOP_HOME")
+local prefix = pathJoin(emop_home, "lib/ocular")
 
 prereq("java")
 
