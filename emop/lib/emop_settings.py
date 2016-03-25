@@ -20,6 +20,9 @@ defaults = {
         "set_walltime": False,
         "extra_args": '[]',
     },
+    "ocular": {
+        "ocr_text_suffix": "_transcription.txt",
+    },
     "denoise": {
         "enabled": True,
     },
@@ -126,6 +129,7 @@ class EmopSettings(object):
 
         # Settings used by Ocular
         self.ocular_emission_engine = self.get_value("ocular", "emission_engine")
+        self.ocular_ocr_text_suffix = self.get_value("ocular", "ocr_text_suffix")
 
         # Settings used by DeNoise
         self.denoise_enabled = self.get_bool_value('denoise', 'enabled')

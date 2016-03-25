@@ -18,7 +18,7 @@ class OcularTranscribe(OcularBase):
         for j in self.job.jobs:
             _image_basename = os.path.basename(j.image_path)
             _image_name = os.path.splitext(_image_basename)[0]
-            _txt_name = "%s_transcription.txt" % _image_name
+            _txt_name = "%s%s" % (_image_name, self.ocr_text_suffix)
             _alto_name = "%s.alto.xml" % _image_name
             _txt_path = os.path.join(self.transcribed_output_path, _txt_name)
             _alto_path = os.path.join(self.transcribed_output_path, _alto_name)
@@ -74,7 +74,7 @@ class OcularTranscribe(OcularBase):
         for j in self.job.jobs:
             _image_basename = os.path.basename(j.image_path)
             _image_name = os.path.splitext(_image_basename)[0]
-            _txt_name = "%s_transcription.txt" % _image_name
+            _txt_name = "%s%s" % (_image_name, self.ocr_text_suffix)
             _alto_name = "%s.alto.xml" % _image_name
             _txt_path = os.path.join(self.transcribed_output_path, _txt_name)
             _alto_path = os.path.join(self.transcribed_output_path, _alto_name)

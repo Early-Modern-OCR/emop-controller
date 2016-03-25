@@ -27,6 +27,7 @@ class OcularBase(ProcessesBase):
         _image_dirname = os.path.basename(os.path.dirname(self.job.image_path))
         self.transcription_dir = os.path.join(self.output_path, 'all_transcriptions')
         self.transcribed_output_path = os.path.join(self.transcription_dir, _image_dirname)
+        self.ocr_text_suffix = self.job.settings.ocular_ocr_text_suffix
         self.java_max_heap = self.calculate_max_heap()
 
     def calculate_max_heap(self):

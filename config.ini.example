@@ -60,6 +60,7 @@ tessdata_dir = /fdata/idhmc/tessdata
 
 [ocular]
 emission_engine = OPENCL
+ocr_text_suffix = _transcription.txt
 
 [denoise]
 enabled = True
