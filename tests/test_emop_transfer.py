@@ -283,7 +283,7 @@ class TestEmopTransfer(TestCase):
             "extra_transfers": [self.tmpout]
         }
         expected = [
-            {'dest': self.tmpout, 'src': os.path.join('/fdata/idhmc/emop-output', self.tmpout)},
+            {'dest': self.tmpout, 'src': os.path.join('/fdata/idhmc/emop-output', self.tmpout), 'recursive': True},
         ]
         retval = self.transfer._get_stage_out_data(data=data)
         self.assertEqual(expected, retval)

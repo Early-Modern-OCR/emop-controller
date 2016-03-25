@@ -184,7 +184,11 @@ class EmopTransfer(EmopBase):
             return ''
         for d in data:
             logger.debug("TRANSFER: %s:%s -> %s:%s", src, d['src'], dest, d['dest'])
-            _transfer.add_item(d['src'], d['dest'])
+            if 'recursive' in d:
+                _recursive = d['recursive']
+            else:
+                _recursive = False
+            _transfer.add_item(d['src'], d['dest'], _recursive)
         task_id = self.globus.send_transfer(_transfer)
         if task_id:
             logger.info("Successfully submitted transfer with task ID %s", task_id)
@@ -372,6 +376,8 @@ class EmopTransfer(EmopBase):
             _remote_path = EmopBase.remove_prefix(prefix=self.settings.output_path_prefix, path=_path)
             _d['dest'] = _remote_path
             _d['src'] = _path
+            if os.path.isdir(_path):
+                _d['recursive'] = True
             _data.append(_d)
 
         return _data
