@@ -100,7 +100,7 @@ def exec_cmd(cmd, log_level="info", timeout=-1):
     if timeout == -1:
         timeout = None
 
-    if isinstance(cmd, str):
+    if isinstance(cmd, basestring):
         cmd_str = cmd
         cmd = shlex.split(cmd)
     elif isinstance(cmd, list):

@@ -1,3 +1,4 @@
+import logging
 import os
 import shlex
 from emop.lib.emop_base import EmopBase
@@ -11,6 +12,8 @@ from emop.lib.models.emop_page_result import EmopPageResult
 from emop.lib.models.emop_postproc_result import EmopPostprocResult
 from emop.lib.models.emop_font_training_result import EmopFontTrainingResult
 from emop.lib.utilities import get_temp_dir
+
+logger = logging.getLogger('emop')
 
 
 class EmopJob(object):
@@ -43,9 +46,11 @@ class EmopJob(object):
             self.output_gsm_path = os.path.join(self.output_dir, "%s.gsmser" % _base_output_name)
             self.input_doc_list_path = os.path.join(self.temp_dir, "batch-%s-work-%s-pages-images.txt" % (str(self.batch_job.id), str(self.work.id)))
         # Extra command parameters that are passed to OCR application
-        self.extra_command_parameters = self.batch_job.parameters
-        if self.extra_command_parameters and isinstance(self.extra_command_parameters, str):
-            self.extra_command_parameters = shlex.split(self.extra_command_parameters)
+        _extra_command_parameters = self.batch_job.parameters
+        if _extra_command_parameters and isinstance(_extra_command_parameters, basestring):
+            self.extra_command_parameters = shlex.split(_extra_command_parameters)
+        else:
+            self.extra_command_parameters = None
 
     def parse_data(self, data):
         self.id = data["id"]
