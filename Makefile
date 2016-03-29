@@ -13,17 +13,17 @@ help:
 	@echo "Please use 'make <target>' where <target> is one of"
 	@echo "  all                to run 'build' and 'install' targets"
 	@echo "  docs               to build documentation"
-	@echo "  ocular				to build and install Ocular"
+	@echo "  ocular             to build and install Ocular"
 	@echo "  build              to build all dependencies"
 	@echo "  build_seasr        to build SEASR"
 	@echo "  build_juxta_cl     to build Juxta-CL"
 	@echo "  build_retas        to build RETAS"
-	@echo "  build_ocular		to build Ocular"
+	@echo "  build_ocular       to build Ocular"
 	@echo "  install            to install all dependencies"
 	@echo "  install_seasr      to build SEASR"
 	@echo "  install_juxta_cl   to build Juxta-CL"
 	@echo "  install_retas      to build RETAS"
-	@echo "  install_ocular		to install Ocular"
+	@echo "  install_ocular     to install Ocular"
 	@echo "  clean              to clean the build of all dependencies"
 	@echo "  clean_seasr        to clean the build of SEASR"
 	@echo "  clean_juxta_cl     to clean the build of Juxta-CL"
@@ -55,7 +55,7 @@ build_retas:
 	cd $(SRC_DIR)/RETAS && javac *.java
 
 build_ocular:
-ifneq ($(wildcard src/ocular/.*),)
+ifneq ($(wildcard $(SRC_DIR)/ocular/.*),)
 	cd $(SRC_DIR)/ocular && git pull origin emop
 else
 	git clone -b emop https://github.com/Early-Modern-OCR/ocular.git $(SRC_DIR)/ocular
@@ -84,7 +84,7 @@ install_retas:
 install_ocular:
 	install -d $(LIB_DIR)/ocular
 	install -d $(LIB_DIR)/ocular/conf
-	install $(SRC_DIR)/ocular/ocular-*-SNAPSHOT-with_dependencies.jar $(LIB_DIR)/ocular/ocular.jar
+	install $(SRC_DIR)/ocular/ocular-emop_*-SNAPSHOT-with_dependencies.jar $(LIB_DIR)/ocular/ocular.jar
 	install -m 0644 $(SRC_DIR)/ocular/conf/* $(LIB_DIR)/ocular/conf/
 	install -m 0644 $(SRC_DIR)/ocular/LICENSE.txt $(LIB_DIR)/ocular/
 	install -m 0644 $(SRC_DIR)/ocular/README.md $(LIB_DIR)/ocular/
