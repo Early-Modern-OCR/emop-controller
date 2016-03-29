@@ -64,9 +64,10 @@ class OcularTranscribe(OcularBase):
         ]
         if self.extra_command_parameters:
             cmd = cmd + self.extra_command_parameters
-        proc = exec_cmd(cmd)
+        proc = exec_cmd(cmd, realtime=True)
 
         if proc.exitcode != 0:
+            #logger.info("OcularTranscribe STDOUT: %s", proc.stdout)
             return self.results(stdout=proc.stdout, stderr=proc.stderr, exitcode=proc.exitcode)
 
         # Loop over each of this job's pages and build transcribed output paths

@@ -77,7 +77,7 @@ def recursive_copy(src, dest, ignore=None, exclude=[]):
         shutil.copyfile(src, dest)
 
 
-def exec_cmd(cmd, log_level="info", timeout=-1):
+def exec_cmd(cmd, log_level="info", timeout=-1, realtime=False):
     """Executes a command
 
     This is the method used by this application to execute
@@ -119,8 +119,16 @@ def exec_cmd(cmd, log_level="info", timeout=-1):
         # TODO Eventually may just need to redirect all stderr to stdout for simplicity
         # process = subprocess32.Popen(cmd, stdout=subprocess32.PIPE, stderr=subprocess32.STDOUT, env=os.environ)
         process = subprocess32.Popen(cmd, stdout=subprocess32.PIPE, stderr=subprocess32.PIPE, env=os.environ)
-        out, err = process.communicate(timeout=timeout)
-        retval = process.returncode
+        if realtime:
+            for line in iter(process.stdout.readline, b''):
+                getattr(logger, log_level)(line.strip())
+            process.stdout.close()
+            retval = process.wait(timeout=timeout)
+            out = process.stdout
+            err = process.stderr
+        else:
+            out, err = process.communicate(timeout=timeout)
+            retval = process.returncode
         return Proc(stdout=out, stderr=err, exitcode=retval)
     except subprocess32.TimeoutExpired:
         process.kill()

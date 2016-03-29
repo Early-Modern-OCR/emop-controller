@@ -54,9 +54,10 @@ class OcularFontTraining(OcularBase):
         ]
         if self.extra_command_parameters:
             cmd = cmd + self.extra_command_parameters
-        proc = exec_cmd(cmd)
+        proc = exec_cmd(cmd, realtime=True)
 
         if proc.exitcode != 0:
+            #logger.info("OcularFontTraining STDOUT: %s", proc.stdout)
             return self.results(stdout=proc.stdout, stderr=proc.stderr, exitcode=proc.exitcode)
 
         # Only set font_training_result on one page (job) since this is a per-work result
