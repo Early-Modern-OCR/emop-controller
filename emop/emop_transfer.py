@@ -313,7 +313,7 @@ class EmopTransfer(EmopBase):
                     continue
                 for value in values:
                     _file = _obj.get(value)
-                    if _file is not None:
+                    if _file:
                         files.append(_file)
         return list(set(files))
 
