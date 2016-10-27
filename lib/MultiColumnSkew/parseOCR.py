@@ -31,7 +31,7 @@ def parseHOCR(fileName):
         splitList = val["title"].split(';')
         x1,y1,x2,y2 = splitList[0].split('bbox ')[1].split(' ')
         w_conf = float(splitList[1].split('x_wconf ')[1])/100
-        word_id = int(val["id"].split("word_")[1])
+        word_id = int(val["id"].split("word_1_")[1])
         #print val
         lenStr=[unicode(s).encode("utf-8") for s in val.contents];
         if len(lenStr)!=0:

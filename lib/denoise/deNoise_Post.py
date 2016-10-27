@@ -14,7 +14,8 @@ import time
 from math import pi, log
 from scipy import fft, ifft
 from scipy.optimize import curve_fit
-import os;
+import os
+import traceback
 #from memory_profiler import profile
 
 #@profile    
@@ -850,7 +851,7 @@ def deNoise(filePath,fileName,debugFlag):
         splitList = val["title"].split(';')
         x1,y1,x2,y2 = splitList[0].split('bbox ')[1].split(' ')
         w_conf = float(splitList[1].split('x_wconf ')[1])/100
-        word_id = int(val["id"].split("word_")[1])
+        word_id = int(val["id"].split("word_1_")[1])
         wordInfoNon_Scaled[word_id-1,:]= np.array([word_id, int(x1),int(y1),int(x2),int(y2),abs(int(y2) - int(y1)), abs(int(x2) - int(x1)),w_conf])
         x1 = (int(x1)/pageWidth)
         y1 = (1 - (int(y1)/pageHeight))
@@ -1256,7 +1257,18 @@ def deNoise(filePath,fileName,debugFlag):
                 confVal[indactualIndexToConsider[finalFilterTemp==1]] = confValTemp[finalFilterTemp==1]
                 confVal[indactualIndexToConsider[finalFilterTemp==-1]] = confValTemp[finalFilterTemp==-1]
                 if np.size(predictedLabelMachineLearning)>0:
-                    predictedLabelMachineLearning = np.append(predictedLabelMachineLearning,indactualIndexToConsider[finalFilterTemp==1],1)     
+                    try:
+                        predictedLabelMachineLearning = np.append(predictedLabelMachineLearning,indactualIndexToConsider[finalFilterTemp==1],1)
+                    except:
+                        print('Error on line 1261:')
+                        print(traceback.format_exc())
+                        print('Value of predictedLabelMachineLearning:')
+                        print(predictedLabelMachineLearning)
+                        print('Value of indactualIndexToConsider:')
+                        print(indactualIndexToConsider)
+                        print('Value of finalFilterTemp:')
+                        print(finalFilterTemp)
+
                 else:                
                     predictedLabelMachineLearning = indactualIndexToConsider[finalFilterTemp==1]
             
@@ -1275,11 +1287,11 @@ def deNoise(filePath,fileName,debugFlag):
                 confValTemp = confVal[word_id];
                 if MLFilter[word_id]==1:
                     confValTemp = 1.0 - confVal[word_id];                    
-                temp = soup.find("span",class_="ocrx_word",id="word_%d"%(wordInfo[word_id,0]))
+                temp = soup.find("span",class_="ocrx_word",id="word_1_%d"%(wordInfo[word_id,0]))
                 temp1 = temp['title'].split(';');
                 temp['title'] = "%s;%s; pred %d; noiseConf %.4f"%(temp1[0],temp1[1 ],MLFilter[word_id],confValTemp)
                 if MLFilter[word_id]==0:
-                    temp1 = soup1.find("span",class_="ocrx_word",id="word_%d"%(wordInfo[word_id,0]))
+                    temp1 = soup1.find("span",class_="ocrx_word",id="word_1_%d"%(wordInfo[word_id,0]))
                     temp1.extract()
             
             # insert noisemeasure
@@ -1296,7 +1308,7 @@ def deNoise(filePath,fileName,debugFlag):
 #            toDel = np.ix_(MLFilter==0)[0]
 #            soup1 = bs4.BeautifulSoup(open(fileName1))
 #            for word_id in range(0,np.size(toDel)):
-#                temp = soup1.find("span",class_="ocrx_word",id="word_%d"%(wordInfo[toDel[word_id],0]))
+#                temp = soup1.find("span",class_="ocrx_word",id="word_1_%d"%(wordInfo[toDel[word_id],0]))
 #                temp.extract()
              # insert noisemeasure
             tempNoiseM = soup1["title"];
@@ -1309,7 +1321,7 @@ def deNoise(filePath,fileName,debugFlag):
         else:
             #make two hOCR files
             for word_id in range(0,np.size(wordInfo[:,0])):
-                temp = soup.find("span",class_="ocrx_word",id="word_%d"%(wordInfo[word_id,0]))
+                temp = soup.find("span",class_="ocrx_word",id="word_1_%d"%(wordInfo[word_id,0]))
                 temp1 = temp['title'].split(';');
                 temp['title'] = "%s;%s; pred %d; noiseConf %.4f"%(temp1[0],temp1[1 ],-1,-1)
             
@@ -1340,7 +1352,7 @@ def deNoise(filePath,fileName,debugFlag):
     else:      
         #make two hOCR files
         for word_id in range(0,np.size(wordInfo[:,0])):
-            temp = soup.find("span",class_="ocrx_word",id="word_%d"%(wordInfo[word_id,0]))
+            temp = soup.find("span",class_="ocrx_word",id="word_1_%d"%(wordInfo[word_id,0]))
             temp1 = temp['title'].split(';');
             temp['title'] = "%s;%s; pred %d; noiseConf %.4f"%(temp1[0],temp1[1 ],-1,-1)
         
