@@ -7,6 +7,9 @@
 # load required modules
 module use ${EMOP_HOME}/modulefiles
 module load emop
+module load mariadb
+module load tesseract
+module load beautifulsoup4/4.3.2
 
 export OPENBLAS_NUM_THREADS=$SLURM_JOB_CPUS_PER_NODE
 export OMP_NUM_THREADS=$SLURM_JOB_CPUS_PER_NODE
